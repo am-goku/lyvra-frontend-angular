@@ -1,0 +1,117 @@
+<!-- Mobile Drawer Toggle Button -->
+<div class="sm:hidden flex justify-end px-4 mt-4">
+  <button (click)="setIsDrawerOpen()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-full flex items-center gap-2">
+    <lucide-icon [img]="SliderIcon" class="w-5 h-5"></lucide-icon>
+  </button>
+</div>
+
+<!-- Drawer Panel for Mobile -->
+@if (isDrawerOpen){
+<div class="fixed inset-0 z-50 bg-black/40 flex justify-end">
+    <div class="bg-white w-64 p-6 h-full overflow-y-auto shadow-lg relative">
+        <button (click)="setIsDrawerOpen()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+            <lucide-icon [img]="XIcon" class="w-6 h-6"></lucide-icon>
+        </button>
+
+        <h3 class="text-lg font-bold mb-4">Filters</h3>
+
+        <!-- Filter Categories -->
+        <div class="mb-4">
+            <h4 class="font-semibold mb-2">Category</h4>
+            <ul class="space-y-1">
+                @for(i of [1,2,3,4,5]; track null) {
+                <li>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="form-checkbox text-rose-600" />
+                        Category {{i}}
+                    </label>
+                </li>
+                }
+            </ul>
+        </div>
+
+        <!-- Filter Gender -->
+        <div class="mb-4">
+            <h4 class="font-semibold mb-2">Gender</h4>
+            <ul class="space-y-1">
+                <li><label><input type="checkbox" class="form-checkbox text-rose-600" /> Men</label></li>
+                <li><label><input type="checkbox" class="form-checkbox text-rose-600" /> Women</label></li>
+                <li><label><input type="checkbox" class="form-checkbox text-rose-600" /> Kids</label></li>
+            </ul>
+        </div>
+
+        <!-- Filter Price Range -->
+        <div class="mb-4">
+            <h4 class="font-semibold mb-2">Price</h4>
+            <input type="range" min="0" max="500" class="w-full" />
+            <div class="flex justify-between text-sm text-gray-500 mt-1">
+                <span>$0</span>
+                <span>$500</span>
+            </div>
+        </div>
+
+        <!-- Filter Color -->
+        <div class="mb-4">
+            <h4 class="font-semibold mb-2">Color</h4>
+            <div class="flex flex-wrap gap-2">
+                @for(i of [1,2,3,4,5,6]; track null) {
+                <span class="w-6 h-6 rounded-full border border-gray-300 cursor-pointer"
+                    [style.backgroundColor]="'hsl({{i*60}}, 70%, 50%)'"></span>
+                }
+            </div>
+        </div>
+
+        <button class="w-full bg-rose-600 hover:bg-rose-700 text-white py-2 rounded-full mt-4">Apply Filters</button>
+    </div>
+</div>
+}
+
+<!-- Desktop Sidebar -->
+<aside class="hidden sm:block w-64 p-6 bg-white shadow-lg sticky top-24">
+  <h3 class="text-lg font-bold mb-4">Filters</h3>
+  
+  <!-- Same filter content as drawer -->
+  <div class="mb-4">
+    <h4 class="font-semibold mb-2">Category</h4>
+    <ul class="space-y-1">
+      @for(i of [1,2,3,4,5]; track null) {
+        <li>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" class="form-checkbox text-rose-600" />
+            Category {{i}}
+          </label>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <div class="mb-4">
+    <h4 class="font-semibold mb-2">Gender</h4>
+    <ul class="space-y-1">
+      <li><label><input type="checkbox" class="form-checkbox text-rose-600" /> Men</label></li>
+      <li><label><input type="checkbox" class="form-checkbox text-rose-600" /> Women</label></li>
+      <li><label><input type="checkbox" class="form-checkbox text-rose-600" /> Kids</label></li>
+    </ul>
+  </div>
+
+  <div class="mb-4">
+    <h4 class="font-semibold mb-2">Price</h4>
+    <input type="range" min="0" max="500" class="w-full" />
+    <div class="flex justify-between text-sm text-gray-500 mt-1">
+      <span>$0</span>
+      <span>$500</span>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <h4 class="font-semibold mb-2">Color</h4>
+    <div class="flex flex-wrap gap-2">
+      @for(i of [1,2,3,4,5,6]; track null) {
+        <span class="w-6 h-6 rounded-full border border-gray-300 cursor-pointer" 
+        [style.backgroundColor]="'hsl({{i*60}}, 70%, 50%)'"></span>
+      }
+    </div>
+  </div>
+
+  <button class="w-full bg-rose-600 hover:bg-rose-700 text-white py-2 rounded-full mt-4">Apply Filters</button>
+</aside>

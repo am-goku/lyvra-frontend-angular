@@ -1,0 +1,43 @@
+<section class="mt-12 max-w-7xl mx-auto px-4">
+  <h2 class="text-2xl font-bold text-slate-800 mb-4">Men's Picks</h2>
+  <div class="flex overflow-x-auto gap-4 pb-2">
+    @for(i of menList; track null) {
+      <div class="min-w-[12rem] bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-3 flex-shrink-0">
+        <img src="https://picsum.photos/200/250?random={{i+20}}" alt="Men Product {{i}}" class="w-full h-48 object-cover rounded-lg mb-2"/>
+        <h3 class="text-slate-800 font-semibold mb-1">Men Item {{i}}</h3>
+        <p class="text-gray-500 mb-2">$ {{(15 + i*4)}}</p>
+        <button class="w-full bg-rose-600 hover:bg-rose-700 text-white py-1.5 rounded-full transition-colors flex items-center justify-center gap-1">
+          <lucide-icon [img]="ShoppingBagIcon" class="w-4 h-4"></lucide-icon> Add to Cart
+        </button>
+      </div>
+    }
+  </div>
+
+  <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Women's Picks</h2>
+  <div class="flex overflow-x-auto gap-4 pb-2">
+    @for(i of womenList; track null) {
+      <div class="min-w-[12rem] bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-3 flex-shrink-0">
+        <img src="https://picsum.photos/200/250?random={{i+30}}" alt="Women Product {{i}}" class="w-full h-48 object-cover rounded-lg mb-2"/>
+        <h3 class="text-slate-800 font-semibold mb-1">Women Item {{i}}</h3>
+        <p class="text-gray-500 mb-2">$ {{(20 + i*3)}}</p>
+        <button class="w-full bg-rose-600 hover:bg-rose-700 text-white py-1.5 rounded-full transition-colors flex items-center justify-center gap-1">
+          <lucide-icon [img]="ShoppingBagIcon" class="w-4 h-4"></lucide-icon> Add to Cart
+        </button>
+      </div>
+    }
+  </div>
+
+  <h2 class="text-2xl font-bold text-slate-800 mt-8 mb-4">Kids' Picks</h2>
+  <div class="flex overflow-x-auto gap-4 pb-2">
+    @for(i of kidsList; track null) {
+      <div class="min-w-[12rem] bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-3 flex-shrink-0">
+        <img src="https://picsum.photos/200/250?random={{i+40}}" alt="Kids Product {{i}}" class="w-full h-48 object-cover rounded-lg mb-2"/>
+        <h3 class="text-slate-800 font-semibold mb-1">Kids Item {{i}}</h3>
+        <p class="text-gray-500 mb-2">$ {{(12 + i*2)}}</p>
+        <button class="w-full bg-rose-600 hover:bg-rose-700 text-white py-1.5 rounded-full transition-colors flex items-center justify-center gap-1">
+          <lucide-icon [img]="ShoppingBagIcon" class="w-4 h-4"></lucide-icon> Add to Cart
+        </button>
+      </div>
+    }
+  </div>
+</section>

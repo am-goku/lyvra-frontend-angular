@@ -1,0 +1,79 @@
+<header class="w-full bg-white shadow-sm fixed top-0 left-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 lg:py-4">
+        <!-- Left: Logo + Brand -->
+        <div class="flex items-center gap-2">
+            <img src="https://placehold.co/32x32" alt="Lyvra logo" class="rounded-md" />
+            <h1 class="text-2xl font-extrabold text-rose-600 tracking-tight">Lyvra</h1>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden lg:flex items-center gap-6">
+            <!-- Search Button + Animated Input -->
+            <div class="relative flex items-center gap-2">
+
+
+                @if(isSearchOpen) {
+                <input type="text" placeholder="Search products..."
+                    class="border border-gray-300 rounded-full px-2 py-1 focus:outline-none focus:ring-2 focus:ring-rose-500 w-xl"
+                    animate.enter="searchenter" animate.leave="searchleave" />
+                }
+
+                <button (click)="toggleSearch()"
+                    class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-1">
+                    <lucide-icon [img]="SearchIcon" class="w-5 h-5"></lucide-icon>
+                </button>
+            </div>
+
+            <a href="#" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+                <lucide-icon [img]="HomeIcon" class="w-5 h-5"></lucide-icon>
+            </a>
+            <a routerLink="/products" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+                <lucide-icon [img]="ShoppingIcon" class="w-5 h-5"></lucide-icon>
+            </a>
+            <a href="#" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+                <lucide-icon [img]="CartIcon" class="w-5 h-5"></lucide-icon>
+            </a>
+            <a href="#" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+                <lucide-icon [img]="UserIcons" class="w-5 h-5"></lucide-icon>
+            </a>
+
+
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button (click)="toggleDrawer()" class="lg:hidden text-slate-800 hover:text-rose-600 transition-colors">
+            <lucide-icon [img]="MenuIcon" class="w-6 h-6"></lucide-icon>
+        </button>
+    </div>
+
+    <!-- Mobile Drawer -->
+    @if(isDrawerOpen) {
+    <div class="fixed inset-0 bg-black/50 z-40" (click)="closeDrawer()" animate.enter="fadeenter"
+        animate.leave="fadeleave"></div>
+
+    <aside class="fixed top-0 right-0 w-3/4 sm:w-2/3 h-full bg-white shadow-lg z-50 p-6 flex flex-col gap-6"
+        animate.enter="drawerenter" animate.leave="drawerleave">
+        <button (click)="closeDrawer()" class="self-end text-slate-800 hover:text-rose-600 transition-colors">
+            <lucide-icon [img]="XIcon" class="w-6 h-6"></lucide-icon>
+        </button>
+
+        <a href="#" class="text-lg text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+            <lucide-icon [img]="HomeIcon" class="w-5 h-5"></lucide-icon>
+            Home
+        </a>
+        <a href="#" class="text-lg text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+            <lucide-icon [img]="ShoppingIcon" class="w-5 h-5"></lucide-icon>
+            Shop
+        </a>
+        <a href="#" class="text-lg text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+            <lucide-icon [img]="CartIcon" class="w-5 h-5"></lucide-icon> Cart
+        </a>
+        <a href="#" class="text-lg text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+            <lucide-icon [img]="UserIcons" class="w-5 h-5"></lucide-icon> Account
+        </a>
+        <a href="#" class="text-lg text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+            <lucide-icon [img]="SearchIcon" class="w-5 h-5"></lucide-icon> Search
+        </a>
+    </aside>
+    }
+</header>

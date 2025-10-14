@@ -1,0 +1,32 @@
+<section class="mt-12 max-w-7xl mx-auto px-4 mb-12">
+    <h2 class="text-2xl font-bold text-slate-800 mb-4">Flash Deals</h2>
+
+    <div class="flex overflow-x-auto gap-4 pb-2">
+        @for(i of deals; track null) {
+        <div
+            class="min-w-[12rem] bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow relative flex-shrink-0">
+            <!-- Discount Badge -->
+            <span class="absolute top-2 left-2 bg-rose-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                -{{10 + i*5}}%
+            </span>
+
+            <!-- Product Image -->
+            <img src="https://picsum.photos/200/250?random={{i+60}}" alt="Flash Deal {{i}}"
+                class="w-full h-48 object-cover rounded-t-2xl mb-2" />
+
+            <!-- Product Info -->
+            <div class="p-3">
+                <h3 class="text-slate-800 font-semibold mb-1">Deal Item {{i}}</h3>
+                <p class="text-gray-500 mb-2">
+                    <span class="line-through mr-1">${{(20 + i*5)}}</span>
+                    <span class="text-rose-600 font-bold">${{(15 + i*4)}}</span>
+                </p>
+                <button
+                    class="w-full bg-rose-600 hover:bg-rose-700 text-white py-1.5 rounded-full transition-colors flex items-center justify-center gap-1">
+                    <lucide-icon [img]="ShoppingBagIcon" class="w-4 h-4"></lucide-icon> Add to Cart
+                </button>
+            </div>
+        </div>
+        }
+    </div>
+</section>

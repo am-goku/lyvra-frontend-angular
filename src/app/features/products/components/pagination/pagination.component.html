@@ -1,0 +1,21 @@
+<section class="mt-8 flex justify-center items-center gap-4">
+    <!-- Previous Button -->
+    <button class="px-1 py-1 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors">
+        <lucide-icon [img]="LeftArrow" class="h-5 w-5" />
+    </button>
+
+    <!-- Page Numbers -->
+    <div class="flex gap-2">
+        @for(i of [1,2,3,4,5]; track null) {
+        <button class="px-4 py-2 rounded-full border border-gray-300 hover:bg-rose-50 transition-colors
+        @if(i === currentPage) { bg-rose-600 text-white border-rose-600 }">
+            {{i}}
+        </button>
+        }
+    </div>
+
+    <!-- Next Button -->
+    <button class="px-1 py-1 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors">
+        <lucide-icon [img]="RightArrow" class="h-5 w-5" />
+    </button>
+</section>

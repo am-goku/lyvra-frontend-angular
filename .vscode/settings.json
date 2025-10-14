@@ -1,0 +1,14 @@
+{
+    "tailwindCSS.emmetCompletions": true,
+    "files.associations": {
+        "*html": "html",
+        "*ts": "typescript"
+    },
+    "tailwindCSS.includeLanguages": {
+        "html": "html",
+        "typescript": "typescript",
+    },
+    "editor.quickSuggestions": {
+        "strings": true
+    }
+}

@@ -1,0 +1,53 @@
+<section class="flex justify-center items-center min-h-[calc(100vh-4rem)] bg-gradient-to-br from-pink-50 to-yellow-50">
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
+        
+    <!-- Logo / Brand -->
+    <!-- <div class="flex justify-center mb-6">
+      <img src="https://via.placeholder.com/60x60.png?text=🛍️" alt="Shop Logo" class="w-16 h-16"/>
+    </div> -->
+
+    <h2 class="text-3xl font-extrabold mb-8 text-center text-gray-800">Welcome Back!</h2>
+    <p class="text-center text-gray-500 mb-6">Login to continue shopping your favorite products</p>
+
+    <!-- Email -->
+    <div class="mb-5">
+      <label class="block mb-2 font-medium text-gray-700">Email</label>
+      <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 hover:border-pink-500 focus-within:border-pink-500 transition-colors">
+        <lucide-angular [img]="MailIcon" class="w-5 h-5 text-gray-400 mr-2"></lucide-angular>
+        <input type="email" formControlName="email" class="flex-1 outline-none text-gray-700" placeholder="you@example.com" />
+      </div>
+    </div>
+
+    <!-- Password -->
+    <div class="mb-6">
+      <label class="block mb-2 font-medium text-gray-700">Password</label>
+      <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 hover:border-pink-500 focus-within:border-pink-500 transition-colors">
+        <lucide-angular [img]="LockIcon" class="w-5 h-5 text-gray-400 mr-2"></lucide-angular>
+        <input type="password" formControlName="password" class="flex-1 outline-none text-gray-700" placeholder="********" />
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" class="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold shadow hover:bg-pink-600 transition-colors">
+      Login
+    </button>
+
+    <!-- Signup Link -->
+    <p class="text-center text-gray-500 mt-6">
+      Don’t have an account? 
+      <a routerLink="/signup" class="text-pink-500 font-medium hover:underline cursor-pointer">Sign up</a>
+    </p>
+
+    <!-- Optional Social Login -->
+    <div class="mt-6 text-center text-gray-400">Or login with</div>
+    <div class="flex justify-center gap-4 mt-3">
+      <button class="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition">
+        <img src="https://img.icons8.com/color/24/google-logo.png" alt="Google"/>
+      </button>
+      <button class="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition">
+        <img src="https://img.icons8.com/color/24/facebook-new.png" alt="Facebook"/>
+      </button>
+    </div>
+
+  </form>
+</section>

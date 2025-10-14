@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+@reference 'tailwindcss'
+
+/* Global resets and fashion theme */
+@layer base {
+  body {
+    @apply bg-neutral text-text font-sans;
+    font-family: 'Inter', 'Poppins', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold text-text;
+  }
+
+  button {
+    @apply transition-colors duration-200;
+  }
+}
+
+/* Animation classes for animate.enter/animate.leave */
+.fade-in {
+  animation: fadeIn 400ms ease-out;
+}
+.fade-out {
+  animation: fadeOut 300ms ease-in forwards;
+}
+.slide-in-right {
+  animation: slideInRight 300ms ease-out;
+}
+.slide-out-right {
+  animation: slideOutRight 300ms ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes slideOutRight {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+
+/* Accessibility: Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .fade-in, .fade-out, .slide-in-right, .slide-out-right {
+    animation: none;
+  }
+}

@@ -1,0 +1,16 @@
+<section class="mt-12 max-w-7xl mx-auto px-4">
+  <h2 class="text-2xl font-bold text-slate-800 mb-4">Trending Now</h2>
+
+  <div class="flex overflow-x-auto gap-4 pb-2">
+    @for(i of trendings; track null) {
+      <div class="min-w-[12rem] bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow p-3 flex-shrink-0">
+        <img src="https://picsum.photos/200/250?random={{i}}" alt="Product {{i}}" class="w-full h-48 object-cover rounded-lg mb-2"/>
+        <h3 class="text-slate-800 font-semibold mb-1">Product {{i}}</h3>
+        <p class="text-gray-500 mb-2">$ {{(10 + i * 5)}}</p>
+        <button class="w-full bg-rose-600 hover:bg-rose-700 text-white py-1.5 rounded-full transition-colors flex items-center justify-center gap-1">
+          <lucide-icon [img]="ShoppingBagIcon" class="w-4 h-4"></lucide-icon> Add to Cart
+        </button>
+      </div>
+    }
+  </div>
+</section>
