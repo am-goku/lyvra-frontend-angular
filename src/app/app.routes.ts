@@ -5,6 +5,7 @@ import { CartComponent } from './features/cart/cart.component';
 import { ProductListComponent } from './features/products/product-list.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
+import { ProductDetailComponent } from './features/product-detail/detail.component';
 
 export const routes: Routes = [
     {
@@ -14,6 +15,7 @@ export const routes: Routes = [
             { path: '', component: HomeComponent },
             { path: 'cart', component: CartComponent },
             { path: 'products', component: ProductListComponent },
+            { path: 'products/:productId', component: ProductDetailComponent },
 
             //Auth Routes
             { path: 'login', component: LoginComponent },
