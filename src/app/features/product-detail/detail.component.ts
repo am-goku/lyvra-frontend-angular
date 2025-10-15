@@ -4,7 +4,7 @@ import { ProductReviewComponent } from "./components/review-section/review.compo
 import { RelatedProductComponent } from "./components/related-section/related.component";
 
 @Component({
-    selector: 'product-detail',
+    selector: 'app-product-detail',
     standalone: true,
     imports: [ProductInfoComponent, ProductReviewComponent, RelatedProductComponent],
     templateUrl: './detail.component.html',

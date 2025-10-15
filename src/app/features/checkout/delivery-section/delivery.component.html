@@ -1,0 +1,20 @@
+<section class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm mt-6">
+    <h2 class="text-2xl font-bold mb-6">Delivery Options</h2>
+
+    <div class="flex flex-col gap-4">
+        @for(option of deliveryOptions; track option.id) {
+        <label
+            class="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:border-rose-600 transition">
+            <div class="flex flex-col">
+                <span class="font-semibold text-gray-800">{{ option.name }}</span>
+                <span class="text-gray-500 text-sm">{{ option.eta }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="font-semibold text-gray-800">₹{{ option.cost }}</span>
+                <input type="radio" name="delivery" [value]="option.id" [(ngModel)]="selectedDelivery"
+                    class="w-4 h-4 accent-rose-600" />
+            </div>
+        </label>
+        }
+    </div>
+</section>

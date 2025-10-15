@@ -1,0 +1,57 @@
+<section class="bg-gray-50 border border-gray-200 rounded-2xl p-6 shadow-sm mt-6 lg:mt-0 lg:w-96 flex flex-col gap-6">
+    <h2 class="text-xl font-bold">Order Summary</h2>
+
+    <!-- Mini Product List -->
+    <div class="flex flex-col gap-3">
+        @for(item of cartItems; track item.id){
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="https://picsum.photos/50/50?random={{item.id}}" alt="{{item.name}}"
+                    class="w-12 h-12 object-cover rounded-lg" />
+                <div class="flex flex-col">
+                    <span class="text-gray-800 font-semibold">{{ item.name }}</span>
+                    <span class="text-gray-500 text-sm">Qty: {{ item.quantity }}</span>
+                </div>
+            </div>
+            <span class="text-gray-800 font-semibold">₹{{ item.price * item.quantity }}</span>
+        </div>
+        }
+    </div>
+
+    <div class="border-t border-gray-300 mt-4"></div>
+
+    <!-- Cost Breakdown -->
+    <div class="flex flex-col gap-2">
+        <div class="flex justify-between text-gray-600">
+            <span>Subtotal</span>
+            <span>₹{{ getSubtotal() }}</span>
+        </div>
+        <div class="flex justify-between text-gray-600">
+            <span>Discount</span>
+            <span>₹{{ getDiscount() }}</span>
+        </div>
+        <div class="flex justify-between text-gray-600">
+            <span>Delivery</span>
+            <span>₹{{ getDeliveryCost() }}</span>
+        </div>
+        <div class="flex justify-between text-gray-600">
+            <span>Tax</span>
+            <span>₹{{ getTax() }}</span>
+        </div>
+        <div class="border-t border-gray-300 mt-2"></div>
+        <div class="flex justify-between font-semibold text-gray-800 text-lg">
+            <span>Total</span>
+            <span>₹{{ getTotal() }}</span>
+        </div>
+    </div>
+
+    <!-- Place Order Button -->
+    <button class="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-full mt-4 transition"
+        (click)="placeOrder()">
+        Place Order
+    </button>
+
+    <p class="text-sm text-gray-500 mt-2">
+        You will receive a confirmation email after placing your order.
+    </p>
+</section>

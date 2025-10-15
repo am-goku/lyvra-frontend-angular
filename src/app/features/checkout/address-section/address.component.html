@@ -1,0 +1,53 @@
+<section class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+  <h2 class="text-2xl font-bold mb-6">Shipping & Billing</h2>
+
+  <form class="flex flex-col gap-4">
+    <!-- Name -->
+    <div class="flex flex-col sm:flex-row gap-4">
+      <input type="text" placeholder="Full Name"
+        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
+        [(ngModel)]="shipping.name" name="name" />
+      <input type="email" placeholder="Email"
+        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
+        [(ngModel)]="shipping.email" name="email" />
+    </div>
+
+    <!-- Phone -->
+    <input type="tel" placeholder="Phone Number"
+      class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
+      [(ngModel)]="shipping.phone" name="phone" />
+
+    <!-- Address -->
+    <input type="text" placeholder="Street Address"
+      class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
+      [(ngModel)]="shipping.address" name="address" />
+
+    <div class="flex flex-col sm:flex-row gap-4">
+      <input type="text" placeholder="City"
+        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
+        [(ngModel)]="shipping.city" name="city" />
+      <input type="text" placeholder="State"
+        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
+        [(ngModel)]="shipping.state" name="state" />
+      <input type="text" placeholder="Zip Code"
+        class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
+        [(ngModel)]="shipping.zip" name="zip" />
+    </div>
+
+    <!-- Country -->
+    <select class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
+      [(ngModel)]="shipping.country" name="country">
+      <option value="">Select Country</option>
+      <option value="India">India</option>
+      <option value="USA">USA</option>
+      <option value="UK">UK</option>
+      <option value="Australia">Australia</option>
+    </select>
+
+    <!-- Billing Same as Shipping -->
+    <label class="flex items-center gap-2 mt-2 text-gray-700">
+      <input type="checkbox" [(ngModel)]="billingSameAsShipping" name="billingSame" class="w-4 h-4 accent-rose-600" />
+      Billing address same as shipping
+    </label>
+  </form>
+</section>
