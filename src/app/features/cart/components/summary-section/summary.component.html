@@ -1,0 +1,33 @@
+<div class="w-full lg:w-96 bg-gray-50 border border-gray-200 rounded-2xl p-6 flex flex-col gap-6 h-fit">
+    <h2 class="text-xl font-bold">Order Summary</h2>
+
+    <div class="flex justify-between text-gray-600">
+        <span>Subtotal</span>
+        <span>₹{{ getSubtotal() }}</span>
+    </div>
+
+    <div class="flex justify-between text-gray-600">
+        <span>Discount</span>
+        <span>₹{{ getDiscount() }}</span>
+    </div>
+
+    <div class="flex justify-between text-gray-600">
+        <span>Tax</span>
+        <span>₹{{ getTax() }}</span>
+    </div>
+
+    <div class="border-t border-gray-300"></div>
+
+    <div class="flex justify-between font-semibold text-gray-800 text-lg">
+        <span>Total</span>
+        <span>₹{{ getTotal() }}</span>
+    </div>
+
+    <button class="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-full mt-4 transition">
+        Proceed to Checkout
+    </button>
+
+    <p class="text-sm text-gray-500 mt-2">
+        Free shipping on orders over ₹2,000
+    </p>
+</div>

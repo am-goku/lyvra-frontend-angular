@@ -1,0 +1,10 @@
+<section class="max-w-6xl mx-auto mt-10 px-4">
+    <!-- <h1 class="text-3xl font-bold mb-6">Your Cart ({{ cartItems.length }} items)</h1> -->
+
+    <div class="flex flex-col gap-6">
+        @for(item of cartItems; track item.id) {
+            <cart-item [item]="item" [decreaseQty]="decreaseQty" [increaseQty]="increaseQty" [removeItem]="removeItem" />
+        }
+
+    </div>
+</section>
