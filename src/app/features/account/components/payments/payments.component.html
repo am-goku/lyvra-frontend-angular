@@ -1,0 +1,123 @@
+<section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">Payment Methods</h2>
+
+    <button
+      class="flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition"
+      (click)="isAdding = !isAdding"
+    >
+      <lucide-icon [img]="PlusIcon" class="w-5 h-5"></lucide-icon>
+      @if (isAdding) { Cancel } @else { Add New }
+    </button>
+  </div>
+
+  @if (isAdding) {
+    <!-- Add Payment Form -->
+    <form class="grid md:grid-cols-2 gap-6 mb-8">
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">Card Holder Name</label>
+        <input
+          type="text"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          [(ngModel)]="newPayment.holder"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">Card Number</label>
+        <input
+          type="text"
+          maxlength="16"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          [(ngModel)]="newPayment.number"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">Expiry</label>
+        <input
+          type="text"
+          placeholder="MM/YY"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          [(ngModel)]="newPayment.expiry"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">Type</label>
+        <select
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          [(ngModel)]="newPayment.type"
+        >
+          <option value="Credit">Credit Card</option>
+          <option value="Debit">Debit Card</option>
+          <option value="UPI">UPI</option>
+        </select>
+      </div>
+
+      <div class="md:col-span-2 flex justify-end">
+        <button
+          type="button"
+          class="bg-rose-600 text-white px-5 py-2.5 rounded-lg hover:bg-rose-700 transition"
+          (click)="savePayment()"
+        >
+          Save Payment
+        </button>
+      </div>
+    </form>
+  }
+
+  @if (payments.length > 0) {
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (payment of payments; track payment.id) {
+        <div class="border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition">
+          <div class="flex justify-between items-start mb-3">
+            <div class="flex items-center gap-2">
+              <lucide-icon
+                [img]="PaymentMethodIcon(payment.type)"
+                class="w-5 h-5 text-gray-500"
+              ></lucide-icon>
+              <h3 class="font-semibold text-gray-800">{{ payment.type }}</h3>
+            </div>
+
+            <div class="flex gap-2">
+              <button
+                class="text-gray-400 hover:text-rose-600 transition"
+                (click)="editPayment(payment.id)"
+              >
+                <lucide-icon [img]="PenLineIcon" class="w-4 h-4"></lucide-icon>
+              </button>
+              <button
+                class="text-gray-400 hover:text-rose-600 transition"
+                (click)="deletePayment(payment.id)"
+              >
+                <lucide-icon [img]="Trash2Icon" class="w-4 h-4"></lucide-icon>
+              </button>
+            </div>
+          </div>
+
+          @if (payment.type === 'UPI') {
+            <p class="text-gray-600 text-sm">UPI ID: {{ payment.upiId }}</p>
+          } @else {
+            <p class="text-gray-600 text-sm">**** **** **** {{ payment.last4 }}</p>
+            <p class="text-gray-500 text-sm">Expires: {{ payment.expiry }}</p>
+          }
+
+          @if (payment.default) {
+            <span
+              class="mt-4 inline-flex items-center gap-2 text-sm font-medium bg-rose-100 text-rose-700 px-3 py-1 rounded-full"
+            >
+              <lucide-icon [img]="StarIcon" class="w-4 h-4"></lucide-icon>
+              Default Payment
+            </span>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="flex flex-col items-center justify-center py-16 text-center text-gray-500">
+      <lucide-icon [img]="CreditCardIcon" class="w-12 h-12 mb-3 text-gray-400"></lucide-icon>
+      <p>No saved payment methods.</p>
+    </div>
+  }
+</section>

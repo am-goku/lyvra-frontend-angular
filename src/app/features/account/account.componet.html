@@ -1,0 +1,84 @@
+<main class="py-16 relative lg:pt-20 h-full px-4 overflow-auto max-w-7xl mx-auto">
+
+  <section class="grid lg:grid-cols-[250px_1fr] gap-8">
+    
+    <!-- Sidebar -->
+    <aside class="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm h-fit">
+      <h2 class="text-xl font-bold mb-6 hidden md:block">My Account</h2>
+
+      <nav class="flex md:flex-col md:gap-3 gap-1">
+        <button
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
+          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'profile' }"
+          (click)="activeSection = 'profile'"
+        >
+          <lucide-icon [img]="UserIcon" class="w-5 h-5"></lucide-icon>
+          <p class="hidden md:block">Profile</p>
+        </button>
+
+        <button
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
+          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'orders' }"
+          (click)="activeSection = 'orders'"
+        >
+          <lucide-icon [img]="PackageIcon" class="w-5 h-5"></lucide-icon>
+          <p class="hidden md:block">Orders</p>
+        </button>
+
+        <button
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
+          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'payments' }"
+          (click)="activeSection = 'payments'"
+        >
+          <lucide-icon [img]="CreditCardIcon" class="w-5 h-5"></lucide-icon>
+          <p class="hidden md:block">Payments</p>
+        </button>
+
+        <button
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
+          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'addresses' }"
+          (click)="activeSection = 'addresses'"
+        >
+          <lucide-icon [img]="MapPinIcon" class="w-5 h-5"></lucide-icon>
+          <p class="hidden md:block">Addresses</p>
+        </button>
+
+        <button
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
+          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'wishlist' }"
+          (click)="activeSection = 'wishlist'"
+        >
+          <lucide-icon [img]="HeartIcon" class="w-5 h-5"></lucide-icon>
+          <p class="hidden md:block">Wishlist</p>
+        </button>
+
+        <button
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
+          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'settings' }"
+          (click)="activeSection = 'settings'"
+        >
+          <lucide-icon [img]="SettingsIcon" class="w-5 h-5"></lucide-icon>
+          <p class="hidden md:block">Settings</p>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <section class="flex-1">
+      @if (activeSection === 'profile') {
+        <account-profile />
+      } @else if (activeSection === 'orders') {
+        <account-orders />
+      } @else if (activeSection === 'payments') {
+        <account-payments />
+      } @else if (activeSection === 'addresses') {
+        <account-addresses />
+      } @else if (activeSection === 'wishlist') {
+        <account-wishlist />
+      } @else if (activeSection === 'settings') {
+        <account-settings />
+      }
+    </section>
+
+  </section>
+</main>

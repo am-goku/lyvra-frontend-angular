@@ -7,6 +7,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { SignupComponent } from './features/auth/signup/signup.component';
 import { ProductDetailComponent } from './features/product-detail/detail.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
+import { AccountComponent } from './features/account/account.component';
 
 export const routes: Routes = [
     {
@@ -18,6 +19,7 @@ export const routes: Routes = [
             { path: 'products', component: ProductListComponent },
             { path: 'products/:productId', component: ProductDetailComponent },
             { path: 'checkout', component: CheckoutComponent },
+            { path: 'account', component: AccountComponent },
 
             //Auth Routes
             { path: 'login', component: LoginComponent },

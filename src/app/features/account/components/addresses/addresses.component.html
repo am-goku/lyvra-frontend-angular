@@ -1,0 +1,119 @@
+<section class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">My Addresses</h2>
+
+    <button
+      class="flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition"
+      (click)="isAdding = !isAdding"
+    >
+      <lucide-icon [img]="PlusIcon" class="w-5 h-5"></lucide-icon>
+      @if (isAdding) { Cancel } @else { Add New }
+    </button>
+  </div>
+
+  @if (isAdding) {
+    <!-- New Address Form -->
+    <form class="grid md:grid-cols-2 gap-6 mb-8">
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
+        <input
+          type="text"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          [(ngModel)]="newAddress.fullName"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">Phone</label>
+        <input
+          type="text"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          [(ngModel)]="newAddress.phone"
+        />
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="block text-sm font-medium text-gray-600 mb-1">Street Address</label>
+        <input
+          type="text"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          [(ngModel)]="newAddress.street"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">City</label>
+        <input
+          type="text"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          [(ngModel)]="newAddress.city"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-600 mb-1">Postal Code</label>
+        <input
+          type="text"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          [(ngModel)]="newAddress.postalCode"
+        />
+      </div>
+
+      <div class="md:col-span-2 flex justify-end">
+        <button
+          type="button"
+          class="bg-rose-600 text-white px-5 py-2.5 rounded-lg hover:bg-rose-700 transition"
+          (click)="saveAddress()"
+        >
+          Save Address
+        </button>
+      </div>
+    </form>
+  }
+
+  @if (addresses.length > 0) {
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      @for (address of addresses; track address.id) {
+        <div class="border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-md transition">
+          <div class="flex justify-between items-start mb-3">
+            <h3 class="font-semibold text-gray-800">{{ address.fullName }}</h3>
+
+            <div class="flex gap-2">
+              <button
+                class="text-gray-400 hover:text-rose-600 transition"
+                (click)="editAddress(address.id)"
+              >
+                <lucide-icon [img]="Edit3Icon" class="w-4 h-4"></lucide-icon>
+              </button>
+              <button
+                class="text-gray-400 hover:text-rose-600 transition"
+                (click)="deleteAddress(address.id)"
+              >
+                <lucide-icon [img]="Trash2Icon" class="w-4 h-4"></lucide-icon>
+              </button>
+            </div>
+          </div>
+
+          <p class="text-gray-600 text-sm leading-relaxed">
+            {{ address.street }}, {{ address.city }} - {{ address.postalCode }}
+          </p>
+          <p class="text-gray-500 text-sm mt-2">📞 {{ address.phone }}</p>
+
+          @if (address.default) {
+            <span
+              class="mt-4 inline-flex items-center gap-2 text-sm font-medium bg-rose-100 text-rose-700 px-3 py-1 rounded-full"
+            >
+              <lucide-icon [img]="StarIcon" class="w-4 h-4"></lucide-icon>
+              Default Address
+            </span>
+          }
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="flex flex-col items-center justify-center py-16 text-center text-gray-500">
+      <lucide-icon [img]="MapPinOffIcon" class="w-12 h-12 mb-3 text-gray-400"></lucide-icon>
+      <p>No addresses added yet.</p>
+    </div>
+  }
+</section>
