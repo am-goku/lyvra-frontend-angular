@@ -1,0 +1,16 @@
+<main class="h-full md:pt-16 flex lg:flex-row overflow-auto">
+    <!-- Left Hero Section (desktop only) -->
+    <section
+        class="hidden lg:flex lg:w-1/2 bg-[url('https://picsum.photos/800/1200?blur=2')] bg-cover bg-center relative">
+        <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+            <h1 class="text-white text-4xl font-bold">Join Lyvra Today</h1>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="w-1/2 h-full flex items-center justify-center p-4 md:py-10 bg-amber-200">
+        <div class="max-w-md w-full">
+            <router-outlet />
+        </div>
+    </section>
+</main>

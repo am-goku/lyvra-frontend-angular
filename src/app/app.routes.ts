@@ -8,6 +8,7 @@ import { SignupComponent } from './features/auth/signup/signup.component';
 import { ProductDetailComponent } from './features/product-detail/detail.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { AccountComponent } from './features/account/account.component';
+import { AuthComponent } from './features/auth/auth.component';
 
 export const routes: Routes = [
     {
@@ -22,8 +23,14 @@ export const routes: Routes = [
             { path: 'account', component: AccountComponent },
 
             //Auth Routes
-            { path: 'login', component: LoginComponent },
-            { path: 'signup', component: SignupComponent }
+            {
+                path: 'auth',
+                component: AuthComponent,
+                children: [
+                    { path: 'login', component: LoginComponent },
+                    { path: 'signup', component: SignupComponent },
+                ]
+            },
         ]
     },
     { path: '**', redirectTo: '' }

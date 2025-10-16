@@ -1,53 +1,72 @@
-<section class="flex justify-center items-center min-h-[calc(100vh-4rem)] bg-gradient-to-br from-pink-50 to-yellow-50">
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
-        
-    <!-- Logo / Brand -->
-    <!-- <div class="flex justify-center mb-6">
-      <img src="https://via.placeholder.com/60x60.png?text=🛍️" alt="Shop Logo" class="w-16 h-16"/>
-    </div> -->
+<div class="max-w-md bg-white rounded-2xl shadow-md md:py-4 p-8">
+  <!-- Logo / Brand -->
+  <div class="flex justify-center mb-6">
+    <img src="https://i.pravatar.cc/80?img=10" alt="Lyvra Logo" class="w-16 h-16 rounded-full" />
+  </div>
 
-    <h2 class="text-3xl font-extrabold mb-8 text-center text-gray-800">Welcome Back!</h2>
-    <p class="text-center text-gray-500 mb-6">Login to continue shopping your favorite products</p>
+  <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Login to Lyvra</h2>
+  <p class="text-gray-500 text-center mb-6">Your fashion journey starts here</p>
 
-    <!-- Email -->
-    <div class="mb-5">
-      <label class="block mb-2 font-medium text-gray-700">Email</label>
-      <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 hover:border-pink-500 focus-within:border-pink-500 transition-colors">
-        <lucide-angular [img]="MailIcon" class="w-5 h-5 text-gray-400 mr-2"></lucide-angular>
-        <input type="email" formControlName="email" class="flex-1 outline-none text-gray-700" placeholder="you@example.com" />
-      </div>
+  <!-- Login Form -->
+  <form class="space-y-4" (submit)="login()">
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-1">Email or Phone</label>
+      <input type="text" name="email" placeholder="you@example.com" [(ngModel)]="emailOrPhone"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
     </div>
 
-    <!-- Password -->
-    <div class="mb-6">
-      <label class="block mb-2 font-medium text-gray-700">Password</label>
-      <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 hover:border-pink-500 focus-within:border-pink-500 transition-colors">
-        <lucide-angular [img]="LockIcon" class="w-5 h-5 text-gray-400 mr-2"></lucide-angular>
-        <input type="password" formControlName="password" class="flex-1 outline-none text-gray-700" placeholder="********" />
-      </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-1">Password</label>
+      <input type="password" placeholder="••••••••" name="password" [(ngModel)]="password"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
     </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold shadow hover:bg-pink-600 transition-colors">
+    <!-- Remember Me + Forgot Password -->
+    <div class="flex justify-between items-center text-sm text-gray-500">
+      <label class="flex items-center gap-2">
+        <input type="checkbox" [(ngModel)]="rememberMe" name="remember" class="w-4 h-4 accent-rose-600" />
+        Remember me
+      </label>
+      <a href="#" class="hover:text-rose-600">Forgot Password?</a>
+    </div>
+
+    <!-- Error Message -->
+    @if (loginError) {
+    <p class="text-rose-600 text-sm mt-2">{{ loginError }}</p>
+    }
+
+    <!-- Login Button -->
+    <button type="submit"
+      class="w-full bg-rose-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition mt-2">
       Login
     </button>
-
-    <!-- Signup Link -->
-    <p class="text-center text-gray-500 mt-6">
-      Don’t have an account? 
-      <a routerLink="/signup" class="text-pink-500 font-medium hover:underline cursor-pointer">Sign up</a>
-    </p>
-
-    <!-- Optional Social Login -->
-    <div class="mt-6 text-center text-gray-400">Or login with</div>
-    <div class="flex justify-center gap-4 mt-3">
-      <button class="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition">
-        <img src="https://img.icons8.com/color/24/google-logo.png" alt="Google"/>
-      </button>
-      <button class="p-2 rounded-full border border-gray-300 hover:bg-gray-100 transition">
-        <img src="https://img.icons8.com/color/24/facebook-new.png" alt="Facebook"/>
-      </button>
-    </div>
-
   </form>
-</section>
+
+  <!-- Divider -->
+  <div class="flex items-center my-6">
+    <hr class="flex-1 border-gray-300" />
+    <span class="px-3 text-gray-400">or</span>
+    <hr class="flex-1 border-gray-300" />
+  </div>
+
+  <!-- Alternative Login -->
+  <div class="flex flex-col gap-3">
+    <button
+      class="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 transition">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Google_Favicon_2025.svg" class="w-5 h-5" />
+      Continue with Google
+    </button>
+
+    <button
+      class="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg px-4 py-2 cursor-pointer hover:bg-gray-50 transition">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/2023_Facebook_icon.svg" class="w-5 h-5" />
+      Continue with Facebook
+    </button>
+  </div>
+
+  <!-- Signup Link -->
+  <p class="text-gray-500 text-center mt-6">
+    Don’t have an account?
+    <a routerLink="/auth/signup" class="text-rose-600 font-medium hover:underline">Sign up</a>
+  </p>
+</div>

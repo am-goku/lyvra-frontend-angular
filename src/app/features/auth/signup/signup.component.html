@@ -1,60 +1,59 @@
-<section class="flex justify-center items-center min-h-[calc(100vh-4rem)] bg-gradient-to-br from-pink-50 to-yellow-50">
-  <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="bg-white p-10 rounded-2xl shadow-xl w-full max-w-md">
-    
-    <!-- Logo / Brand -->
-    <!-- <div class="flex justify-center mb-6">
-      <img src="https://via.placeholder.com/60x60.png?text=🛍️" alt="Shop Logo" class="w-16 h-16"/>
-    </div> -->
+<div class="w-full max-w-md bg-white rounded-2xl shadow-md md:py-4 md:px-8 p-8">
+  <!-- Logo / Brand -->
+  <div class="flex justify-center mb-6">
+    <img src="https://i.pravatar.cc/80?img=10" alt="Lyvra Logo" class="w-16 h-16 rounded-full" />
+  </div>
 
-    <h2 class="text-3xl font-extrabold mb-4 text-center text-gray-800">Create Account</h2>
-    <p class="text-center text-gray-500 mb-6">Sign up to start shopping your favorite products</p>
+  <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Create an Account</h2>
+  <p class="text-gray-500 text-center mb-6">Start your fashion journey with Lyvra</p>
 
-    <!-- Name -->
-    <div class="mb-5">
-      <label class="block mb-2 font-medium text-gray-700">Name</label>
-      <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 hover:border-pink-500 focus-within:border-pink-500 transition-colors">
-        <lucide-angular [img]="UserIcon" class="w-5 h-5 text-gray-400 mr-2"></lucide-angular>
-        <input type="text" formControlName="name" class="flex-1 outline-none text-gray-700" placeholder="Your Name" />
-      </div>
+  <!-- Signup Form -->
+  <form class="space-y-4" (submit)="signup()">
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
+      <input type="text" placeholder="Name" name="name" [(ngModel)]="fullName"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
     </div>
 
-    <!-- Email -->
-    <div class="mb-5">
-      <label class="block mb-2 font-medium text-gray-700">Email</label>
-      <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 hover:border-pink-500 focus-within:border-pink-500 transition-colors">
-        <lucide-angular [img]="MailIcon" class="w-5 h-5 text-gray-400 mr-2"></lucide-angular>
-        <input type="email" formControlName="email" class="flex-1 outline-none text-gray-700" placeholder="you@example.com" />
-      </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
+      <input type="email" placeholder="email@example.com" name="email" [(ngModel)]="email"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
     </div>
 
-    <!-- Password -->
-    <div class="mb-5">
-      <label class="block mb-2 font-medium text-gray-700">Password</label>
-      <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 hover:border-pink-500 focus-within:border-pink-500 transition-colors">
-        <lucide-angular [img]="LockIcon" class="w-5 h-5 text-gray-400 mr-2"></lucide-angular>
-        <input type="password" formControlName="password" class="flex-1 outline-none text-gray-700" placeholder="********" />
-      </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-1">Password</label>
+      <input type="password" placeholder="••••••••" name="password" [(ngModel)]="password"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
     </div>
 
-    <!-- Confirm Password -->
-    <div class="mb-6">
-      <label class="block mb-2 font-medium text-gray-700">Confirm Password</label>
-      <div class="flex items-center border border-gray-300 rounded-lg px-3 py-2 hover:border-pink-500 focus-within:border-pink-500 transition-colors">
-        <lucide-angular [img]="LockIcon" class="w-5 h-5 text-gray-400 mr-2"></lucide-angular>
-        <input type="password" formControlName="confirmPassword" class="flex-1 outline-none text-gray-700" placeholder="********" />
-      </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-600 mb-1">Confirm Password</label>
+      <input type="password" placeholder="••••••••" name="confirmPassword" [(ngModel)]="confirmPassword"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
     </div>
 
-    <!-- Submit Button -->
-    <button type="submit" class="w-full bg-pink-500 text-white py-3 rounded-lg font-semibold shadow hover:bg-pink-600 transition-colors">
+    <!-- Terms Checkbox -->
+    <label class="flex items-center gap-2 text-gray-500 text-sm">
+      <input type="checkbox" name="agreeTerms" [(ngModel)]="agreeTerms" class="w-4 h-4 accent-rose-600" />
+      I agree to the <a href="#" class="text-rose-600 hover:underline">Terms & Conditions</a>
+    </label>
+
+    <!-- Error Message -->
+    @if (signupError) {
+    <p class="text-rose-600 text-sm mt-2">{{ signupError }}</p>
+    }
+
+    <!-- Signup Button -->
+    <button type="submit"
+      class="w-full bg-rose-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition mt-2">
       Sign Up
     </button>
-
-    <!-- Login Link -->
-    <p class="text-center text-gray-500 mt-6">
-      Already have an account? 
-      <a routerLink="/login" class="text-pink-500 font-medium hover:underline cursor-pointer">Login</a>
-    </p>
-
   </form>
-</section>
+
+  <!-- Bottom link -->
+  <p class="text-gray-500 text-center mt-6">
+    Already have an account?
+    <a routerLink="/auth/login" class="text-rose-600 font-medium hover:underline">Login</a>
+  </p>
+</div>
