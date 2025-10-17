@@ -6,7 +6,7 @@
 
     <!-- Page Numbers -->
     <div class="flex gap-2">
-        @for(i of [1,2,3,4,5]; track null) {
+        @for(i of [1,2,3,4,5]; track i) {
         <button class="px-4 py-2 rounded-full border border-gray-300 hover:bg-rose-50 transition-colors
         @if(i === currentPage) { bg-rose-600 text-white border-rose-600 }">
             {{i}}

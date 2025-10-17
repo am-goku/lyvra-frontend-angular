@@ -25,16 +25,16 @@
             </div>
 
             <a routerLink="/" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
-                <lucide-icon [img]="HomeIcon" class="w-5 h-5"></lucide-icon>
+                <lucide-icon [img]="HomeIcon" [ngClass]="{'text-rose-500': currentRoute === 'home'}" class="w-5 h-5"></lucide-icon>
             </a>
             <a routerLink="/products" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
-                <lucide-icon [img]="ShoppingIcon" class="w-5 h-5"></lucide-icon>
+                <lucide-icon [img]="ShoppingIcon" [ngClass]="{'text-rose-500': currentRoute === 'products'}" class="w-5 h-5"></lucide-icon>
             </a>
             <a routerLink="/cart" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
-                <lucide-icon [img]="CartIcon" class="w-5 h-5"></lucide-icon>
+                <lucide-icon [img]="CartIcon" [ngClass]="{'text-rose-500': currentRoute === 'cart'}" class="w-5 h-5"></lucide-icon>
             </a>
             <a routerLink="/account" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
-                <lucide-icon [img]="UserIcons" class="w-5 h-5"></lucide-icon>
+                <lucide-icon [img]="UserIcons" [ngClass]="{'text-rose-500': currentRoute === 'account'}" class="w-5 h-5"></lucide-icon>
             </a>
 
 

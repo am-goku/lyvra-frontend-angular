@@ -1,7 +1,7 @@
 <section class="w-full mt-16 lg:mt-20 relative overflow-hidden px-5">
     <!-- Carousel Wrapper -->
     <div class="relative w-full h-64 lg:h-96">
-        @for(i of sampleCarousel; track null) {
+        @for(i of sampleCarousel; track i) {
         <div class="absolute inset-0 transition-opacity duration-700 ease-in-out" [ngClass]="{
             'opacity-100 z-10': currentSlide === i,
             'opacity-0 z-0': currentSlide !== i

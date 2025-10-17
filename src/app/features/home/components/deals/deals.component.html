@@ -2,7 +2,7 @@
     <h2 class="text-2xl font-bold text-slate-800 mb-4">Flash Deals</h2>
 
     <div class="flex overflow-x-auto gap-4 pb-2">
-        @for(i of deals; track null) {
+        @for(i of deals; track i) {
         <div
             class="min-w-[12rem] bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow relative flex-shrink-0">
             <!-- Discount Badge -->

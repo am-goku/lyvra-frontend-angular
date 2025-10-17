@@ -1,6 +1,6 @@
 <section class="flex-1 px-4 mt-6">
     <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-        @for(p of products; track null) {
+        @for(p of products; track p) {
          <product-card [i]="p" />
         }
     </div>
