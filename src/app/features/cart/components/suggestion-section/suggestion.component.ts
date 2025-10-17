@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { LucideAngularModule } from "lucide-angular";
+import { EyeIcon, LucideAngularModule } from "lucide-angular";
 
 @Component({
     selector: 'cart-suggestion',
@@ -16,5 +16,8 @@ export class CartSuggestionComponent {
         { id: 105, name: 'Floral Maxi Dress', price: 1299 },
         { id: 106, name: 'Lightweight Hoodie', price: 1499 },
     ];
+
+    //icons
+    EyeIcon = EyeIcon;
 
 };
