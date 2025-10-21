@@ -7,6 +7,7 @@
   <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Create an Account</h2>
   <p class="text-gray-500 text-center mb-6">Start your fashion journey with Lyvra</p>
 
+  @if(formType === "SIGNUP") {
   <!-- Signup Form -->
   <form class="space-y-4" (submit)="signup()">
     <div>
@@ -43,13 +44,40 @@
     @if (signupError) {
     <p class="text-rose-600 text-sm mt-2">{{ signupError }}</p>
     }
-
     <!-- Signup Button -->
     <button type="submit"
       class="w-full bg-rose-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition mt-2">
       Sign Up
     </button>
   </form>
+  } @else if (formType === "OTP") {
+
+  <!-- Otp form -->
+  <form class="space-y-4" (submit)="submitOtp()">
+    <div>
+      <input type="email" [readOnly]="true" [value]="email"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
+    </div>
+
+    <div class="flex items-center gap-2">
+      <label class="block text-sm font-medium text-gray-600 mb-1">OTP</label>
+      <div class="flex flex-wrap justify-center gap-2" id="otpInput">
+        @for (ctrl of otpControls; track $index; let i = $index) {
+        <input id="otpInput" type="text" inputmode="numeric" maxlength="1" name="{{'otp'+i}}" [(ngModel)]="otp[i]"
+          (input)="onInput($event, i)" (keydown)="onKeyDown($event, i)"
+          class="border w-10 md:w-12 aspect-square text-center border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500" />
+        }
+      </div>
+    </div>
+
+    <!-- OTP Submit Button -->
+    <button type="submit"
+      class="w-full bg-rose-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition mt-2">
+      Register
+    </button>
+  </form>
+
+  }
 
   <!-- Bottom link -->
   <p class="text-gray-500 text-center mt-6">

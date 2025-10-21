@@ -1,14 +1,19 @@
-<main class="h-full md:pt-16 flex lg:flex-row overflow-auto">
+<main class="h-full md:pt-16 flex lg:flex-row overflow-auto bg-[url('/bg.png')] bg-cover bg-no-repeat bg-center">
     <!-- Left Hero Section (desktop only) -->
     <section
-        class="hidden lg:flex lg:w-1/2 bg-[url('https://picsum.photos/800/1200?blur=2')] bg-cover bg-center relative">
-        <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
-            <h1 class="text-white text-4xl font-bold">Join Lyvra Today</h1>
+        class="hidden lg:flex md:w-1/2 justify-center items-center bg-gradient-to-r from-black/40 to-gray-900/60 backdrop-blur-sm">
+        <div class="text-center p-8 rounded-lg bg-white/10 shadow-2xl">
+            <h1 class="text-white text-6xl font-extrabold mb-4 text-shadow-lg drop-shadow-md">Welcome to Lyvra</h1>
+            @if (currentAction === 'signup') {
+            <p class="text-gray-200 text-2xl mb-6">Get started with Lyvra – join our community today!</p>
+            } @else if (currentAction === 'login') {
+            <p class="text-gray-200 text-2xl mb-6">Welcome back! Log in to continue your Lyvra journey.</p>
+            }
         </div>
     </section>
 
     <!-- Form Section -->
-    <section class="w-1/2 h-full flex items-center justify-center p-4 md:py-10 bg-gray-50">
+    <section class="md:w-1/2 w-full h-full flex items-center justify-center p-4 md:py-10 bg-gradient-to-l from-black/40 to-gray-900/60 backdrop-blur-sm">
         <div class="max-w-md w-full">
             <router-outlet />
         </div>

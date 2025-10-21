@@ -10,6 +10,9 @@ import { RouterLink } from "@angular/router";
 })
 
 export class SignupComponent {
+
+    formType: "SIGNUP" | "OTP" = "SIGNUP";
+
     fullName = '';
     email = '';
     password = '';
@@ -32,6 +35,46 @@ export class SignupComponent {
         }
         this.signupError = null;
         console.log('Signing up...', this.email);
+    }
+
+
+    //OTP Management
+    otp = Array(6).fill('');
+    otpControls = new Array(6);
+
+    onInput(event: any, index: number) {
+        console.log('Triggering input')
+        const input = event.target as HTMLInputElement;
+        const otpInputs = document.querySelectorAll('#otpInput input') as NodeListOf<HTMLInputElement>;
+
+        // move focus forward only if a new value is typed (not backspace or delete)
+        if (input.value && index < otpInputs.length - 1) {
+            otpInputs[index + 1].focus();
+        }
+    }
+
+    onKeyDown(event: any, index: number) {
+        console.log('logging', event)
+        if (event.key === 'Backspace') {
+            const input = event.target as HTMLInputElement;
+            const otpInputs = document.querySelectorAll('#otpInput input') as NodeListOf<HTMLInputElement>;
+            // if current input has a value, just clear it — don't move yet
+            if (input.value) {
+                input.value = '';
+                this.otp[index] = '';
+                event.preventDefault();
+                return;
+            }
+
+            // if empty and not the first, move back
+            if (index > 0) {
+                otpInputs[index - 1].focus();
+            }
+        }
+    }
+
+    submitOtp() {
+        console.log(`OTP: ${this.otp.join('')}`);
     }
 
 };
