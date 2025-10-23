@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { LucideAngularModule, SlidersVertical, X } from "lucide-angular";
+import { LucideAngularModule, SearchIcon, SlidersVertical, X } from "lucide-angular";
 
 @Component({
     selector: 'products-filter',
@@ -10,6 +10,7 @@ import { LucideAngularModule, SlidersVertical, X } from "lucide-angular";
 export class FilterComponent {
     SliderIcon = SlidersVertical;
     XIcon = X;
+    SearchIcon = SearchIcon;
 
     isDrawerOpen = false;
 

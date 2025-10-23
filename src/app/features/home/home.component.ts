@@ -26,19 +26,10 @@ import { CommonModule } from '@angular/common';
 })
 export class HomeComponent implements AfterViewInit {
 
-    // -------------------------------
-    // Sections Visibility
-    // -------------------------------
     sections: boolean[] = [false, false, false, false, false, false, false]; // 7 sections
 
-    // -------------------------------
-    // Grab all sections from the template
-    // -------------------------------
     @ViewChildren('section0, section1, section2, section3, section4, section5, section6') sectionElements!: QueryList<ElementRef>;
 
-    // -------------------------------
-    // Intersection Observer Setup
-    // -------------------------------
     ngAfterViewInit(): void {
         this.sectionElements.forEach((section: ElementRef<any>, index: number) => {
             const observer = new IntersectionObserver(

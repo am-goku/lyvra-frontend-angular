@@ -1,9 +1,65 @@
 <main class="py-16 relative lg:pt-20 h-full flex flex-col lg:flex-row max-w-7xl mx-auto gap-6 px-4">
   <products-filter />
-  
+
+  @if (products().length>0) {
   <section class="flex-1 flex flex-col overflow-auto">
-    <products-search />
-    <product-grid />
+    <product-grid [products]="products()" />
     <product-pagination />
   </section>
+  }
+  @else {
+  <section class="flex-1 flex flex-col overflow-auto">
+
+    <!-- SKELETON PRODUCT GRID (Responsive) -->
+    <section class="flex-1 px-4 mt-6">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        @for (i of [1,2,3,4,5,6,7,8,9,10,11,12]; track i) {
+        <div
+          class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow overflow-hidden relative flex flex-col animate-pulse">
+
+          <!-- Favorite Button Placeholder -->
+          <div class="absolute top-2 right-2 bg-black/40 p-1.5 rounded-full w-8 h-8"></div>
+
+          <!-- Product Image Placeholder with Shimmer -->
+          <div
+            class="w-full aspect-square bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 relative overflow-hidden">
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]">
+            </div>
+          </div>
+
+          <!-- Product Info -->
+          <div class="p-4 flex flex-col flex-1 justify-between space-y-3">
+            <!-- Name -->
+            <div class="h-5 bg-gray-200 rounded-full w-11/12"></div>
+
+            <!-- Price -->
+            <div class="h-6 bg-rose-100 rounded-full w-16"></div>
+
+            <!-- Add to Cart Button -->
+            <div class="w-full bg-rose-200 hover:bg-rose-300 h-10 rounded-full flex items-center justify-center gap-2">
+              <div class="w-4 h-4 bg-white/50 rounded-full"></div>
+              <div class="h-3 bg-white/40 rounded w-20"></div>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Shimmer Animation -->
+      <style>
+        @keyframes shimmer {
+          0% {
+            transform: translateX(-100%);
+          }
+
+          100% {
+            transform: translateX(100%);
+          }
+        }
+      </style>
+    </section>
+  </section>
+  }
+
 </main>

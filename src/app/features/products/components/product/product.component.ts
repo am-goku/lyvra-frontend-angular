@@ -1,5 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { HeartIcon, LucideAngularModule, ShoppingBagIcon } from "lucide-angular";
+import { Product } from "../../../../models/product.model";
 
 @Component({
     selector: 'product-card',
@@ -11,5 +12,5 @@ export class ProductCard {
     ShoppingBagIcon = ShoppingBagIcon;
     HeartIcon = HeartIcon;
 
-    @Input() i: number = 0;
+    @Input() product?: Product;
 };
