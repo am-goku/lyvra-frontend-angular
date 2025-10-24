@@ -5,7 +5,7 @@ import { Injectable } from "@angular/core";
 export class ProductService {
     constructor (private readonly http: HttpClient) {};
 
-    getProducts() {
-        return this.http.get('products');
+    getProducts(categoryIds?: string[]) {
+        return this.http.get(`products?categoryIds=${categoryIds}`);
     }
 }
