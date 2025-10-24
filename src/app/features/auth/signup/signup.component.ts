@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
+import { AuthService } from "../../../core/services/auth.service";
 
 @Component({
     selector: 'app-signup',
@@ -20,6 +21,11 @@ export class SignupComponent {
     agreeTerms = false;
     signupError: string | null = null;
 
+    constructor(
+        private authService: AuthService,
+        private router: Router,
+    ) { }
+
     signup() {
         if (!this.fullName || !this.email || !this.password || !this.confirmPassword) {
             this.signupError = 'Please fill in all fields';
@@ -34,7 +40,15 @@ export class SignupComponent {
             return;
         }
         this.signupError = null;
-        console.log('Signing up...', this.email);
+
+        this.authService.signup({ email: this.email, password: this.password }).subscribe({
+            next: () => {
+                this.formType = "OTP"
+            },
+            error: (err) => {
+                console.log('Signup Failed', err);
+            }
+        });
     }
 
 
@@ -43,7 +57,6 @@ export class SignupComponent {
     otpControls = new Array(6);
 
     onInput(event: any, index: number) {
-        console.log('Triggering input')
         const input = event.target as HTMLInputElement;
         const otpInputs = document.querySelectorAll('#otpInput input') as NodeListOf<HTMLInputElement>;
 
@@ -54,7 +67,6 @@ export class SignupComponent {
     }
 
     onKeyDown(event: any, index: number) {
-        console.log('logging', event)
         if (event.key === 'Backspace') {
             const input = event.target as HTMLInputElement;
             const otpInputs = document.querySelectorAll('#otpInput input') as NodeListOf<HTMLInputElement>;
@@ -74,7 +86,22 @@ export class SignupComponent {
     }
 
     submitOtp() {
-        console.log(`OTP: ${this.otp.join('')}`);
+        if (!this.otp || !this.otp.join('')) {
+            this.signupError = 'Please enter the otp';
+            return
+        }
+        this.signupError = null;
+
+        //Submitting OTP
+        this.authService.verifyRegistration({ email: this.email, otp: this.otp.join('') }).subscribe({
+            next: () => {
+                console.log('Signing up...', this.email);
+                this.router.navigate(['/']);
+            },
+            error: (err) => {
+                console.log('Verification Failed', err);
+            }
+        });
     }
 
 };

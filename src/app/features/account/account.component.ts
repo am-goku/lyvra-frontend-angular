@@ -1,12 +1,13 @@
 import { CommonModule } from "@angular/common";
 import { Component } from "@angular/core";
-import { CreditCardIcon, HeartIcon, LucideAngularModule, MapPinIcon, PackageIcon, SettingsIcon, UserIcon } from "lucide-angular";
+import { CreditCardIcon, HeartIcon, LogOutIcon, LucideAngularModule, MapPinIcon, PackageIcon, SettingsIcon, UserIcon } from "lucide-angular";
 import { AccountProfileComponent } from "./components/profile/profile.component";
 import { AccountOrdersComponent } from "./components/orders/orders.component";
 import { AccountPaymentsComponent } from "./components/payments/payments.component";
 import { AccountAddressesComponent } from "./components/addresses/addresses.component";
 import { AccountWishlistComponent } from "./components/wishlist/wishlist.component";
 import { AccountSettingsComponent } from "./components/settings/settings.component";
+import { AuthService } from "../../core/services/auth.service";
 
 @Component({
     selector: 'app-account',
@@ -17,6 +18,8 @@ import { AccountSettingsComponent } from "./components/settings/settings.compone
 export class AccountComponent {
     activeSection: string = 'profile';
 
+    constructor(public readonly authService: AuthService){}
+
     // ICONS
     UserIcon = UserIcon;
     PackageIcon = PackageIcon;
@@ -24,4 +27,5 @@ export class AccountComponent {
     MapPinIcon = MapPinIcon;
     HeartIcon = HeartIcon;
     SettingsIcon = SettingsIcon;
+    LogOutIcon = LogOutIcon
 };

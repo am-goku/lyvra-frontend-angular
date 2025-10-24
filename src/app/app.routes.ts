@@ -9,6 +9,8 @@ import { ProductDetailComponent } from './features/product-detail/detail.compone
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { AccountComponent } from './features/account/account.component';
 import { AuthComponent } from './features/auth/auth.component';
+import { NoAuthGuard } from './core/guards/no-auth.guard';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -16,11 +18,11 @@ export const routes: Routes = [
         component: UserLayoutComponent,
         children: [
             { path: '', component: HomeComponent },
-            { path: 'cart', component: CartComponent },
+            { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
             { path: 'products', component: ProductListComponent },
             { path: 'products/:productId', component: ProductDetailComponent },
-            { path: 'checkout', component: CheckoutComponent },
-            { path: 'account', component: AccountComponent },
+            { path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuard] },
+            { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
 
             //Auth Routes
             {
@@ -30,7 +32,8 @@ export const routes: Routes = [
                     { path: 'login', component: LoginComponent },
                     { path: 'signup', component: SignupComponent },
                     { path: '', redirectTo: 'login', pathMatch: 'full' }, // optional default redirect
-                ]
+                ],
+                canActivate: [NoAuthGuard]
             },
         ]
     },

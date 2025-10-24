@@ -1,6 +1,7 @@
 import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { RouterLink } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { AuthService } from "../../../core/services/auth.service";
 
 @Component({
     selector: 'app-login',
@@ -15,6 +16,12 @@ export class LoginComponent {
     rememberMe = false;
     loginError: string | null = null;
 
+    constructor(
+        private authService: AuthService,
+        private router: Router,
+        private route: ActivatedRoute
+    ) {};
+
     login() {
         // Placeholder logic
         if (!this.emailOrPhone || !this.password) {
@@ -22,7 +29,17 @@ export class LoginComponent {
             return;
         }
         this.loginError = null;
-        console.log('Logging in...', this.emailOrPhone);
+        
+        this.authService.login({email:this.emailOrPhone, password: this.password}).subscribe({
+            next: () => {
+                // Get returnUrl from query params or default to home
+                const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                this.router.navigate([returnUrl]);
+            },
+            error: (err) => {
+                console.log('Login Failed', err);
+            }
+        });
     }
 
 

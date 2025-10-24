@@ -60,6 +60,14 @@
           <lucide-icon [img]="SettingsIcon" class="w-5 h-5"></lucide-icon>
           <p class="hidden md:block">Settings</p>
         </button>
+
+        <button
+          class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-rose-50 text-rose-600 transition"
+          (click)="authService.logout()"
+        >
+          <lucide-icon [img]="LogOutIcon" class="w-5 h-5"></lucide-icon>
+          <p class="hidden md:block">Logout</p>
+        </button>
       </nav>
     </aside>
 
