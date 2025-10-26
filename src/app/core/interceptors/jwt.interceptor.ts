@@ -1,17 +1,34 @@
 import { HttpEvent, HttpHandlerFn, HttpRequest } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { inject } from "@angular/core";
+import { catchError, Observable, throwError } from "rxjs";
+import { AuthService } from "../services/auth.service";
+
 
 const JwtInterceptor = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
-    const token = localStorage.getItem('accessToken');
+    const authService = inject(AuthService);
 
-    if (token) {
-        const cloned = req.clone({
+    const TOKEN_KEY: string | null = localStorage.getItem('accessToken');
+
+    if (TOKEN_KEY) {
+        const clonedReq = req.clone({
             setHeaders: {
-                Authorization: `Bearer ${token}`
-            }
+                Authorization: `Bearer ${TOKEN_KEY}`,
+            },
         });
 
-        return next(cloned);
+        // Handle the request and catch errors
+        return next(clonedReq).pipe(
+            catchError((error) => {
+                if (error.status === 401) {
+                    // Handle unauthorized error (e.g., token expired)
+                    console.error('Unauthorized request - token may be expired');
+                    // Optionally: Trigger token refresh or redirect to login
+                    authService.logout();
+                    
+                }
+                return throwError(() => error);
+            })
+        )
     }
 
     return next(req);

@@ -1,12 +1,37 @@
 <main class="py-16 relative gap-10 lg:pt-20 h-full px-10 overflow-auto">
   <section class="md:flex">
+    @if (cart(); as cartValue) {
+    @if (cartValue && cartValue.items && cartValue.items.length > 0) {
+    <!-- Cart item list section -->
     <section class="md:mr-auto">
-      <cart-item-list />
+      <cart-item-list [cartItems]="cartValue.items" [addQuantity]="increaseQty.bind(this)"
+        [minusQuantity]="decreaseQty.bind(this)" [removeItem]="removeItem.bind(this)" />
     </section>
+
+    <!-- Cart summary section -->
     <section class="md:ml-auto md:shadow-2xl">
       <cart-summary />
     </section>
-
+    } @else {
+    <section class="w-full">
+      <div class="text-center py-8">
+        <p class="text-lg text-gray-600">Your cart is empty</p>
+        <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" [routerLink]="['/products']">
+          Continue Shopping
+        </button>
+      </div>
+    </section>
+    }
+    } @else {
+    <section class="md:mr-auto">
+      <div class="text-center py-8">
+        <p class="text-lg text-gray-600">Your cart is empty</p>
+        <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" [routerLink]="['/products']">
+          Continue Shopping
+        </button>
+      </div>
+    </section>
+    }
   </section>
   <cart-suggestion />
 </main>

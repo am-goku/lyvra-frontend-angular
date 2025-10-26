@@ -1,32 +1,32 @@
 <div class="flex flex-col sm:flex-row items-center gap-4 border-b border-gray-200 p-4">
     @if (item) {
     <!-- Product Thumbnail -->
-    <img src="https://picsum.photos/150/150?random={{item.id}}" alt="{{item.name}}"
+    <img src="{{item.product.imageUrl}}" alt="{{item.product.name}}"
         class="w-28 h-28 object-cover rounded-2xl" />
 
     <!-- Product Info -->
     <div class="flex-1 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 w-full">
         <div class="flex-1">
-            <h2 class="text-lg font-semibold">{{ item.name }}</h2>
-            <p class="text-gray-500 text-sm">Size: {{ item.size }} | Color: {{ item.color }}</p>
-            <p class="text-gray-500 text-sm">Price: ₹{{ item.price }}</p>
+            <h2 class="text-lg font-semibold">{{ item.product.name }}</h2>
+            <!-- <p class="text-gray-500 text-sm">Size: {{ item.size }}</p> -->
+            <p class="text-gray-500 text-sm">Price: ₹{{ item.product.price }}</p>
         </div>
 
         <!-- Quantity Selector -->
         <div class="flex items-center gap-2">
             <button
                 class="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 transition"
-                (click)="decreaseQty(item.id)">-</button>
+                (click)="minusQ.emit(item.id)">-</button>
             <span class="w-8 text-center">{{ item.quantity }}</span>
             <button
                 class="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 transition"
-                (click)="increaseQty(item.id)">+</button>
+                (click)="addQ.emit(item.id)">+</button>
         </div>
 
         <!-- Total & Actions -->
         <div class="flex items-center gap-4 mt-2 sm:mt-0">
-            <p class="font-semibold text-gray-800">₹{{ item.price * item.quantity }}</p>
-            <button class="text-gray-500 hover:text-rose-600 transition" (click)="removeItem(item.id)">
+            <p class="font-semibold text-gray-800">₹{{ item.product.price * item.quantity }}</p>
+            <button class="text-gray-500 hover:text-rose-600 transition" (click)="remove.emit(item.id)">
                 <lucide-icon [img]="TrashIcon" class="w-5 h-5"></lucide-icon>
             </button>
             <button class="text-gray-500 hover:text-rose-600 transition" >

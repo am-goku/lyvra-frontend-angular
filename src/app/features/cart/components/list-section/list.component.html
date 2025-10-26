@@ -3,8 +3,9 @@
 
     <div class="flex flex-col gap-6">
         @for(item of cartItems; track item.id) {
-            <cart-item [item]="item" [decreaseQty]="decreaseQty" [increaseQty]="increaseQty" [removeItem]="removeItem" />
+        <cart-item [item]="item" (addQ)="addQuantity ? addQuantity(item.id): null"
+            (minusQ)="minusQuantity ? minusQuantity(item.id): null"
+            (remove)="removeItem ? removeItem(item.id) : null" />
         }
-
     </div>
 </section>
