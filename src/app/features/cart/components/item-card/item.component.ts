@@ -1,5 +1,6 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { HeartIcon, LucideAngularModule, TrashIcon } from "lucide-angular";
+import { CartItems } from "../../../../models/cart.model";
 
 @Component({
     selector: 'cart-item',
@@ -8,15 +9,12 @@ import { HeartIcon, LucideAngularModule, TrashIcon } from "lucide-angular";
     templateUrl: './item.component.html'
 })
 export class CartItemComponent {
-
     HeartIcon = HeartIcon;
     TrashIcon = TrashIcon;
 
-    @Input() item: {id: number, name: string, size: string, color: string, price: number, quantity: number} | null = null;
+    @Input() item: CartItems | null = null;
+    @Output() remove = new EventEmitter<number>();
+    @Output() addQ = new EventEmitter<number>();
+    @Output() minusQ = new EventEmitter<number>();
 
-    @Input() decreaseQty: (id:number) => void = (id) => {};
-
-    @Input() increaseQty: (id: number) => void = (id) => {};
-
-    @Input() removeItem: (id: number) => void = (id) => {};
 }

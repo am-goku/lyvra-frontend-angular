@@ -1,5 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
+import { Cart } from "../../models/cart.model";
 
 @Injectable({
     providedIn: "root"
@@ -7,20 +9,24 @@ import { Injectable } from "@angular/core";
 export class CartService {
     constructor(private readonly http: HttpClient) { };
 
-    addToCart(product: { productId: number, quantity: number }) {
+    getCart(): Observable<Cart> {
+        return this.http.get<Cart>('cart');
+    }
+
+    addToCart(product: { id: number, quantity: number }) {
         return this.http.post('cart', product);
     }
 
-    addQuantity(productId: number) {
-        return this.http.patch('cart/add-quantity', { productId });
+    addQuantity(id: number) {
+        return this.http.patch('cart/add-quantity', { id });
     }
 
-    minusQuantity(productId: number) {
-        return this.http.patch('cart/minus-quantity', { productId });
+    minusQuantity(id: number) {
+        return this.http.patch('cart/minus-quantity', { id });
     }
 
-    removeFromCart(productId: number) {
-        return this.http.delete(`cart/${productId}`);
+    removeFromCart(id: number) {
+        return this.http.delete(`cart/${id}`);
     }
 
     clearCart() {
