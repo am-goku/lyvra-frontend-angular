@@ -11,6 +11,8 @@ import { AccountComponent } from './features/account/account.component';
 import { AuthComponent } from './features/auth/auth.component';
 import { NoAuthGuard } from './core/guards/no-auth.guard';
 import { AuthGuard } from './core/guards/auth.guard';
+import { AdminProductComponent } from './features/admin/product/product.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 
 export const routes: Routes = [
     {
@@ -35,6 +37,13 @@ export const routes: Routes = [
                 ],
                 canActivate: [NoAuthGuard]
             },
+        ]
+    },
+    {
+        path: 'admin',
+        component: AdminLayoutComponent,
+        children: [
+            { path: 'product', component: AdminProductComponent },
         ]
     },
     { path: '**', redirectTo: '' }
