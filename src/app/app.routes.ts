@@ -13,6 +13,10 @@ import { NoAuthGuard } from './core/guards/no-auth.guard';
 import { AuthGuard } from './core/guards/auth.guard';
 import { AdminProductComponent } from './features/admin/product/product.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { AdminDashboardComponent } from './features/admin/dashboard/dashboard.component';
+import { AdminUsersComponent } from './features/admin/users/users.component';
+import { AdminCreateUserComponent } from './features/admin/users/create/create.component';
+import { AdminNewProductComponent } from './features/admin/product/new/new-product.component';
 
 export const routes: Routes = [
     {
@@ -43,7 +47,19 @@ export const routes: Routes = [
         path: 'admin',
         component: AdminLayoutComponent,
         children: [
-            { path: 'product', component: AdminProductComponent },
+            { path: 'dashboard', component: AdminDashboardComponent },
+            {
+                path: 'products', children: [
+                    { path: '', component: AdminProductComponent },
+                    { path: 'add', component: AdminNewProductComponent }
+                ]
+            },
+            {
+                path: 'users', children: [
+                    { path: '', component: AdminUsersComponent },
+                    { path: 'create', component: AdminCreateUserComponent }
+                ]
+            }
         ]
     },
     { path: '**', redirectTo: '' }
