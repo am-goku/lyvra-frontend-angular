@@ -1,0 +1,4 @@
+/* ensure the dropdown stays on top of everything */
+.relative > div[role="listbox"] {
+  z-index: 50;
+}
