@@ -31,7 +31,11 @@ export class LoginComponent {
         this.loginError = null;
         
         this.authService.login({email:this.emailOrPhone, password: this.password}).subscribe({
-            next: () => {
+            next: (res) => {
+                if(res.user.role === "ADMIN") {
+                    this.router.navigate(['/admin/dashboard']);
+                    return;
+                }
                 // Get returnUrl from query params or default to home
                 const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
                 this.router.navigate([returnUrl]);
@@ -41,6 +45,4 @@ export class LoginComponent {
             }
         });
     }
-
-
 };

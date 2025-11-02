@@ -9,6 +9,7 @@ export interface Response {
         id: number;
         name?: string;
         email: string;
+        role: string;
     }
 }
 
@@ -58,6 +59,10 @@ export class AuthService {
 
     isAuthenticated(): boolean {
         return !!this.userSubject.value;
+    }
+
+    isAdminAuthenticated(): boolean {
+        return !!this.userSubject.value && this.userSubject.value.role === 'ADMIN';
     }
 
     getUser(): any {

@@ -1,7 +1,7 @@
 import { CommonModule } from "@angular/common";
 import { Component, signal } from "@angular/core";
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
-import { ChevronRightIcon, HeadphonesIcon, HouseIcon, LucideAngularModule, MenuIcon, PackageIcon, ShoppingCartIcon, UsersIcon, X } from "lucide-angular";
+import { ChevronRightIcon, HeadphonesIcon, HouseIcon, LucideAngularModule, MenuIcon, PackageIcon, ShoppingCartIcon, TagIcon, UsersIcon, X } from "lucide-angular";
 
 interface NavItem {
     label: string;
@@ -30,6 +30,7 @@ export class AdminLayoutComponent {
         x: X,
         home: HouseIcon,
         package: PackageIcon,
+        tag: TagIcon,
         shoppingCart: ShoppingCartIcon,
         users: UsersIcon,
         headphones: HeadphonesIcon,
@@ -49,6 +50,15 @@ export class AdminLayoutComponent {
             tabs: [
                 { label: 'All Products', route: '/admin/products' },
                 { label: 'Add Product', route: '/admin/products/add' }
+            ]
+        },
+        {
+            label: 'Categories',
+            route: '/admin/categories',
+            icon: this.icons.tag,
+            tabs: [
+                { label: 'All Categories', route: '/admin/categories' },
+                { label: 'Add Category', route: '/admin/categories/add' }
             ]
         },
         {

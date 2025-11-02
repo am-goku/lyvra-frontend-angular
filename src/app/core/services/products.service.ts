@@ -8,4 +8,5 @@ export class ProductService {
     getProducts(categoryIds?: string[]) {
         return this.http.get(`products?categoryIds=${categoryIds}`);
     }
+
 }

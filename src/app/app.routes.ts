@@ -17,6 +17,9 @@ import { AdminDashboardComponent } from './features/admin/dashboard/dashboard.co
 import { AdminUsersComponent } from './features/admin/users/users.component';
 import { AdminCreateUserComponent } from './features/admin/users/create/create.component';
 import { AdminNewProductComponent } from './features/admin/product/new/new-product.component';
+import { AdminCategoriesComponent } from './features/admin/categories/categories.component';
+import { AddCategoryComponent } from './features/admin/categories/add/add-category.component';
+import { AdminAuthGuard } from './core/guards/admin-auth.guard';
 
 export const routes: Routes = [
     {
@@ -45,6 +48,7 @@ export const routes: Routes = [
     },
     {
         path: 'admin',
+        canActivate: [AdminAuthGuard],
         component: AdminLayoutComponent,
         children: [
             { path: 'dashboard', component: AdminDashboardComponent },
@@ -58,6 +62,12 @@ export const routes: Routes = [
                 path: 'users', children: [
                     { path: '', component: AdminUsersComponent },
                     { path: 'create', component: AdminCreateUserComponent }
+                ]
+            },
+            {
+                path: 'categories', children: [
+                    { path: '', component: AdminCategoriesComponent },
+                    { path: 'add', component: AddCategoryComponent }
                 ]
             }
         ]

@@ -1,0 +1,201 @@
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 class="text-2xl font-bold text-gray-900">Categories</h1>
+    </div>
+
+    <!-- Controls -->
+    <div class="bg-white p-4 rounded-lg shadow-sm space-y-4">
+        <!-- Search + Filter + Sort -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Search -->
+            <!-- <div class="relative">
+                <lucide-icon [img]="icons.search" class="absolute left-1.5 top-1.5 w-5 h-5 text-gray-400"></lucide-icon>
+                <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()"
+                    placeholder="Search by category name..."
+                    class="pl-10 pr-4 py-2 w-full border rounded-md placeholder:text-gray-600 focus:ring-indigo-500 focus:border-indigo-500" />
+            </div> -->
+        </div>
+
+        <!-- Multi-Select Toggle -->
+        <!-- <div class="flex items-center justify-between">
+            <label class="flex items-center cursor-pointer">
+                <input type="checkbox" [(ngModel)]="multiSelect" (change)="toggleMultiSelect()"
+                    class="w-4 h-4 text-indigo-600 rounded">
+                <span class="ml-2 text-sm font-medium text-gray-700">Multi-select</span>
+            </label>
+            @if (multiSelect() && selectedCategories().size > 0) {
+            <div class="flex gap-2">
+                <button (click)="bulkToggleStatus()"
+                    class="px-3 py-1.5 bg-yellow-600 text-white rounded text-sm hover:bg-yellow-700">
+                    <lucide-icon [img]="selectedInactive() ? icons.unlock : icons.lock"
+                        class="w-4 h-4 inline mr-1"></lucide-icon>
+                    {{ selectedInactive() ? 'Activate' : 'Deactivate' }} ({{ selectedCategories().size }})
+                </button>
+                <button (click)="bulkDelete()"
+                    class="px-3 py-1.5 bg-red-600 text-white rounded text-sm hover:bg-red-700">
+                    <lucide-icon [img]="icons.trash2" class="w-4 h-4 inline mr-1"></lucide-icon>
+                    Delete ({{ selectedCategories().size }})
+                </button>
+            </div>
+            }
+        </div> -->
+    </div>
+
+    <!-- Table -->
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <!-- @if (multiSelect()) {
+                        <th class="px-4 sm:px-6 py-3 text-left">
+                            <input type="checkbox" [checked]="allSelected()" (change)="toggleAll()"
+                                class="w-4 h-4 text-indigo-600 rounded" />
+                        </th>
+                        } -->
+                        <th
+                            class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            SL No</th>
+                        <th
+                            class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Name</th>
+                        <!-- <th
+                            class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Description</th>
+                        <th
+                            class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status</th>
+                        <th
+                            class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Created</th>
+                        <th
+                            class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions</th> -->
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    @for (category of allCategories(); track category.id; let i = $index) {
+                    <tr [class.bg-indigo-50]="selectedCategories().has(`${category.id}`)">
+                        <!-- @if (multiSelect()) {
+                        <td class="px-4 sm:px-6 py-4">
+                            <input type="checkbox" [checked]="selectedCategories().has(category.id)"
+                                (change)="toggleSelect(category.id)" class="w-4 h-4 text-indigo-600 rounded" />
+                        </td>
+                        } -->
+                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ (currentPage() - 1) * pageSize + i + 1 }}
+                        </td>
+                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{
+                            category.name }}</td>
+                        <!-- <td class="px-4 sm:px-6 py-4 text-sm text-gray-500 max-w-xs truncate">{{ category.description }}
+                        </td>
+                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
+                            <span [class]="category.active ? 'text-green-600' : 'text-red-600'"
+                                class="flex items-center">
+                                <lucide-icon [img]="category.active ? icons.checkCircle : icons.xCircle"
+                                    class="w-4 h-4 mr-1"></lucide-icon>
+                                {{ category.active ? 'Active' : 'Inactive' }}
+                            </span>
+                        </td>
+                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{
+                            formatDate(category.createdAt) }}</td>
+                        <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm">
+                            <button (click)="openCategoryModal(category)" class="text-indigo-600 hover:text-indigo-900">
+                                <lucide-icon [img]="icons.moreVertical" class="w-5 h-5"></lucide-icon>
+                            </button>
+                        </td> -->
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="7" class="px-4 sm:px-6 py-12 text-center text-gray-500">No categories found</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+            <div class="flex-1 flex justify-between sm:hidden">
+                <button (click)="prevPage()" [disabled]="currentPage() === 1"
+                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Previous
+                </button>
+                <!-- <button (click)="nextPage()" [disabled]="currentPage() === totalPages()"
+                    class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    Next
+                </button> -->
+            </div>
+            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                    <!-- <p class="text-sm text-gray-700">
+                        Showing <span class="font-medium">{{ (currentPage()-1)*pageSize + 1 }}</span> to
+                        <span class="font-medium">{{ Math.min(currentPage()*pageSize, filteredCategories().length)
+                            }}</span> of
+                        <span class="font-medium">{{ filteredCategories().length }}</span> results
+                    </p> -->
+                </div>
+                <div>
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                        <button (click)="prevPage()" [disabled]="currentPage() === 1"
+                            class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            Prev
+                        </button>
+                        <!-- @for (page of pageNumbers(); track page) {
+                        <button (click)="goToPage(page)" [class.bg-indigo-600]="page === currentPage()"
+                            [class.text-white]="page === currentPage()" [class.text-gray-700]="page !== currentPage()"
+                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium hover:bg-gray-50">
+                            {{ page }}
+                        </button>
+                        } -->
+                        <!-- <button (click)="nextPage()" [disabled]="currentPage() === totalPages()"
+                            class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            Next
+                        </button> -->
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Modal -->
+    @if (selectedCategory()) {
+    <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-lg font-semibold">Category Details</h3>
+                <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <lucide-icon [img]="icons.x" class="w-5 h-5"></lucide-icon>
+                </button>
+            </div>
+            <div class="space-y-3 text-sm">
+                <div><strong>Name:</strong> {{ selectedCategory()!.name }}</div>
+                <!-- <div><strong>Description:</strong> {{ selectedCategory()!.description }}</div> -->
+                <!-- <div><strong>Status:</strong>
+                    <span [class.text-green-600]="selectedCategory()!.active"
+                        [class.text-red-600]="!selectedCategory()!.active">
+                        {{ selectedCategory()!.active ? 'Active' : 'Inactive' }}
+                    </span>
+                </div>
+                <div><strong>Created:</strong> {{ formatDate(selectedCategory()!.createdAt) }}</div> -->
+            </div>
+            <!-- <div class="mt-6 flex gap-3">
+                <button (click)="toggleStatus(selectedCategory()!.id)"
+                    [class.bg-yellow-600]="!selectedCategory()!.active"
+                    [class.bg-green-600]="selectedCategory()!.active"
+                    class="flex-1 py-2 px-4 text-white rounded-md hover:opacity-90">
+                    <lucide-icon [img]="selectedCategory()!.active ? icons.lock : icons.unlock"
+                        class="w-4 h-4 inline mr-1"></lucide-icon>
+                    {{ selectedCategory()!.active ? 'Deactivate' : 'Activate' }}
+                </button>
+                <button (click)="deleteCategory(selectedCategory()!.id)"
+                    class="flex-1 py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700">
+                    <lucide-icon [img]="icons.trash2" class="w-4 h-4 inline mr-1"></lucide-icon>
+                    Delete
+                </button>
+            </div> -->
+        </div>
+    </div>
+    }
+</div>
