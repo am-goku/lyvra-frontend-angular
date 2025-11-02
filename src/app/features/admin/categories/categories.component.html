@@ -9,16 +9,16 @@
         <!-- Search + Filter + Sort -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <!-- Search -->
-            <!-- <div class="relative">
+            <div class="relative">
                 <lucide-icon [img]="icons.search" class="absolute left-1.5 top-1.5 w-5 h-5 text-gray-400"></lucide-icon>
                 <input type="text" [(ngModel)]="searchTerm" (input)="onSearch()"
                     placeholder="Search by category name..."
                     class="pl-10 pr-4 py-2 w-full border rounded-md placeholder:text-gray-600 focus:ring-indigo-500 focus:border-indigo-500" />
-            </div> -->
+            </div>
         </div>
 
         <!-- Multi-Select Toggle -->
-        <!-- <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between">
             <label class="flex items-center cursor-pointer">
                 <input type="checkbox" [(ngModel)]="multiSelect" (change)="toggleMultiSelect()"
                     class="w-4 h-4 text-indigo-600 rounded">
@@ -39,7 +39,7 @@
                 </button>
             </div>
             }
-        </div> -->
+        </div>
     </div>
 
     <!-- Table -->
@@ -48,19 +48,19 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <!-- @if (multiSelect()) {
+                        @if (multiSelect()) {
                         <th class="px-4 sm:px-6 py-3 text-left">
                             <input type="checkbox" [checked]="allSelected()" (change)="toggleAll()"
                                 class="w-4 h-4 text-indigo-600 rounded" />
                         </th>
-                        } -->
+                        }
                         <th
                             class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             SL No</th>
                         <th
                             class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Name</th>
-                        <!-- <th
+                        <th
                             class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Description</th>
                         <th
@@ -71,24 +71,24 @@
                             Created</th>
                         <th
                             class="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            Actions</th> -->
+                            Actions</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                    @for (category of allCategories(); track category.id; let i = $index) {
-                    <tr [class.bg-indigo-50]="selectedCategories().has(`${category.id}`)">
-                        <!-- @if (multiSelect()) {
+                    @for (category of paginatedCategories(); track category.id; let i = $index) {
+                    <tr [class.bg-indigo-50]="selectedCategories().has(category.id)">
+                        @if (multiSelect()) {
                         <td class="px-4 sm:px-6 py-4">
                             <input type="checkbox" [checked]="selectedCategories().has(category.id)"
                                 (change)="toggleSelect(category.id)" class="w-4 h-4 text-indigo-600 rounded" />
                         </td>
-                        } -->
+                        }
                         <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {{ (currentPage() - 1) * pageSize + i + 1 }}
                         </td>
                         <td class="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{
                             category.name }}</td>
-                        <!-- <td class="px-4 sm:px-6 py-4 text-sm text-gray-500 max-w-xs truncate">{{ category.description }}
+                        <td class="px-4 sm:px-6 py-4 text-sm text-gray-500 max-w-xs truncate">{{ category.description }}
                         </td>
                         <td class="px-4 sm:px-6 py-4 whitespace-nowrap">
                             <span [class]="category.active ? 'text-green-600' : 'text-red-600'"
@@ -104,7 +104,7 @@
                             <button (click)="openCategoryModal(category)" class="text-indigo-600 hover:text-indigo-900">
                                 <lucide-icon [img]="icons.moreVertical" class="w-5 h-5"></lucide-icon>
                             </button>
-                        </td> -->
+                        </td>
                     </tr>
                     } @empty {
                     <tr>
@@ -122,19 +122,19 @@
                     class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                     Previous
                 </button>
-                <!-- <button (click)="nextPage()" [disabled]="currentPage() === totalPages()"
+                <button (click)="nextPage()" [disabled]="currentPage() === totalPages()"
                     class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
                     Next
-                </button> -->
+                </button>
             </div>
             <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                 <div>
-                    <!-- <p class="text-sm text-gray-700">
+                    <p class="text-sm text-gray-700">
                         Showing <span class="font-medium">{{ (currentPage()-1)*pageSize + 1 }}</span> to
                         <span class="font-medium">{{ Math.min(currentPage()*pageSize, filteredCategories().length)
                             }}</span> of
                         <span class="font-medium">{{ filteredCategories().length }}</span> results
-                    </p> -->
+                    </p>
                 </div>
                 <div>
                     <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
@@ -142,17 +142,17 @@
                             class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                             Prev
                         </button>
-                        <!-- @for (page of pageNumbers(); track page) {
+                        @for (page of pageNumbers(); track page) {
                         <button (click)="goToPage(page)" [class.bg-indigo-600]="page === currentPage()"
                             [class.text-white]="page === currentPage()" [class.text-gray-700]="page !== currentPage()"
                             class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium hover:bg-gray-50">
                             {{ page }}
                         </button>
-                        } -->
-                        <!-- <button (click)="nextPage()" [disabled]="currentPage() === totalPages()"
+                        }
+                        <button (click)="nextPage()" [disabled]="currentPage() === totalPages()"
                             class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                             Next
-                        </button> -->
+                        </button>
                     </nav>
                 </div>
             </div>
@@ -171,16 +171,16 @@
             </div>
             <div class="space-y-3 text-sm">
                 <div><strong>Name:</strong> {{ selectedCategory()!.name }}</div>
-                <!-- <div><strong>Description:</strong> {{ selectedCategory()!.description }}</div> -->
-                <!-- <div><strong>Status:</strong>
+                <div><strong>Description:</strong> {{ selectedCategory()!.description }}</div>
+                <div><strong>Status:</strong>
                     <span [class.text-green-600]="selectedCategory()!.active"
                         [class.text-red-600]="!selectedCategory()!.active">
                         {{ selectedCategory()!.active ? 'Active' : 'Inactive' }}
                     </span>
                 </div>
-                <div><strong>Created:</strong> {{ formatDate(selectedCategory()!.createdAt) }}</div> -->
+                <div><strong>Created:</strong> {{ formatDate(selectedCategory()!.createdAt) }}</div>
             </div>
-            <!-- <div class="mt-6 flex gap-3">
+            <div class="mt-6 flex gap-3">
                 <button (click)="toggleStatus(selectedCategory()!.id)"
                     [class.bg-yellow-600]="!selectedCategory()!.active"
                     [class.bg-green-600]="selectedCategory()!.active"
@@ -194,7 +194,7 @@
                     <lucide-icon [img]="icons.trash2" class="w-4 h-4 inline mr-1"></lucide-icon>
                     Delete
                 </button>
-            </div> -->
+            </div>
         </div>
     </div>
     }

@@ -3,8 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     LucideAngularModule,
-    Search, Filter, ChevronDown, ChevronUp, MoreVertical,
-    X, CheckCircle, XCircle, Trash2, Lock, Unlock, Tag
+    Search, ChevronDown, ChevronUp,
+    X, Trash2, Lock, Tag,
+    FunnelIcon,
+    EllipsisVerticalIcon,
+    CircleCheckBigIcon,
+    CircleXIcon,
+    LockOpenIcon
 } from 'lucide-angular';
 import { CategoryService } from '../../../core/services/category.service';
 import { Category } from '../../../models/category.model';
@@ -23,45 +28,49 @@ interface SortOption {
 })
 export class AdminCategoriesComponent implements OnInit {
 
-    constructor(private readonly categoryService: CategoryService) {}
+    constructor(private readonly categoryService: CategoryService) { }
 
     // Icons
     icons = {
         search: Search,
-        filter: Filter,
+        filter: FunnelIcon,
         chevronDown: ChevronDown,
         chevronUp: ChevronUp,
-        moreVertical: MoreVertical,
+        moreVertical: EllipsisVerticalIcon,
         x: X,
-        checkCircle: CheckCircle,
-        xCircle: XCircle,
+        checkCircle: CircleCheckBigIcon,
+        xCircle: CircleXIcon,
         trash2: Trash2,
         lock: Lock,
-        unlock: Unlock,
+        unlock: LockOpenIcon,
         tag: Tag
     };
 
     Math = Math;
 
     // Mock Data
-    allCategories = signal<Category[]>([]);
+    private allCategories = signal<Category[]>([]);
 
     ngOnInit() {
-        // Initialize with mock data
         this.categoryService.getCategories().subscribe({
-            next: (data: any) => {
-                // Assuming data is an array of categories
-                this.allCategories.set(data);
-            }
+            next: (data: any[]) => {
+                const categories = data.map(c => ({
+                    ...c,
+                    createdAt: new Date(c.createdAt)
+                }));
+                this.allCategories.set(categories);
+            },
+            error: (err) => console.error('Failed to load categories', err)
         });
     }
+
 
     // State
     searchTerm = signal('');
     filters = signal({ active: null as boolean | null });
     sort = signal<SortOption>({ field: 'createdAt', direction: 'desc' });
     multiSelect = signal(false);
-    selectedCategories = signal<Set<string>>(new Set());
+    selectedCategories = signal<Set<number>>(new Set());
     selectedCategory = signal<Category | null>(null);
     showFilters = signal(false);
 
@@ -70,59 +79,59 @@ export class AdminCategoriesComponent implements OnInit {
     pageSize = 5;
 
     // Computed
-    // filteredCategories = computed(() => {
-    //     let categories = this.allCategories();
+    filteredCategories = computed(() => {
+        let categories = this.allCategories();
 
-    //     // Search
-    //     const term = this.searchTerm().toLowerCase();
-    //     if (term) {
-    //         categories = categories.filter(c => c.name.toLowerCase().includes(term));
-    //     }
+        // Search
+        const term = this.searchTerm().toLowerCase();
+        if (term) {
+            categories = categories.filter(c => c.name.toLowerCase().includes(term));
+        }
 
-    //     // Filters
-    //     const f = this.filters();
-    //     if (f.active !== null) {
-    //         categories = categories.filter(c => c.active === f.active);
-    //     }
+        // Filters
+        const f = this.filters();
+        if (f.active !== null) {
+            categories = categories.filter(c => c.active === f.active);
+        }
 
-    //     // Sort
-    //     const s = this.sort();
-    //     categories = [...categories].sort((a, b) => {
-    //         let valA, valB;
-    //         if (s.field === 'name') { valA = a.name; valB = b.name; }
-    //         else { valA = a.createdAt.getTime(); valB = b.createdAt.getTime(); }
+        // Sort
+        const s = this.sort();
+        categories = [...categories].sort((a, b) => {
+            let valA, valB;
+            if (s.field === 'name') { valA = a.name; valB = b.name; }
+            else { valA = a.createdAt.getTime(); valB = b.createdAt.getTime(); }
 
-    //         if (s.direction === 'asc') return valA > valB ? 1 : -1;
-    //         return valA < valB ? 1 : -1;
-    //     });
+            if (s.direction === 'asc') return valA > valB ? 1 : -1;
+            return valA < valB ? 1 : -1;
+        });
 
-    //     return categories;
-    // });
+        return categories;
+    });
 
-    // paginatedCategories = computed(() => {
-    //     const start = (this.currentPage() - 1) * this.pageSize;
-    //     return this.filteredCategories().slice(start, start + this.pageSize);
-    // });
+    paginatedCategories = computed(() => {
+        const start = (this.currentPage() - 1) * this.pageSize;
+        return this.filteredCategories().slice(start, start + this.pageSize);
+    });
 
-    // totalPages = computed(() => Math.ceil(this.filteredCategories().length / this.pageSize));
-    // pageNumbers = computed(() => {
-    //     const total = this.totalPages();
-    //     return Array.from({ length: total }, (_, i) => i + 1);
-    // });
+    totalPages = computed(() => Math.ceil(this.filteredCategories().length / this.pageSize));
+    pageNumbers = computed(() => {
+        const total = this.totalPages();
+        return Array.from({ length: total }, (_, i) => i + 1);
+    });
 
     activeFiltersCount = computed(() => {
         return this.filters().active !== null ? 1 : 0;
     });
 
-    // allSelected = computed(() => {
-    //     const categories = this.paginatedCategories();
-    //     return categories.length > 0 && categories.every(c => this.selectedCategories().has(c.id));
-    // });
+    allSelected = computed(() => {
+        const categories = this.paginatedCategories();
+        return categories.length > 0 && categories.every(c => this.selectedCategories().has(c.id));
+    });
 
-    // selectedInactive = computed(() => {
-    //     const selected = [...this.selectedCategories()].map(id => this.allCategories().find(c => c.id === id));
-    //     return selected.length > 0 && selected.every(c => c && !c.active);
-    // });
+    selectedInactive = computed(() => {
+        const selected = [...this.selectedCategories()].map(id => this.allCategories().find(c => c.id === id));
+        return selected.length > 0 && selected.every(c => c && !c.active);
+    });
 
     // Actions
     onSearch() { this.currentPage.set(1); }
@@ -135,7 +144,7 @@ export class AdminCategoriesComponent implements OnInit {
         }
     }
 
-    toggleSelect(id: string) {
+    toggleSelect(id: number) {
         this.selectedCategories.update(set => {
             const newSet = new Set(set);
             if (newSet.has(id)) newSet.delete(id);
@@ -144,14 +153,14 @@ export class AdminCategoriesComponent implements OnInit {
         });
     }
 
-    // toggleAll() {
-    //     if (this.allSelected()) {
-    //         this.selectedCategories.set(new Set());
-    //     } else {
-    //         const pageIds = this.paginatedCategories().map(c => c.id);
-    //         this.selectedCategories.set(new Set(pageIds));
-    //     }
-    // }
+    toggleAll() {
+        if (this.allSelected()) {
+            this.selectedCategories.set(new Set());
+        } else {
+            const pageIds = this.paginatedCategories().map(c => c.id);
+            this.selectedCategories.set(new Set(pageIds));
+        }
+    }
 
     openCategoryModal(category: Category) {
         this.selectedCategory.set(category);
@@ -161,40 +170,40 @@ export class AdminCategoriesComponent implements OnInit {
         this.selectedCategory.set(null);
     }
 
-    // toggleStatus(id: string) {
-    //     this.allCategories.update(categories =>
-    //         categories.map(c => c.id === id ? { ...c, active: !c.active } : c)
-    //     );
-    //     this.closeModal();
-    // }
+    toggleStatus(id: number) {
+        this.allCategories.update(categories =>
+            categories.map(c => c.id === id ? { ...c, active: !c.active } : c)
+        );
+        this.closeModal();
+    }
 
-    // deleteCategory(id: string) {
-    //     this.allCategories.update(categories => categories.filter(c => c.id !== id));
-    //     this.selectedCategories.update(set => {
-    //         const newSet = new Set(set);
-    //         newSet.delete(id);
-    //         return newSet;
-    //     });
-    //     this.closeModal();
-    // }
+    deleteCategory(id: number) {
+        this.allCategories.update(categories => categories.filter(c => c.id !== id));
+        this.selectedCategories.update(set => {
+            const newSet = new Set(set);
+            newSet.delete(id);
+            return newSet;
+        });
+        this.closeModal();
+    }
 
-    // bulkToggleStatus() {
-    //     const activate = !this.selectedInactive();
-    //     this.allCategories.update(categories =>
-    //         categories.map(c => this.selectedCategories().has(c.id) ? { ...c, active: activate } : c)
-    //     );
-    //     this.selectedCategories.set(new Set());
-    // }
+    bulkToggleStatus() {
+        const activate = !this.selectedInactive();
+        this.allCategories.update(categories =>
+            categories.map(c => this.selectedCategories().has(c.id) ? { ...c, active: activate } : c)
+        );
+        this.selectedCategories.set(new Set());
+    }
 
-    // bulkDelete() {
-    //     if (confirm(`Delete ${this.selectedCategories().size} categories?`)) {
-    //         this.allCategories.update(categories => categories.filter(c => !this.selectedCategories().has(c.id)));
-    //         this.selectedCategories.set(new Set());
-    //     }
-    // }
+    bulkDelete() {
+        if (confirm(`Delete ${this.selectedCategories().size} categories?`)) {
+            this.allCategories.update(categories => categories.filter(c => !this.selectedCategories().has(c.id)));
+            this.selectedCategories.set(new Set());
+        }
+    }
 
     prevPage() { if (this.currentPage() > 1) this.currentPage.update(p => p - 1); }
-    // nextPage() { if (this.currentPage() < this.totalPages()) this.currentPage.update(p => p + 1); }
+    nextPage() { if (this.currentPage() < this.totalPages()) this.currentPage.update(p => p + 1); }
     goToPage(page: number) { this.currentPage.set(page); }
 
     formatDate(date: Date) {

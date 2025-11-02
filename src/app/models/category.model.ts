@@ -3,5 +3,8 @@ import { Product } from "./product.model";
 export interface Category {
     id: number;
     name: string;
-    products: Product[];
+    description?: string;
+    active: boolean;
+    createdAt: Date;
+    products?: Product[];
 }
