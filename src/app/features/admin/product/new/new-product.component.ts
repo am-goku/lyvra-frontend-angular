@@ -1,20 +1,14 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { CheckIcon, ChevronDownIcon, DollarSignIcon, FileTextIcon, ImageIcon, LinkIcon, LucideAngularModule, PackageIcon, SaveIcon, SearchIcon, TagIcon, ToggleLeftIcon, Trash2Icon, TypeIcon, UploadIcon, X } from "lucide-angular";
+import { CheckIcon, ChevronDownIcon, DollarSignIcon, FileTextIcon, ImageIcon, LucideAngularModule, SaveIcon, SearchIcon, TagIcon, Trash2Icon, TypeIcon, UploadIcon, X } from "lucide-angular";
+import { ProductService } from "../../../../core/services/products.service";
 
 interface Category {
-    id: string;
+    id: number;
     name: string;
     selected: boolean;
 }
-
-interface ProductImage {
-    dataUrl: string;   // base64 or remote URL
-    isDefault: boolean;
-    isUrl: boolean;    // true → remote URL, false → uploaded file
-}
-
 
 @Component({
     selector: 'admin-new-product',
@@ -24,16 +18,16 @@ interface ProductImage {
     styleUrls: ['./new-product.component.scss']
 })
 export class AdminNewProductComponent {
+
+    constructor(private readonly productService: ProductService){};
+
     // Icons
     icons = {
         upload: UploadIcon,
-        link: LinkIcon,
         type: TypeIcon,
         tag: TagIcon,
         fileText: FileTextIcon,
         dollarSign: DollarSignIcon,
-        package: PackageIcon,
-        toggleLeft: ToggleLeftIcon,
         save: SaveIcon,
         x: X,
         chevronDown: ChevronDownIcon,
@@ -46,28 +40,23 @@ export class AdminNewProductComponent {
     /* ------------------------------------------------------------------ *
      *  SIGNALS – reactive state                                           *
      * ------------------------------------------------------------------ */
-    imageSource = signal<'upload' | 'url'>('upload');
-    images = signal<ProductImage[]>([]);               // all images
-    defaultImageIndex = signal<number>(0);             // index of default
-
-    title = signal('');
+    images = signal<File[]>([]); // array of File objects
+    name = signal('');
     description = signal('');
     price = signal('');
-    stock = signal('');
-    available = signal(true);
 
     // Category handling
     allCategories = signal<Category[]>([
-        { id: '1', name: 'Electronics', selected: false },
-        { id: '2', name: 'Clothing', selected: false },
-        { id: '3', name: 'Home & Garden', selected: false },
-        { id: '4', name: 'Sports', selected: false },
-        { id: '5', name: 'Books', selected: false },
-        { id: '6', name: 'Toys', selected: false },
-        { id: '7', name: 'Beauty', selected: false },
-        { id: '8', name: 'Food & Beverage', selected: false },
-        { id: '9', name: 'Automotive', selected: false },
-        { id: '10', name: 'Jewelry', selected: false }
+        { id: 1, name: 'Electronics', selected: false },
+        { id: 2, name: 'Clothing', selected: false },
+        { id: 3, name: 'Home & Garden', selected: false },
+        { id: 4, name: 'Sports', selected: false },
+        { id: 5, name: 'Books', selected: false },
+        { id: 6, name: 'Toys', selected: false },
+        { id: 7, name: 'Beauty', selected: false },
+        { id: 8, name: 'Food & Beverage', selected: false },
+        { id: 9, name: 'Automotive', selected: false },
+        { id: 10, name: 'Jewelry', selected: false }
     ]);
     categorySearch = signal('');
     showCategoryDropdown = signal(false);
@@ -92,65 +81,34 @@ export class AdminNewProductComponent {
         const input = event.target as HTMLInputElement;
         if (!input.files?.length) return;
 
-        Array.from(input.files).forEach(file => {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const newImg: ProductImage = {
-                    dataUrl: reader.result as string,
-                    isDefault: this.images().length === 0, // first image → default
-                    isUrl: false
-                };
-                this.images.update(arr => [...arr, newImg]);
-                if (this.images().length === 1) this.defaultImageIndex.set(0);
-            };
-            reader.readAsDataURL(file);
-        });
-        input.value = '';
-    }
-
-    addImageUrl(url: string) {
-        if (!url.trim()) return;
-        const newImg: ProductImage = {
-            dataUrl: url,
-            isDefault: this.images().length === 0,
-            isUrl: true
-        };
-        this.images.update(arr => [...arr, newImg]);
-        if (this.images().length === 1) this.defaultImageIndex.set(0);
-        this.tempUrl = '';
+        const newFiles = Array.from(input.files);
+        this.images.update(arr => [...arr, ...newFiles]);
+        input.value = ''; // Clear input
     }
 
     removeImage(idx: number) {
         this.images.update(arr => {
             const copy = [...arr];
             copy.splice(idx, 1);
-            // re-assign default if needed
-            if (copy.length === 0) return copy;
-            if (this.defaultImageIndex() === idx) {
-                this.defaultImageIndex.set(0);
-            } else if (this.defaultImageIndex() > idx) {
-                this.defaultImageIndex.update(v => v - 1);
-            }
             return copy;
         });
     }
 
-    setDefault(idx: number) {
-        this.defaultImageIndex.set(idx);
+    // Generate preview URL for image files
+    getImagePreview(file: File): string {
+        return URL.createObjectURL(file);
     }
-
-    tempUrl = ''; // bound to URL input field
 
     /* ------------------------------------------------------------------ *
      *  CATEGORY HANDLING                                                 *
      * ------------------------------------------------------------------ */
-    toggleCategory(id: string) {
+    toggleCategory(id: number) {
         this.allCategories.update(cats =>
             cats.map(c => (c.id === id ? { ...c, selected: !c.selected } : c))
         );
     }
 
-    removeSelectedCategory(id: string) {
+    removeSelectedCategory(id: number) {
         this.allCategories.update(cats =>
             cats.map(c => (c.id === id ? { ...c, selected: false } : c))
         );
@@ -159,53 +117,54 @@ export class AdminNewProductComponent {
     /* ------------------------------------------------------------------ *
      *  FORM VALIDATION (client-side only)                               *
      * ------------------------------------------------------------------ */
-    titleError = computed(() => !this.title() ? 'Title is required' : '');
-    descError = computed(() => !this.description() ? 'Description is required' : '');
+    nameError = computed(() => !this.name() ? 'Name is required' : '');
     priceError = computed(() => !this.price() ? 'Price is required' : '');
-    stockError = computed(() => !this.stock() ? 'Stock is required' : '');
-    imagesError = computed(() => !this.hasImages() ? 'At least one image (upload or URL) is required' : '');
+    imagesError = computed(() => !this.hasImages() ? 'At least one image is required' : '');
     categoryError = computed(() => !this.hasAtLeastOneCategory() ? 'Select at least one category' : '');
 
-    /* ------------------------------------------------------------------ *
-     *  MOCK API                                                          *
-     * ------------------------------------------------------------------ */
-    async mockApi(payload: any) {
-        // simulate network delay
-        await new Promise(r => setTimeout(r, 800));
-        console.log('MOCK API payload →', payload);
-        alert('Product saved! (check console)');
-    }
-
     async onSubmit() {
-        // force recompute of errors
-        this.titleError();
-        this.descError();
+        // Force recompute of errors
+        this.nameError();
         this.priceError();
-        this.stockError();
         this.imagesError();
         this.categoryError();
 
-        // if any error → stop
+        // If any error → stop
         if (
-            this.titleError() || this.descError() || this.priceError() ||
-            this.stockError() || this.imagesError() || this.categoryError()
+            this.nameError() || this.priceError() ||
+            this.imagesError() || this.categoryError()
         ) {
             return;
         }
 
-        const payload = {
-            title: this.title(),
-            description: this.description(),
-            price: Number(this.price()),
-            stock: Number(this.stock()),
-            available: this.available(),
-            categoryIds: this.selectedCategories().map(c => c.id),
-            // separate arrays – backend can decide which to use
-            images: this.images().filter(i => !i.isUrl).map(i => i.dataUrl),
-            imageUrls: this.images().filter(i => i.isUrl).map(i => i.dataUrl),
-            defaultImageIndex: this.defaultImageIndex()
-        };
+        // Prepare FormData
+        const formData = new FormData();
+        formData.append('name', this.name());
+        if (this.description()) {
+            formData.append('description', this.description());
+        }
+        formData.append('price', this.price().toString());
+        formData.append('categoryIds', JSON.stringify(this.selectedCategories().map(c => c.id)));
+        
+        // Append each image file
+        this.images().forEach((file, index) => {
+            formData.append(`images`, file);
+        });
 
-        await this.mockApi(payload);
+        try {
+            // const response = await this.mockApi(formData);
+            this.productService.createProduct(formData).subscribe({
+                next(value) {
+                    console.log('upload success', value)
+                },
+                error(err) {
+                    console.warn('upload failed', err)
+                },
+
+            })
+        } catch (error) {
+            console.error('Upload failed:', error);
+            alert('Failed to save product.');
+        }
     }
 }

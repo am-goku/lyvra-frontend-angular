@@ -2,7 +2,6 @@
     <div class="bg-white shadow-sm rounded-lg">
         <div class="px-6 py-5">
             <h2 class="text-lg font-semibold text-gray-900">Add New Product</h2>
-            <!-- <p class="mt-1 text-sm text-gray-600">All fields are required.</p> -->
         </div>
 
         <form (ngSubmit)="onSubmit()" class="p-6 space-y-8">
@@ -13,26 +12,7 @@
                     Product Images <span class="text-red-600 ml-1">*</span>
                 </label>
 
-                <!-- Upload / URL switch -->
-                <div class="flex space-x-4 mb-4">
-                    <button type="button" (click)="imageSource.set('upload')"
-                        [class.bg-indigo-100]="imageSource() === 'upload'"
-                        [class.text-indigo-700]="imageSource() === 'upload'"
-                        [class.border-indigo-500]="imageSource() === 'upload'"
-                        class="flex items-center px-4 py-2 text-sm font-medium rounded-md border-2 transition-colors hover:border-gray-400">
-                        <lucide-icon [img]="icons.upload" class="w-4 h-4 mr-2"></lucide-icon>Upload
-                    </button>
-                    <button type="button" (click)="imageSource.set('url')"
-                        [class.bg-indigo-100]="imageSource() === 'url'"
-                        [class.text-indigo-700]="imageSource() === 'url'"
-                        [class.border-indigo-500]="imageSource() === 'url'"
-                        class="flex items-center px-4 py-2 text-sm font-medium rounded-md border-2 transition-colors hover:border-gray-400">
-                        <lucide-icon [img]="icons.link" class="w-4 h-4 mr-2"></lucide-icon>URL
-                    </button>
-                </div>
-
                 <!-- Upload area -->
-                @if (imageSource() === 'upload') {
                 <div
                     class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
                     <div class="space-y-1 text-center w-full">
@@ -49,41 +29,21 @@
                         <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10 MB each</p>
                     </div>
                 </div>
-                } @else {
-                <!-- URL input -->
-                <div class="flex gap-2">
-                    <input type="url" [(ngModel)]="tempUrl" placeholder="https://example.com/img.jpg"
-                        class="flex-1 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                    <button type="button" (click)="addImageUrl(tempUrl)"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-                        Add
-                    </button>
-                </div>
-                }
 
                 <!-- Image previews -->
                 @if (images().length) {
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
-                    @for (img of images(); track $index; let i = $index) {
+                    @for (img of images(); track $index) {
                     <div class="relative group">
-                        <img [src]="img.dataUrl" alt="preview" class="h-32 w-full object-cover rounded-md border"
-                            [class.border-indigo-500]="i === defaultImageIndex()"
-                            [class.border-2]="i === defaultImageIndex()">
+                        <img [src]="getImagePreview(img)" alt="preview" class="h-32 w-full object-cover rounded-md border">
                         <div
                             class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-md flex items-center justify-center transition">
-                            <button type="button" (click)="setDefault(i)"
-                                class="mx-1 p-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition">
-                                <lucide-icon [img]="icons.check" class="w-4 h-4 text-indigo-600"></lucide-icon>
-                            </button>
-                            <button type="button" (click)="removeImage(i)"
+                            <button type="button" (click)="removeImage($index)"
                                 class="mx-1 p-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition">
                                 <lucide-icon [img]="icons.trash" class="w-4 h-4 text-red-600"></lucide-icon>
                             </button>
                         </div>
-                        @if (i === defaultImageIndex()) {
-                        <span
-                            class="absolute top-1 left-1 bg-indigo-600 text-white text-xs px-2 py-0.5 rounded">Default</span>
-                        }
+                        <span class="absolute top-1 left-1 bg-indigo-600 text-white text-xs px-2 py-0.5 rounded">{{ img.name }}</span>
                     </div>
                     }
                 </div>
@@ -96,17 +56,17 @@
 
             <!-- ==================== BASIC INFO ==================== -->
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <!-- Title -->
+                <!-- Name -->
                 <div>
                     <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
                         <lucide-icon [img]="icons.type" class="w-5 h-5 mr-2"></lucide-icon>
-                        Product Title <span class="text-red-600">*</span>
+                        Product Name <span class="text-red-600">*</span>
                     </label>
-                    <input type="text" [(ngModel)]="title" name="title"
+                    <input type="text" [(ngModel)]="name" name="name"
                         class="block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="Enter title">
-                    @if (titleError()) {
-                    <p class="mt-1 text-sm text-red-600">{{ titleError() }}</p>
+                        placeholder="Enter name">
+                    @if (nameError()) {
+                    <p class="mt-1 text-sm text-red-600">{{ nameError() }}</p>
                     }
                 </div>
 
@@ -117,7 +77,6 @@
                         Categories <span class="text-red-600">*</span>
                     </label>
 
-                    <!-- Dropdown trigger -->
                     <div class="relative">
                         <button type="button" (click)="showCategoryDropdown.set(!showCategoryDropdown())"
                             class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
@@ -132,7 +91,6 @@
                         @if (showCategoryDropdown()) {
                         <div
                             class="absolute z-20 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                            <!-- Search inside dropdown -->
                             <div class="sticky top-0 bg-white border-b px-3 py-2">
                                 <div class="relative">
                                     <lucide-icon [img]="icons.search"
@@ -163,7 +121,6 @@
                         }
                     </div>
 
-                    <!-- Selected tags -->
                     @if (selectedCategories().length) {
                     <div class="mt-2 flex flex-wrap gap-2">
                         @for (c of selectedCategories(); track c.id) {
@@ -189,17 +146,14 @@
             <div>
                 <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
                     <lucide-icon [img]="icons.fileText" class="w-5 h-5 mr-2"></lucide-icon>
-                    Product Description <span class="text-red-600">*</span>
+                    Product Description
                 </label>
                 <textarea [(ngModel)]="description" name="description" rows="4"
                     class="block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     placeholder="Describe the product..."></textarea>
-                @if (descError()) {
-                <p class="mt-1 text-sm text-red-600">{{ descError() }}</p>
-                }
             </div>
 
-            <!-- ==================== PRICING & INVENTORY ==================== -->
+            <!-- ==================== PRICING ==================== -->
             <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <!-- Price -->
                 <div>
@@ -218,35 +172,6 @@
                     @if (priceError()) {
                     <p class="mt-1 text-sm text-red-600">{{ priceError() }}</p>
                     }
-                </div>
-
-                <!-- Stock -->
-                <div>
-                    <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
-                        <lucide-icon [img]="icons.package" class="w-5 h-5 mr-2"></lucide-icon>
-                        Stock Quantity <span class="text-red-600">*</span>
-                    </label>
-                    <input type="number" [(ngModel)]="stock" name="stock" min="0"
-                        class="block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="0">
-                    @if (stockError()) {
-                    <p class="mt-1 text-sm text-red-600">{{ stockError() }}</p>
-                    }
-                </div>
-
-                <!-- Availability -->
-                <div>
-                    <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
-                        <lucide-icon [img]="icons.toggleLeft" class="w-5 h-5 mr-2"></lucide-icon>
-                        Available for Purchase
-                    </label>
-                    <button type="button" (click)="available.set(!available())" [class.bg-indigo-600]="available()"
-                        [class.bg-gray-200]="!available()"
-                        class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        <span [class.translate-x-5]="available()" [class.translate-x-0]="!available()"
-                            class="inline-block h-5 w-5 transform rounded-full bg-white shadow transition"></span>
-                    </button>
-                    <span class="ml-3 text-sm text-gray-600">{{ available() ? 'Available' : 'Unavailable' }}</span>
                 </div>
             </div>
 
