@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../../core/services/auth.service";
+import { AuthGoogleService } from "../../../core/oauth/oauth.service";
 
 @Component({
     selector: 'app-login',
@@ -18,6 +19,7 @@ export class LoginComponent {
 
     constructor(
         private authService: AuthService,
+        // private oauthService: AuthGoogleService,
         private router: Router,
         private route: ActivatedRoute
     ) {};
@@ -45,4 +47,28 @@ export class LoginComponent {
             }
         });
     }
+
+
+//     ngOnInit() {
+//     this.authService.oauthService.events.subscribe((event) => {
+//       if (event.type === 'token_received') {
+//         this.isLoggedIn = true;
+//         const idToken = this.authService.getIdToken();
+//         this.authService.sendIdTokenToBackend(idToken).subscribe({
+//           next: (res) => {
+//             console.log('Backend response:', res);
+//             // Store JWT, redirect, etc.
+//           },
+//           error: (err) => console.error('Backend error:', err),
+//         });
+//         this.authService.getUserInfo().subscribe((info) => {
+//           this.userInfo = info;
+//         });
+//       }
+//     });
+//   }
+
+    // signInWithGoogle() {
+    //     this.oauthService.login()
+    // }
 };

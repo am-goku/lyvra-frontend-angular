@@ -152,7 +152,6 @@ export class AdminNewProductComponent {
         });
 
         try {
-            // const response = await this.mockApi(formData);
             this.productService.createProduct(formData).subscribe({
                 next(value) {
                     console.log('upload success', value)
