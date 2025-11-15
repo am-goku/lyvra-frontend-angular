@@ -10,7 +10,6 @@ import { AuthGoogleService } from "../../../core/oauth/oauth.service";
     imports: [FormsModule, RouterLink],
     templateUrl: './login.component.html',
 })
-
 export class LoginComponent {
     emailOrPhone = '';
     password = '';
@@ -19,9 +18,9 @@ export class LoginComponent {
 
     constructor(
         private authService: AuthService,
-        // private oauthService: AuthGoogleService,
         private router: Router,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private readonly oauthService: AuthGoogleService,
     ) {};
 
     login() {
@@ -48,27 +47,8 @@ export class LoginComponent {
         });
     }
 
+    googleLogin() {
+        this.oauthService.login();
+    }
 
-//     ngOnInit() {
-//     this.authService.oauthService.events.subscribe((event) => {
-//       if (event.type === 'token_received') {
-//         this.isLoggedIn = true;
-//         const idToken = this.authService.getIdToken();
-//         this.authService.sendIdTokenToBackend(idToken).subscribe({
-//           next: (res) => {
-//             console.log('Backend response:', res);
-//             // Store JWT, redirect, etc.
-//           },
-//           error: (err) => console.error('Backend error:', err),
-//         });
-//         this.authService.getUserInfo().subscribe((info) => {
-//           this.userInfo = info;
-//         });
-//       }
-//     });
-//   }
-
-    // signInWithGoogle() {
-    //     this.oauthService.login()
-    // }
 };

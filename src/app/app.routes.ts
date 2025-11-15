@@ -20,6 +20,7 @@ import { AdminNewProductComponent } from './features/admin/product/new/new-produ
 import { AdminCategoriesComponent } from './features/admin/categories/categories.component';
 import { AddCategoryComponent } from './features/admin/categories/add/add-category.component';
 import { AdminAuthGuard } from './core/guards/admin-auth.guard';
+import { AuthCallbackComponent } from './features/auth/callback/callback.component';
 
 export const routes: Routes = [
     {
@@ -40,6 +41,7 @@ export const routes: Routes = [
                 children: [
                     { path: 'login', component: LoginComponent },
                     { path: 'signup', component: SignupComponent },
+                    { path: 'callback', component: AuthCallbackComponent },
                     { path: '', redirectTo: 'login', pathMatch: 'full' }, // optional default redirect
                 ],
                 canActivate: [NoAuthGuard]

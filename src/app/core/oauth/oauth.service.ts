@@ -1,49 +1,33 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { Observable } from 'rxjs';
-import { authConfig } from './oauth.config';
+import { googleAuthConfig } from './oauth.config';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class AuthGoogleService {
 
-    private configure() {
-        this.oauthService.configure(authConfig);
-        this.oauthService.loadDiscoveryDocumentAndTryLogin().then(() => {
-            console.log('OAuth discovery document loaded');
-        }).catch((error) => {
-            console.error('Error loading discovery document:', error);
-        });
-    }
+  constructor(private oauthService: OAuthService) {
+    this.oauthService.configure(googleAuthConfig);
+    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+  }
 
-    constructor(
-        private oauthService: OAuthService,
-        private http: HttpClient
-    ) {
-        this.configure();
-    }
+  login() {
+    this.oauthService.initCodeFlow(); // Start Google OAuth Redirect
+  }
 
-    login() {
-        this.oauthService.initCodeFlow();
-    }
+  logout() {
+    this.oauthService.logOut();
+  }
 
-    getIdToken(): string {
-        return this.oauthService.getIdToken();
-    }
+  get profile() {
+    return this.oauthService.getIdentityClaims();
+  }
 
-    getUserInfo(): Observable<any> {
-        return this.http.get('https://www.googleapis.com/oauth2/v3/userinfo', {
-            headers: { Authorization: `Bearer ${this.oauthService.getAccessToken()}` },
-        });
-    }
+  get idToken(): string | null {
+    return this.oauthService.getIdToken();
+  }
 
-    sendIdTokenToBackend(idToken: string): Observable<any> {
-        return this.http.post('http://localhost:3000/auth/google', { idToken });
-    }
-
-    logout() {
-        this.oauthService.logOut();
-    }
+  async loginCodeFlow() {
+    await this.oauthService.tryLoginCodeFlow();
+  }
+  
 }
