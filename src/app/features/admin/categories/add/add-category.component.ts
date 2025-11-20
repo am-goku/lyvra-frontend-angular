@@ -34,9 +34,9 @@ export class AddCategoryComponent {
     };
 
     // State
-    name = signal('');
-    description = signal('');
-    active = signal(true);
+    name = signal<string>('');
+    description = signal<string>('');
+    active = signal<boolean>(true);
 
     imageFile = signal<File | null>(null);
     imagePreview = signal<string | null>(null);

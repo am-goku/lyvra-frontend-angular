@@ -15,7 +15,6 @@ export class CategoryService {
     }
 
     createCategory(data: FormData) {
-        // Only passing name as per backend requirement
         return this.http.post<Category>('categories', data);
     }
 
