@@ -16,14 +16,18 @@ export class ProductListComponent implements OnInit {
 
   products = signal<Product[]>([]);
 
+  loading = signal<boolean>(false);
+
   constructor(private readonly productService: ProductService) { };
 
   ngOnInit(): void {
+    this.loading.set(true);
     this.productService.getProducts().subscribe({
       next: (res) => {
         this.products.set(res as Product[])
       },
-      error: (err) => console.log("Error occured", err)
+      error: (err) => console.log("Error occured", err),
+      complete: () => this.loading.set(false)
     })
   }
 }
