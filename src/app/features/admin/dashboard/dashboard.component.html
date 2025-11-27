@@ -1,1 +1,91 @@
-<h1>Admin Dashboard</h1>
+<section class="flex-1">
+    <!-- header -->
+    <header class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <button (click)="toggleSidebar()" class="p-2 rounded hover:bg-slate-100">
+          <lucide-icon name="menu" [size]="20"></lucide-icon>
+        </button>
+        <h1 class="text-2xl font-bold">Dashboard</h1>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <label class="relative">
+          <input type="search" (input)="search($any($event.target).value)" placeholder="Search products..." class="pl-9 pr-3 py-2 rounded-lg border border-slate-200" />
+          <span class="absolute left-2 top-1/2 -translate-y-1/2"><lucide-icon name="search" [size]="16"></lucide-icon></span>
+        </label>
+        <button class="p-2 rounded-full hover:bg-slate-100"><lucide-icon name="user" [size]="18"></lucide-icon></button>
+      </div>
+    </header>
+
+    <!-- KPI cards -->
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="bg-white p-4 rounded-2xl shadow">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm text-slate-500">Products</p>
+            <p class="text-2xl font-semibold">{{ totalProducts() }}</p>
+          </div>
+          <lucide-icon name="box" [size]="28"></lucide-icon>
+        </div>
+      </div>
+      <div class="bg-white p-4 rounded-2xl shadow">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm text-slate-500">Out of stock</p>
+            <p class="text-2xl font-semibold">{{ outOfStock() }}</p>
+          </div>
+          <lucide-icon name="shopping-cart" [size]="28"></lucide-icon>
+        </div>
+      </div>
+      <div class="bg-white p-4 rounded-2xl shadow">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm text-slate-500">Revenue (est)</p>
+            <p class="text-2xl font-semibold">₹ 1,24,000</p>
+          </div>
+          <lucide-icon name="home" [size]="28"></lucide-icon>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products table -->
+    <div class="bg-white rounded-2xl shadow p-4">
+      <h3 class="text-lg font-semibold mb-4">Products</h3>
+
+      <table class="w-full table-auto">
+        <thead class="text-slate-500 text-sm">
+          <tr>
+            <th class="text-left py-2">ID</th>
+            <th class="text-left py-2">Name</th>
+            <th class="text-left py-2">Stock</th>
+            <th class="text-left py-2">Price</th>
+            <th class="text-left py-2">Active</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- new control flow: @for -->
+          @for (p of filteredProducts; track p.id) {
+            <tr class="border-t">
+              <td class="py-3">{{ p.id }}</td>
+              <td class="py-3">{{ p.name }}</td>
+              <td class="py-3">{{ p.stock }}</td>
+              <td class="py-3">₹ {{ p.price }}</td>
+              <td class="py-3">
+                @if (p.active) {
+                  <span class="text-green-600 font-medium">Active</span>
+                } @else {
+                  <span class="text-rose-600 font-medium">Inactive</span>
+                }
+              </td>
+              <td class="py-3 text-right">
+                <button class="px-3 py-1 rounded bg-slate-50 hover:bg-slate-100">Edit</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr><td colspan="6" class="py-6 text-center text-slate-500">No products found.</td></tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>

@@ -1,0 +1,17 @@
+/* dashboard.component.scss */
+
+/* Tailwind utilities do most of the heavy lifting. Use SCSS for small component specifics. */
+
+:host {
+  display: block;
+}
+
+/* Example: slightly bigger KPI icon */
+lucide-icon {
+  vertical-align: middle;
+}
+
+/* Responsive tweaks */
+@media (max-width: 1024px) {
+  aside[hidden] { display: none; }
+}
