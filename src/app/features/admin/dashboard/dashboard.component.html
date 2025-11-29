@@ -1,91 +1,131 @@
-<section class="flex-1">
-    <!-- header -->
-    <header class="flex items-center justify-between mb-6">
-      <div class="flex items-center gap-3">
-        <button (click)="toggleSidebar()" class="p-2 rounded hover:bg-slate-100">
-          <lucide-icon name="menu" [size]="20"></lucide-icon>
-        </button>
-        <h1 class="text-2xl font-bold">Dashboard</h1>
+<div class="overflow-auto">
+  <!-- KPI Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+    @for (kpi of computedKpis(); track kpi.title) {
+      <div [ngClass]="kpi.color"
+           class="bg-white p-6 rounded-xl shadow-lg border-l-4 transition transform hover:scale-[1.02]">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-sm font-medium text-gray-500 truncate">{{ kpi.title }}</p>
+            <p class="mt-1 text-3xl font-semibold text-gray-900">
+              {{ formatValue(kpi.value, kpi.unit) }}
+            </p>
+          </div>
+          <div class="p-3 bg-opacity-10 rounded-full text-indigo-600">
+            @switch (kpi.icon) {
+              @case ('dollar') {
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" x2="12" y1="2" y2="22"/>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                </svg>
+              }
+              @case ('package') {
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m7.5 4.27 9 5.15"/>
+                  <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/>
+                  <path d="m3.3 7 8.7 5 8.7-5"/>
+                  <path d="M12 22V12"/>
+                </svg>
+              }
+              @case ('users') {
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              }
+              @case ('trending-up') {
+                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
+                  <polyline points="18 7 22 7 22 11"/>
+                </svg>
+              }
+            }
+          </div>
+        </div>
       </div>
+    }
+  </div>
 
-      <div class="flex items-center gap-3">
-        <label class="relative">
-          <input type="search" (input)="search($any($event.target).value)" placeholder="Search products..." class="pl-9 pr-3 py-2 rounded-lg border border-slate-200" />
-          <span class="absolute left-2 top-1/2 -translate-y-1/2"><lucide-icon name="search" [size]="16"></lucide-icon></span>
-        </label>
-        <button class="p-2 rounded-full hover:bg-slate-100"><lucide-icon name="user" [size]="18"></lucide-icon></button>
-      </div>
-    </header>
+  <!-- Sales Analytics and User Stats Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-    <!-- KPI cards -->
-    <div class="grid grid-cols-3 gap-4 mb-6">
-      <div class="bg-white p-4 rounded-2xl shadow">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm text-slate-500">Products</p>
-            <p class="text-2xl font-semibold">{{ totalProducts() }}</p>
+    <!-- Sales Analytics Card -->
+    <div class="lg:col-span-2 bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Sales Analytics Summary</h2>
+
+      @if (filteredSales().length > 0) {
+        <div class="space-y-4">
+          <!-- Revenue Bar Visualization -->
+          <div class="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+            <p class="text-sm font-medium text-indigo-700">Revenue Distribution Over Period</p>
+            <div class="h-40 flex items-end overflow-hidden mt-2">
+              @for (sale of filteredSales(); track sale.date) {
+                <div
+                  [style.height.%]="(sale.revenue / maxRevenue()) * 90"
+                  class="flex-1 bg-indigo-500 mx-0.5 rounded-t-sm transition-all duration-300 ease-out"
+                  [title]="sale.date + ': ' + formatValue(sale.revenue, '$')">
+                </div>
+              }
+            </div>
+            <p class="text-xs text-gray-500 mt-2 text-center">Daily Revenue (Hover for details)</p>
           </div>
-          <lucide-icon name="box" [size]="28"></lucide-icon>
-        </div>
-      </div>
-      <div class="bg-white p-4 rounded-2xl shadow">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm text-slate-500">Out of stock</p>
-            <p class="text-2xl font-semibold">{{ outOfStock() }}</p>
+
+          <!-- Detailed Metrics -->
+          <div class="grid grid-cols-2 gap-4 text-sm">
+            <div class="p-3 bg-gray-50 rounded-lg">
+              <p class="font-medium text-gray-700">Total Transactions</p>
+              <p class="text-2xl font-bold text-indigo-600">{{ totalOrders() | number }}</p>
+            </div>
+            <div class="p-3 bg-gray-50 rounded-lg">
+              <p class="font-medium text-gray-700">Avg. Daily Revenue</p>
+              <p class="text-2xl font-bold text-indigo-600">{{ formatValue(avgDailyRevenue(), '$') }}</p>
+            </div>
           </div>
-          <lucide-icon name="shopping-cart" [size]="28"></lucide-icon>
         </div>
-      </div>
-      <div class="bg-white p-4 rounded-2xl shadow">
-        <div class="flex justify-between items-start">
-          <div>
-            <p class="text-sm text-slate-500">Revenue (est)</p>
-            <p class="text-2xl font-semibold">₹ 1,24,000</p>
-          </div>
-          <lucide-icon name="home" [size]="28"></lucide-icon>
-        </div>
-      </div>
+      } @else {
+        <p class="text-gray-500 italic">No sales data available for the selected period.</p>
+      }
     </div>
 
-    <!-- Products table -->
-    <div class="bg-white rounded-2xl shadow p-4">
-      <h3 class="text-lg font-semibold mb-4">Products</h3>
+    <!-- User Statistics Card -->
+    <div class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">User Stats by Region</h2>
 
-      <table class="w-full table-auto">
-        <thead class="text-slate-500 text-sm">
-          <tr>
-            <th class="text-left py-2">ID</th>
-            <th class="text-left py-2">Name</th>
-            <th class="text-left py-2">Stock</th>
-            <th class="text-left py-2">Price</th>
-            <th class="text-left py-2">Active</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- new control flow: @for -->
-          @for (p of filteredProducts; track p.id) {
-            <tr class="border-t">
-              <td class="py-3">{{ p.id }}</td>
-              <td class="py-3">{{ p.name }}</td>
-              <td class="py-3">{{ p.stock }}</td>
-              <td class="py-3">₹ {{ p.price }}</td>
-              <td class="py-3">
-                @if (p.active) {
-                  <span class="text-green-600 font-medium">Active</span>
-                } @else {
-                  <span class="text-rose-600 font-medium">Inactive</span>
-                }
-              </td>
-              <td class="py-3 text-right">
-                <button class="px-3 py-1 rounded bg-slate-50 hover:bg-slate-100">Edit</button>
-              </td>
-            </tr>
-          } @empty {
-            <tr><td colspan="6" class="py-6 text-center text-slate-500">No products found.</td></tr>
-          }
-        </tbody>
-      </table>
+      @if (rawUserStats().length > 0) {
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Country</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">New</th>
+                <th class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Users</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              @for (user of rawUserStats(); track user.country) {
+                <tr class="hover:bg-gray-50 transition duration-100">
+                  <td class="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ user.country }}</td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm text-green-600 font-semibold">{{ user.newUsers | number }}</td>
+                  <td class="px-3 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.totalUsers | number }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      } @else {
+        <p class="text-gray-500 italic">No user data available.</p>
+      }
     </div>
-  </section>
+
+  </div>
+</div>

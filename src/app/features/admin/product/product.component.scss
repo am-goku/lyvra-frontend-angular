@@ -1,0 +1,16 @@
+:host {
+    display: block;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Custom style for the modal to handle the sticky header/footer */
+.max-h-\[90vh\] {
+    max-height: 90vh;
+}
+
+/* Truncate long text */
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
