@@ -1,192 +1,209 @@
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="bg-white shadow-sm rounded-lg">
-        <div class="px-6 py-5">
-            <h2 class="text-lg font-semibold text-gray-900">Add New Product</h2>
+<div class="min-h-screen">
+
+    <!-- Header -->
+    <div class="mb-8 border-b pb-4">
+        <h1 class="text-3xl font-extrabold text-gray-800 flex items-center">
+            <span [innerHTML]="SVG_ICONS.Package"></span>
+            Create New Product
+        </h1>
+        <p class="mt-2 text-gray-500">
+            Fill in the details below to add a new product to your inventory.
+        </p>
+    </div>
+
+    <!-- Form and Status -->
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()" class="space-y-6">
+
+        <!-- Product Details Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Product Name -->
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Product Name *</label>
+                <div class="relative">
+                    <input id="name" type="text" formControlName="name" placeholder="E.g., Wireless Mechanical Keyboard"
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                    <span [innerHTML]="SVG_ICONS.Tag"></span>
+                </div>
+                @if (productForm.controls['name'].invalid && productForm.controls['name'].touched) {
+                <p class="mt-1 text-xs text-red-600">Product Name is required.</p>
+                }
+            </div>
+
+            <!-- Price -->
+            <div>
+                <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price *</label>
+                <div class="relative">
+                    <input id="price" type="number" formControlName="price" placeholder="E.g., 99.99"
+                        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                        min="0" step="0.01">
+                    <span [innerHTML]="SVG_ICONS.DollarSign"></span>
+                </div>
+                @if (productForm.controls['price'].invalid && productForm.controls['price'].touched) {
+                <p class="mt-1 text-xs text-red-600">Price is required and must be a positive number.</p>
+                }
+            </div>
         </div>
 
-        <form (ngSubmit)="onSubmit()" class="p-6 space-y-8">
-            <!-- ==================== IMAGES ==================== -->
-            <div class="space-y-4">
-                <label class="flex items-center text-sm font-medium text-gray-700 mb-3">
-                    <lucide-icon [img]="icons.image" class="w-5 h-5 mr-2"></lucide-icon>
-                    Product Images <span class="text-red-600 ml-1">*</span>
-                </label>
+        <!-- Description -->
+        <div>
+            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description
+                (Optional)</label>
+            <div class="relative">
+                <textarea id="description" formControlName="description" rows="3"
+                    placeholder="A detailed description of the product features..."
+                    class="w-full pl-4 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"></textarea>
+            </div>
+        </div>
 
-                <!-- Upload area -->
+        <!-- Categories Section -->
+        <div class="border p-4 rounded-xl bg-gray-50">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                <span [innerHTML]="SVG_ICONS.Tags"></span>
+                Categories (Multi-Select)
+            </h3>
+
+            <!-- Selected Categories Display -->
+            <div class="flex flex-wrap gap-2 mb-4 min-h-[40px] items-center">
+                @if (selectedCategories().length > 0) {
+                @for (cat of selectedCategories(); track cat.id) {
+                <span
+                    class="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-sm font-medium text-indigo-800">
+                    {{ cat.name }}
+                    <button type="button" (click)="removeSelectedCategory(cat.id)"
+                        class="ml-1.5 p-0.5 rounded-full hover:bg-indigo-200 transition">
+                        <lucide-icon [img]="XIcon" class="w-4 h-4"></lucide-icon>
+                    </button>
+                </span>
+                }
+                } @else {
+                <p class="text-sm text-gray-400">Select 1 or more categories.</p>
+                }
+            </div>
+
+            <!-- Category Search Dropdown -->
+            <div class="relative">
+                <input type="text" placeholder="Search and add categories..." [value]="categorySearchTerm()"
+                    (input)="categorySearchTerm.set($event.target.value)" (focus)="isCategoryDropdownOpen.set(true)"
+                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                <span [innerHTML]="SVG_ICONS.Search"></span>
+
+                @if (isCategoryDropdownOpen()) {
                 <div
-                    class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors">
-                    <div class="space-y-1 text-center w-full">
-                        <lucide-icon [img]="icons.upload" class="mx-auto h-12 w-12 text-gray-400"></lucide-icon>
-                        <div class="flex text-sm text-gray-600 justify-center">
-                            <label
-                                class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500">
-                                <span>Upload files</span>
-                                <input type="file" accept="image/*" multiple (change)="onFileSelected($event)"
-                                    class="sr-only">
-                            </label>
-                            <p class="pl-1">or drag & drop</p>
-                        </div>
-                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10 MB each</p>
+                    class="absolute z-10 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-xl max-h-60 overflow-y-auto">
+                    @if (filteredCategories().length > 0) {
+                    @for (cat of filteredCategories(); track cat.id) {
+                    <div (click)="toggleCategory(cat)"
+                        class="flex justify-between items-center px-4 py-2 cursor-pointer hover:bg-indigo-50 transition duration-150 text-gray-700"
+                        [class.bg-indigo-50]="isSelected(cat.id)">
+                        {{ cat.name }}
+                        @if (isSelected(cat.id)) {
+                        <span [innerHTML]="SVG_ICONS.Check"></span>
+                        }
                     </div>
-                </div>
-
-                <!-- Image previews -->
-                @if (images().length) {
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4">
-                    @for (img of images(); track $index) {
-                    <div class="relative group">
-                        <img [src]="getImagePreview(img)" alt="preview" class="h-32 w-full object-cover rounded-md border">
-                        <div
-                            class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-md flex items-center justify-center transition">
-                            <button type="button" (click)="removeImage($index)"
-                                class="mx-1 p-1 bg-white rounded-full opacity-0 group-hover:opacity-100 transition">
-                                <lucide-icon [img]="icons.trash" class="w-4 h-4 text-red-600"></lucide-icon>
-                            </button>
-                        </div>
-                        <span class="absolute top-1 left-1 bg-indigo-600 text-white text-xs px-2 py-0.5 rounded">{{ img.name }}</span>
+                    }
+                    } @else {
+                    <div class="px-4 py-3 text-gray-500">No categories found matching "{{ categorySearchTerm() }}"
                     </div>
                     }
                 </div>
                 }
+            </div>
+            @if (selectedCategories().length === 0) {
+            <p class="mt-1 text-xs text-red-600">At least one category is required.</p>
+            }
+        </div>
 
-                @if (imagesError()) {
-                <p class="mt-1 text-sm text-red-600">{{ imagesError() }}</p>
+        <!-- Images Section -->
+        <div class="border p-4 rounded-xl bg-gray-50">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3 flex items-center">
+                <span [innerHTML]="SVG_ICONS.ImagePlus" class="w-5 h-5 mr-2 text-indigo-500"></span>
+                Product Images (1 to 4 files)
+            </h3>
+
+            <!-- File Input Area: Dynamically disabled when maxImagesReached() is true -->
+            <label class="block w-full rounded-lg border-2 border-dashed p-6 text-center transition duration-300"
+                [ngClass]="{
+                     'cursor-pointer border-gray-300 hover:border-indigo-400': !maxImagesReached(),
+                     'cursor-not-allowed border-gray-200 bg-gray-100 opacity-70': maxImagesReached()
+                   }">
+                <input type="file" (change)="handleImageUpload($event)" multiple accept="image/*" class="sr-only"
+                    [disabled]="maxImagesReached()">
+
+                <span [innerHTML]="SVG_ICONS.ImagePlus" class="mx-auto h-10 w-10"
+                    [class.text-gray-400]="!maxImagesReached()" [class.text-gray-300]="maxImagesReached()">
+                </span>
+
+                <p class="mt-2 text-sm text-gray-600">
+                    @if (!maxImagesReached()) {
+                    <span class="font-semibold text-indigo-600">Click to upload</span> or drag and drop
+                    } @else {
+                    <span class="font-semibold text-gray-500">Maximum 4 images uploaded.</span>
+                    }
+                </p>
+                <p class="text-xs text-gray-500">PNG, JPG, up to 4 files (max 1MB each)</p>
+
+                @if (maxImagesReached()) {
+                <p class="text-xs text-indigo-600 mt-1 font-medium">Remove an existing image to upload a new one.
+                </p>
                 }
+            </label>
+
+            <!-- Uploaded Files List -->
+            @if (uploadedImages().length > 0) {
+            <ul class="mt-4 space-y-2">
+                @for (file of uploadedImages(); track $index) {
+                <li class="flex items-center justify-between rounded-lg bg-white p-3 shadow-sm border border-gray-200">
+                    <span class="truncate text-sm text-gray-700">
+                        {{ file.name }}
+                    </span>
+                    <!-- Image Removal Option -->
+                    <button type="button" (click)="removeImage($index)"
+                        class="ml-4 flex-shrink-0 text-red-500 hover:text-red-700 transition p-1 rounded-full hover:bg-red-50"
+                        title="Remove image">
+                        <!-- <span [innerHTML]="SVG_ICONS.X"></span> -->
+                         <lucide-icon [img]="XIcon" class="w-4 h-4"></lucide-icon>
+                    </button>
+                </li>
+                }
+            </ul>
+            }
+
+            <!-- Image Validation Message -->
+            @if (uploadedImages().length === 0) {
+            <p class="mt-1 text-xs text-red-600">At least one image is required.</p>
+            }
+            @if (uploadedImages().length > 4) {
+            <p class="mt-1 text-xs text-red-600">You can only upload a maximum of 4 images.</p>
+            }
+        </div>
+
+        <!-- Submit Button and Status Message -->
+        <div class="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <button type="submit" [disabled]="isLoading()"
+                class="w-full sm:w-auto inline-flex justify-center items-center rounded-lg border border-transparent bg-indigo-600 px-6 py-2 text-base font-medium text-white shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:bg-indigo-400 transition duration-300">
+                @if (isLoading()) {
+                <span [innerHTML]="SVG_ICONS.Loader2"></span>
+                Creating Product...
+                } @else {
+                Create Product
+                }
+            </button>
+
+            <!-- Status Message -->
+            @if (statusMessage()) {
+            <div [ngClass]="{
+                'text-green-600 bg-green-50 border-green-300': isSuccess(),
+                'text-red-600 bg-red-50 border-red-300': !isSuccess()
+              }" class="p-3 rounded-lg border text-sm w-full sm:w-auto text-center">
+                {{ statusMessage() }}
             </div>
+            }
+        </div>
+    </form>
 
-            <!-- ==================== BASIC INFO ==================== -->
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <!-- Name -->
-                <div>
-                    <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
-                        <lucide-icon [img]="icons.type" class="w-5 h-5 mr-2"></lucide-icon>
-                        Product Name <span class="text-red-600">*</span>
-                    </label>
-                    <input type="text" [(ngModel)]="name" name="name"
-                        class="block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="Enter name">
-                    @if (nameError()) {
-                    <p class="mt-1 text-sm text-red-600">{{ nameError() }}</p>
-                    }
-                </div>
+    <!-- Hidden overlay to close dropdown when clicking outside -->
+    @if (isCategoryDropdownOpen()) {
+    <div class="fixed inset-0 z-0" (click)="isCategoryDropdownOpen.set(false)"></div>
+    }
 
-                <!-- Categories (searchable) -->
-                <div>
-                    <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
-                        <lucide-icon [img]="icons.tag" class="w-5 h-5 mr-2"></lucide-icon>
-                        Categories <span class="text-red-600">*</span>
-                    </label>
-
-                    <div class="relative">
-                        <button type="button" (click)="showCategoryDropdown.set(!showCategoryDropdown())"
-                            class="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-pointer focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                            <span class="block truncate">
-                                {{ selectedCategories().length ? selectedCategories().length + ' selected' : 'Select categories' }}
-                            </span>
-                            <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                                <lucide-icon [img]="icons.chevronDown" class="h-5 w-5 text-gray-400"></lucide-icon>
-                            </span>
-                        </button>
-
-                        @if (showCategoryDropdown()) {
-                        <div
-                            class="absolute z-20 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 overflow-auto focus:outline-none sm:text-sm">
-                            <div class="sticky top-0 bg-white border-b px-3 py-2">
-                                <div class="relative">
-                                    <lucide-icon [img]="icons.search"
-                                        class="absolute left-2 top-2.5 h-4 w-4 text-gray-400"></lucide-icon>
-                                    <input type="text" [(ngModel)]="categorySearch" name="catSearch"
-                                        placeholder="Search categories..."
-                                        class="pl-9 pr-3 py-1 w-full border rounded-md text-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                </div>
-                            </div>
-
-                            @for (cat of filteredCategories(); track cat.id) {
-                            <div (click)="toggleCategory(cat.id)"
-                                class="cursor-pointer select-none relative py-2 pl-3 pr-9 hover:bg-indigo-50 transition">
-                                <div class="flex items-center">
-                                    <input type="checkbox" [checked]="cat.selected" (click)="$event.stopPropagation()"
-                                        class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                                    <span [class.font-semibold]="cat.selected" class="ml-3 block truncate">{{ cat.name
-                                        }}</span>
-                                </div>
-                                @if (cat.selected) {
-                                <span class="absolute inset-y-0 right-0 flex items-center pr-3 text-indigo-600">
-                                    <lucide-icon [img]="icons.check" class="h-5 w-5"></lucide-icon>
-                                </span>
-                                }
-                            </div>
-                            }
-                        </div>
-                        }
-                    </div>
-
-                    @if (selectedCategories().length) {
-                    <div class="mt-2 flex flex-wrap gap-2">
-                        @for (c of selectedCategories(); track c.id) {
-                        <span
-                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                            {{ c.name }}
-                            <button type="button" (click)="removeSelectedCategory(c.id)"
-                                class="ml-1.5 h-4 w-4 text-indigo-400 hover:text-indigo-600">
-                                <lucide-icon [img]="icons.x" class="h-3 w-3"></lucide-icon>
-                            </button>
-                        </span>
-                        }
-                    </div>
-                    }
-
-                    @if (categoryError()) {
-                    <p class="mt-1 text-sm text-red-600">{{ categoryError() }}</p>
-                    }
-                </div>
-            </div>
-
-            <!-- ==================== DESCRIPTION ==================== -->
-            <div>
-                <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
-                    <lucide-icon [img]="icons.fileText" class="w-5 h-5 mr-2"></lucide-icon>
-                    Product Description
-                </label>
-                <textarea [(ngModel)]="description" name="description" rows="4"
-                    class="block w-full px-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    placeholder="Describe the product..."></textarea>
-            </div>
-
-            <!-- ==================== PRICING ==================== -->
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-                <!-- Price -->
-                <div>
-                    <label class="flex items-center text-sm font-medium text-gray-700 mb-2">
-                        <lucide-icon [img]="icons.dollarSign" class="w-5 h-5 mr-2"></lucide-icon>
-                        Price <span class="text-red-600">*</span>
-                    </label>
-                    <div class="relative rounded-md shadow-sm">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span class="text-gray-500 sm:text-sm">$</span>
-                        </div>
-                        <input type="number" [(ngModel)]="price" name="price" min="0" step="0.01"
-                            class="block w-full pl-7 pr-3 py-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="0.00">
-                    </div>
-                    @if (priceError()) {
-                    <p class="mt-1 text-sm text-red-600">{{ priceError() }}</p>
-                    }
-                </div>
-            </div>
-
-            <!-- ==================== SUBMIT ==================== -->
-            <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
-                <button type="button"
-                    class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                    Cancel
-                </button>
-                <button type="submit"
-                    class="inline-flex items-center px-6 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
-                    <lucide-icon [img]="icons.save" class="w-4 h-4 mr-2"></lucide-icon>
-                    Save Product
-                </button>
-            </div>
-        </form>
-    </div>
-</main>
+</div>

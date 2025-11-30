@@ -1,4 +1,16 @@
-/* ensure the dropdown stays on top of everything */
-.relative > div[role="listbox"] {
-  z-index: 50;
+/* Ensure the component uses border-box for better layout control */
+:host {
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Simple styling for the price input number spinner removal (optional) */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
 }
