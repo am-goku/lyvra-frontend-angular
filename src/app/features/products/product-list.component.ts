@@ -24,6 +24,7 @@ export class ProductListComponent implements OnInit {
     this.loading.set(true);
     this.productService.getProducts().subscribe({
       next: (res) => {
+        console.log(res);
         this.products.set(res as Product[])
       },
       error: (err) => console.log("Error occured", err),

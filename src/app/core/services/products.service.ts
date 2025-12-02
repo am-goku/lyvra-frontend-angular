@@ -13,4 +13,8 @@ export class ProductService {
         return this.http.get(`products?${categoryIds && "categoryIds=" + categoryIds}`);
     }
 
+    getProductById(productId: number) {
+        return this.http.get(`products/${productId}`);
+    }
+
 }

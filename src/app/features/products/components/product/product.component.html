@@ -1,23 +1,19 @@
-<div
-  class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow overflow-hidden relative flex flex-col">
+<div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-shadow overflow-hidden relative flex flex-col">
 
   <!-- Favorite Button -->
-  <button
-    class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 p-1.5 rounded-full transition-colors">
+  <button class="absolute top-2 right-2 bg-black/50 hover:bg-black/70 p-1.5 rounded-full transition-colors">
     <lucide-icon [img]="HeartIcon" class="w-4 h-4" color="white"></lucide-icon>
   </button>
 
   <!-- Product Image -->
-  <div class="w-full aspect-square bg-gray-100">
-    <img
-      [src]="product?.imageUrl"
-      [alt]="product?.name"
-      class="w-full h-full object-cover" />
+  <div routerLink="/products/{{product?.id}}" class="w-full aspect-square bg-gray-100 cursor-pointer">
+    <img [src]="product?.images?.[0]?.url" [alt]="product?.name" (error)="onImgError($event)" loading="lazy"
+      class="w-full h-48 object-cover" />
   </div>
 
   <!-- Product Info -->
   <div class="p-4 flex flex-col flex-1 justify-between">
-    <h3 class="text-slate-800 font-semibold mb-1 truncate">{{ product?.name }}</h3>
+    <h3 routerLink="/products/{{product?.id}}" class="text-slate-800 font-semibold mb-1 truncate cursor-pointer">{{ product?.name }}</h3>
     <p class="text-gray-500 mb-3">
       <span class="text-rose-600 font-bold">${{ product?.price }}</span>
     </p>
