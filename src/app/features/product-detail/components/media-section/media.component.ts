@@ -1,5 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { LucideAngularModule } from "lucide-angular";
+import { ProductImage } from "../../../../models/product.model";
 
 @Component({
     selector: 'product-media-section',
@@ -9,8 +10,10 @@ import { LucideAngularModule } from "lucide-angular";
 })
 
 export class ProductMediaComponent {
-    thumbnails = [1, 2, 3, 4, 5];
-    selectedThumb = 1;
 
-    setSelectedThumb = (t: number) => this.selectedThumb = t;
+    @Input() media: ProductImage[] | undefined = [];
+
+    selectedThumbIndex: number = 0;
+
+    setSelectedThumbIndex = (t: number) => this.selectedThumbIndex = t;
 }

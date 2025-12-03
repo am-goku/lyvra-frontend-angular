@@ -4,6 +4,7 @@ import { ProductReviewComponent } from "./components/review-section/review.compo
 import { RelatedProductComponent } from "./components/related-section/related.component";
 import { ActivatedRoute } from "@angular/router";
 import { ProductService } from "../../core/services/products.service";
+import { SingleProductResponse } from "../../models/product.model";
 
 @Component({
     selector: 'app-product-detail',
@@ -15,7 +16,7 @@ import { ProductService } from "../../core/services/products.service";
 
 export class ProductDetailComponent implements OnInit {
 
-    product = signal<{ [key: string]: any } | null>(null);
+    product = signal<SingleProductResponse | null>(null);
 
     private route = inject(ActivatedRoute);
     private productId: string = '';
@@ -27,11 +28,10 @@ export class ProductDetailComponent implements OnInit {
         this.productId = this.route.snapshot.paramMap.get('productId') as string;
         console.log('Product ID:', this.productId);
         this.productService.getProductById(Number(this.productId)).subscribe({
-            next(value) {
-                console.log('Product Details:', value);
-                // this.product.set(value as { [key: string]: any });
+            next: (value) => {
+                this.product.set(value);
             },
-            error(err) {
+            error: (err) => {
                 console.error('Error fetching product details:', err);
             }
         })

@@ -1,17 +1,18 @@
 <div class="flex flex-col gap-4">
     <!-- Main Image -->
+    @if (media && media.length > 0) {
     <div class="aspect-square overflow-hidden rounded-2xl border border-gray-200">
-        <img src="https://picsum.photos/600/600?product={{selectedThumb}}" alt="Product Image"
+        <img src="{{media[selectedThumbIndex]?.url}}" alt="Product Image" loading="lazy"
             class="w-full h-full object-cover transition-transform duration-300 hover:scale-105" />
     </div>
+    }
 
     <!-- Thumbnails -->
     <div class="flex gap-3 justify-center p-1 overflow-auto">
-        @for (thumb of thumbnails; track $index){
-        <img (click)="setSelectedThumb(thumb)"
-         src="https://picsum.photos/600/600?product={{thumb}}" alt="Thumbnail"
+        @for (thumb of media; track $index) {
+        <img (click)="setSelectedThumbIndex($index)" src="{{thumb.url}}" alt="Thumbnail" loading="lazy"
             class="md:w-20 md:h-20 w-12 h-12 object-cover rounded-xl cursor-pointer border border-gray-200 hover:border-rose-600 transition"
-            [class.ring-2]="selectedThumb === thumb" [class.ring-rose-600]="selectedThumb === thumb" />
+            [class.ring-2]="selectedThumbIndex === $index" [class.ring-rose-600]="selectedThumbIndex === $index" />
         }
     </div>
 </div>

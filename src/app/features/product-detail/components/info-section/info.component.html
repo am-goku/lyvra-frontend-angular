@@ -1,28 +1,13 @@
 <section class="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10">
-    <product-media-section />
+    <product-media-section [media]="product?.images" />
 
     <!-- Product Info -->
     <div class="flex flex-col gap-5">
-        <h1 class="text-3xl font-bold text-gray-900">Women’s Summer Dress</h1>
-        <p class="text-rose-600 text-2xl font-semibold">₹1,299</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{product?.name}}</h1>
+        <p class="text-rose-600 text-2xl font-semibold">₹{{product?.price}}</p>
         <p class="text-gray-600 leading-relaxed">
-            Breezy and lightweight summer dress made from premium cotton, perfect for everyday comfort and style.
+            {{product?.description}}
         </p>
-
-        <!-- Sizes -->
-        <div>
-            <h3 class="font-semibold mb-2">Select Size</h3>
-            <div class="flex gap-3">
-                @for(size of sizes; track size; let i = $index){
-                <button
-                    class="px-4 py-2 rounded-full border border-gray-300 hover:border-rose-600 hover:text-rose-600 transition"
-                    [class.bg-rose-600]="selectedSize === size" [class.text-white]="selectedSize === size"
-                    (click)="setSelectctedSize(i)">
-                    {{ size }}
-                </button>
-                }
-            </div>
-        </div>
 
         <!-- Actions -->
         <div class="flex flex-wrap gap-3 mt-4">

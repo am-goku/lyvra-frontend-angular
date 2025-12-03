@@ -1,5 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
+import { SingleProductResponse } from "../../models/product.model";
 
 @Injectable({ providedIn: "root" })
 export class ProductService {
@@ -14,7 +15,7 @@ export class ProductService {
     }
 
     getProductById(productId: number) {
-        return this.http.get(`products/${productId}`);
+        return this.http.get<SingleProductResponse>(`products/${productId}`);
     }
 
 }
