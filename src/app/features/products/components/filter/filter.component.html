@@ -1,89 +1,307 @@
 <!-- MOBILE: Filter button + Search bar -->
 <div class="sm:hidden flex items-center gap-3 px-4 mt-4">
-  <!-- Filter Button -->
+  <!-- Filter Button with Badge -->
   <button
     (click)="setIsDrawerOpen()"
-    class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2.5 rounded-full flex items-center gap-2 shadow-lg transition-all duration-200 flex-shrink-0 font-medium">
+    class="relative bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white px-5 py-3 rounded-xl flex items-center gap-2 shadow-lg hover:shadow-xl transition-all duration-200 flex-shrink-0 font-medium">
     <lucide-icon [img]="SliderIcon" class="w-5 h-5"></lucide-icon>
-    <!-- <span class="text-sm">Filters</span> -->
+    <span class="text-sm font-semibold">Filters</span>
+    @if (getActiveFilterCount() > 0) {
+    <span class="absolute -top-2 -right-2 bg-white text-rose-600 text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center shadow-md">
+      {{ getActiveFilterCount() }}
+    </span>
+    }
   </button>
 
   <!-- Search Bar -->
   <div class="flex-1 relative">
     <input
       type="text"
-      placeholder="Search for products..."
-      class="w-full px-4 py-2.5 rounded-full placeholder:text-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-rose-600 text-sm shadow-sm transition-shadow" />
+      [(ngModel)]="searchQuery"
+      placeholder="Search products..."
+      class="w-full pl-4 pr-10 py-3 rounded-xl placeholder:text-gray-400 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm shadow-sm transition-all" />
     <lucide-icon
       [img]="SearchIcon"
-      class="w-5 h-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"></lucide-icon>
+      class="w-5 h-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></lucide-icon>
   </div>
 </div>
 
 <!-- MOBILE DRAWER -->
 @if (isDrawerOpen) {
-<div class="fixed inset-0 z-50 flex justify-end bg-black/40 backdrop-blur-sm transition-opacity duration-300">
+<div class="fixed inset-0 z-50 sm:hidden" (click)="setIsDrawerOpen()">
+  <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
   <div
-    class="bg-white w-80 max-w-full h-full shadow-2xl transform transition-transform duration-300 ease-out"
-    [class.translate-x-full]="!isDrawerOpen"
-    [class.translate-x-0]="isDrawerOpen">
-    <button
-      (click)="setIsDrawerOpen()"
-      class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 transition-colors p-1">
-      <lucide-icon [img]="XIcon" class="w-6 h-6"></lucide-icon>
-    </button>
-
-    <h3 class="text-xl font-bold mb-5 mt-12 px-5 text-gray-900">Filters</h3>
-
-    <div class="overflow-y-auto h-[calc(100vh-6rem)] px-5 pb-6 space-y-7 pr-2">
-      <!-- Category -->
-      <div>
-        <h4 class="font-semibold text-gray-800 mb-3">Category</h4>
-        <ul class="space-y-2.5">
-          @for (i of [1,2,3,4,5]; track i) {
-          <li>
-            <label class="flex items-center gap-3 cursor-pointer select-none">
-              <input type="checkbox" class="w-4 h-4 text-rose-600 rounded focus:ring-2 focus:ring-rose-500" />
-              <span class="text-gray-700">Category {{ i }}</span>
-            </label>
-          </li>
-          }
-        </ul>
+    class="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300"
+    (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="sticky top-0 bg-gradient-to-r from-rose-600 to-rose-700 text-white p-5 flex items-center justify-between shadow-lg z-10">
+      <div class="flex items-center gap-3">
+        <lucide-icon [img]="SliderIcon" class="w-6 h-6"></lucide-icon>
+        <h3 class="text-xl font-bold">Filters</h3>
+        @if (getActiveFilterCount() > 0) {
+        <span class="bg-white text-rose-600 text-xs font-bold px-2.5 py-1 rounded-full">
+          {{ getActiveFilterCount() }}
+        </span>
+        }
       </div>
-
-      <!-- Gender -->
-      <div>
-        <h4 class="font-semibold text-gray-800 mb-3">Gender</h4>
-        <ul class="space-y-2.5">
-          <li><label class="flex items-center gap-3 cursor-pointer select-none"><input type="checkbox" class="w-4 h-4 text-rose-600 rounded focus:ring-2 focus:ring-rose-500" />Men</label></li>
-          <li><label class="flex items-center gap-3 cursor-pointer select-none"><input type="checkbox" class="w-4 h-4 text-rose-600 rounded focus:ring-2 focus:ring-rose-500" />Women</label></li>
-          <li><label class="flex items-center gap-3 cursor-pointer select-none"><input type="checkbox" class="w-4 h-4 text-rose-600 rounded focus:ring-2 focus:ring-rose-500" />Kids</label></li>
-        </ul>
-      </div>
-
-      <!-- Price -->
-      <div>
-        <h4 class="font-semibold text-gray-800 mb-3">Price</h4>
-        <input type="range" min="0" max="500" class="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer accent-rose-600" />
-        <div class="flex justify-between text-sm text-gray-500 mt-2">
-          <span>$0</span><span>$500</span>
-        </div>
-      </div>
-
-      <!-- Color -->
-      <div>
-        <h4 class="font-semibold text-gray-800 mb-3">Color</h4>
-        <div class="flex flex-wrap gap-3">
-          @for (i of [1,2,3,4,5,6]; track i) {
-          <span
-            class="w-9 h-9 rounded-full border-2 border-gray-300 cursor-pointer transition-transform hover:scale-110 shadow-sm"
-            [style.backgroundColor]="'hsl(' + (i * 60) + ', 70%, 50%)'"></span>
-          }
-        </div>
-      </div>
-
       <button
-        class="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-full mt-8 font-medium transition-all duration-200 shadow-md">
+        (click)="setIsDrawerOpen()"
+        class="text-white/90 hover:text-white transition-colors p-1">
+        <lucide-icon [img]="XIcon" class="w-6 h-6"></lucide-icon>
+      </button>
+    </div>
+
+    <!-- Filters Content -->
+    <div class="overflow-y-auto h-[calc(100vh-140px)] px-5 py-6 space-y-4">
+      
+      <!-- Clear All Button -->
+      @if (hasActiveFilters()) {
+      <button
+        (click)="clearAllFilters()"
+        class="w-full text-rose-600 hover:text-rose-700 font-medium text-sm py-2 px-4 border border-rose-200 hover:border-rose-300 rounded-lg transition-all duration-200 hover:bg-rose-50">
+        Clear All Filters
+      </button>
+      }
+
+      <!-- Category Section -->
+      <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+        <button
+          (click)="toggleSection('category')"
+          class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center gap-2">
+            <h4 class="font-semibold text-gray-900">Category</h4>
+            @if (selectedCategories().length > 0) {
+            <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+              {{ selectedCategories().length }}
+            </span>
+            }
+          </div>
+          <lucide-icon 
+            [img]="expandedSections().category ? ChevronUpIcon : ChevronDownIcon" 
+            class="w-5 h-5 text-gray-500 transition-transform">
+          </lucide-icon>
+        </button>
+        @if (expandedSections().category) {
+        <div class="px-4 pb-4 space-y-2 animate-slideDown">
+          @for (cat of categories; track cat.id) {
+          <label class="flex items-center justify-between cursor-pointer group p-2 rounded-lg hover:bg-gray-50 transition-colors">
+            <div class="flex items-center gap-3">
+              <input 
+                type="checkbox" 
+                [checked]="selectedCategories().includes(cat.id)"
+                (change)="toggleCategory(cat.id)"
+                class="w-4 h-4 text-rose-600 border-gray-300 rounded focus:ring-2 focus:ring-rose-500 cursor-pointer" />
+              <span class="text-gray-700 group-hover:text-gray-900 font-medium">{{ cat.name }}</span>
+            </div>
+            <span class="text-xs text-gray-400 font-medium">{{ cat.count }}</span>
+          </label>
+          }
+        </div>
+        }
+      </div>
+
+      <!-- Gender Section -->
+      <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+        <button
+          (click)="toggleSection('gender')"
+          class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center gap-2">
+            <h4 class="font-semibold text-gray-900">Gender</h4>
+            @if (selectedGenders().length > 0) {
+            <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+              {{ selectedGenders().length }}
+            </span>
+            }
+          </div>
+          <lucide-icon 
+            [img]="expandedSections().gender ? ChevronUpIcon : ChevronDownIcon" 
+            class="w-5 h-5 text-gray-500">
+          </lucide-icon>
+        </button>
+        @if (expandedSections().gender) {
+        <div class="px-4 pb-4 space-y-2 animate-slideDown">
+          @for (gender of genders; track gender) {
+          <label class="flex items-center gap-3 cursor-pointer group p-2 rounded-lg hover:bg-gray-50 transition-colors">
+            <input 
+              type="checkbox" 
+              [checked]="selectedGenders().includes(gender)"
+              (change)="toggleGender(gender)"
+              class="w-4 h-4 text-rose-600 border-gray-300 rounded focus:ring-2 focus:ring-rose-500 cursor-pointer" />
+            <span class="text-gray-700 group-hover:text-gray-900 font-medium">{{ gender }}</span>
+          </label>
+          }
+        </div>
+        }
+      </div>
+
+      <!-- Brand Section -->
+      <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+        <button
+          (click)="toggleSection('brand')"
+          class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center gap-2">
+            <h4 class="font-semibold text-gray-900">Brand</h4>
+            @if (selectedBrands().length > 0) {
+            <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+              {{ selectedBrands().length }}
+            </span>
+            }
+          </div>
+          <lucide-icon 
+            [img]="expandedSections().brand ? ChevronUpIcon : ChevronDownIcon" 
+            class="w-5 h-5 text-gray-500">
+          </lucide-icon>
+        </button>
+        @if (expandedSections().brand) {
+        <div class="px-4 pb-4 space-y-2 animate-slideDown">
+          @for (brand of brands; track brand) {
+          <label class="flex items-center gap-3 cursor-pointer group p-2 rounded-lg hover:bg-gray-50 transition-colors">
+            <input 
+              type="checkbox" 
+              [checked]="selectedBrands().includes(brand)"
+              (change)="toggleBrand(brand)"
+              class="w-4 h-4 text-rose-600 border-gray-300 rounded focus:ring-2 focus:ring-rose-500 cursor-pointer" />
+            <span class="text-gray-700 group-hover:text-gray-900 font-medium">{{ brand }}</span>
+          </label>
+          }
+        </div>
+        }
+      </div>
+
+      <!-- Price Range Section -->
+      <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+        <button
+          (click)="toggleSection('price')"
+          class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center gap-2">
+            <h4 class="font-semibold text-gray-900">Price Range</h4>
+            @if (minPrice() > 0 || maxPrice() < 500) {
+            <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+              Active
+            </span>
+            }
+          </div>
+          <lucide-icon 
+            [img]="expandedSections().price ? ChevronUpIcon : ChevronDownIcon" 
+            class="w-5 h-5 text-gray-500">
+          </lucide-icon>
+        </button>
+        @if (expandedSections().price) {
+        <div class="px-4 pb-4 space-y-4 animate-slideDown">
+          <div class="flex items-center gap-4">
+            <div class="flex-1">
+              <label class="text-xs text-gray-500 font-medium mb-1 block">Min</label>
+              <input 
+                type="number" 
+                [(ngModel)]="minPrice"
+                min="0" 
+                max="500"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm" />
+            </div>
+            <span class="text-gray-400 mt-5">-</span>
+            <div class="flex-1">
+              <label class="text-xs text-gray-500 font-medium mb-1 block">Max</label>
+              <input 
+                type="number" 
+                [(ngModel)]="maxPrice"
+                min="0" 
+                max="500"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm" />
+            </div>
+          </div>
+          <div class="bg-gradient-to-r from-rose-500 to-rose-600 text-white text-center py-2 px-4 rounded-lg font-semibold text-sm shadow-sm">
+            ${{ minPrice() }} - ${{ maxPrice() }}
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Color Section -->
+      <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+        <button
+          (click)="toggleSection('color')"
+          class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center gap-2">
+            <h4 class="font-semibold text-gray-900">Color</h4>
+            @if (selectedColors().length > 0) {
+            <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+              {{ selectedColors().length }}
+            </span>
+            }
+          </div>
+          <lucide-icon 
+            [img]="expandedSections().color ? ChevronUpIcon : ChevronDownIcon" 
+            class="w-5 h-5 text-gray-500">
+          </lucide-icon>
+        </button>
+        @if (expandedSections().color) {
+        <div class="px-4 pb-4 animate-slideDown">
+          <div class="grid grid-cols-4 gap-3">
+            @for (color of colors; track color.id) {
+            <button
+              (click)="toggleColor(color.id)"
+              [class.ring-2]="selectedColors().includes(color.id)"
+              [class.ring-rose-600]="selectedColors().includes(color.id)"
+              [class.ring-offset-2]="selectedColors().includes(color.id)"
+              class="relative w-12 h-12 rounded-lg cursor-pointer transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
+              [style.backgroundColor]="color.hex"
+              [title]="color.name">
+              @if (selectedColors().includes(color.id)) {
+              <svg class="absolute inset-0 m-auto w-6 h-6 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+              </svg>
+              }
+            </button>
+            }
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Rating Section -->
+      <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+        <button
+          (click)="toggleSection('rating')"
+          class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+          <div class="flex items-center gap-2">
+            <h4 class="font-semibold text-gray-900">Rating</h4>
+            @if (minRating() > 0) {
+            <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+              {{ minRating() }}+ ⭐
+            </span>
+            }
+          </div>
+          <lucide-icon 
+            [img]="expandedSections().rating ? ChevronUpIcon : ChevronDownIcon" 
+            class="w-5 h-5 text-gray-500">
+          </lucide-icon>
+        </button>
+        @if (expandedSections().rating) {
+        <div class="px-4 pb-4 space-y-2 animate-slideDown">
+          @for (rating of [4, 3, 2, 1]; track rating) {
+          <label class="flex items-center gap-3 cursor-pointer group p-2 rounded-lg hover:bg-gray-50 transition-colors">
+            <input 
+              type="radio" 
+              name="rating"
+              [checked]="minRating() === rating"
+              (change)="minRating.set(rating)"
+              class="w-4 h-4 text-rose-600 border-gray-300 focus:ring-2 focus:ring-rose-500 cursor-pointer" />
+            <div class="flex items-center gap-1">
+              <span class="text-gray-700 group-hover:text-gray-900 font-medium">{{ rating }}+</span>
+              <span class="text-yellow-400">⭐</span>
+            </div>
+          </label>
+          }
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Footer with Apply Button -->
+    <div class="sticky bottom-0 bg-white border-t border-gray-200 p-4 shadow-lg">
+      <button
+        class="w-full bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-95 shadow-md hover:shadow-lg">
         Apply Filters
       </button>
     </div>
@@ -92,71 +310,303 @@
 }
 
 <!-- DESKTOP SIDEBAR -->
-<aside
-  class="hidden sm:flex flex-col w-80 bg-white shadow-xl rounded-2xl p-6 sticky top-6 h-fit max-h-[calc(100vh-3rem)] overflow-y-auto space-y-7">
+<aside class="hidden sm:flex flex-col w-80 bg-white shadow-xl rounded-2xl sticky top-6 h-fit max-h-[calc(100vh-3rem)] overflow-hidden border border-gray-100">
   
-  <!-- Search on top -->
-  <div class="relative mb-6">
-    <input
-      type="text"
-      placeholder="Search products, brands..."
-      class="w-full px-4 py-2.5 rounded-full placeholder:text-gray-400 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-rose-600 shadow-sm transition-shadow" />
-    <lucide-icon
-      [img]="SearchIcon"
-      class="w-5 h-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"></lucide-icon>
-  </div>
-
-  <!-- Filter Content -->
-  <div>
-    <h3 class="text-xl font-bold mb-5 text-gray-900">Filters</h3>
-
-    <div class="space-y-7">
-      <div>
-        <h4 class="font-semibold text-gray-800 mb-3">Category</h4>
-        <ul class="space-y-2.5">
-          @for (i of [1,2,3,4,5]; track i) {
-          <li>
-            <label class="flex items-center gap-3 cursor-pointer select-none">
-              <input type="checkbox" class="w-4 h-4 text-rose-600 rounded focus:ring-2 focus:ring-rose-500" />
-              <span class="text-gray-700">Category {{ i }}</span>
-            </label>
-          </li>
-          }
-        </ul>
+  <!-- Header with gradient -->
+  <div class="bg-gradient-to-r from-rose-600 to-rose-700 text-white p-5 rounded-t-2xl">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-3">
+        <lucide-icon [img]="SliderIcon" class="w-6 h-6"></lucide-icon>
+        <h3 class="text-xl font-bold">Filters</h3>
+        @if (getActiveFilterCount() > 0) {
+        <span class="bg-white text-rose-600 text-xs font-bold px-2.5 py-1 rounded-full">
+          {{ getActiveFilterCount() }}
+        </span>
+        }
       </div>
-
-      <div>
-        <h4 class="font-semibold text-gray-800 mb-3">Gender</h4>
-        <ul class="space-y-2.5">
-          <li><label class="flex items-center gap-3 cursor-pointer select-none"><input type="checkbox" class="w-4 h-4 text-rose-600 rounded focus:ring-2 focus:ring-rose-500" />Men</label></li>
-          <li><label class="flex items-center gap-3 cursor-pointer select-none"><input type="checkbox" class="w-4 h-4 text-rose-600 rounded focus:ring-2 focus:ring-rose-500" />Women</label></li>
-          <li><label class="flex items-center gap-3 cursor-pointer select-none"><input type="checkbox" class="w-4 h-4 text-rose-600 rounded focus:ring-2 focus:ring-rose-500" />Kids</label></li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 class="font-semibold text-gray-800 mb-3">Price</h4>
-        <input type="range" min="0" max="500" class="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer accent-rose-600" />
-        <div class="flex justify-between text-sm text-gray-500 mt-2">
-          <span>$0</span><span>$500</span>
-        </div>
-      </div>
-
-      <div>
-        <h4 class="font-semibold text-gray-800 mb-3">Color</h4>
-        <div class="flex flex-wrap gap-3">
-          @for (i of [1,2,3,4,5,6]; track i) {
-          <span
-            class="w-9 h-9 rounded-full border-2 border-gray-300 cursor-pointer transition-transform hover:scale-110 shadow-sm"
-            [style.backgroundColor]="'hsl(' + (i * 60) + ', 70%, 50%)'"></span>
-          }
-        </div>
-      </div>
-
-      <button
-        class="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-full mt-8 font-medium transition-all duration-200 shadow-md">
-        Apply Filters
-      </button>
+    </div>
+    
+    <!-- Search in header -->
+    <div class="relative">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        placeholder="Search products..."
+        class="w-full pl-4 pr-10 py-2.5 rounded-xl placeholder:text-gray-400 text-gray-900 border-0 focus:outline-none focus:ring-2 focus:ring-white/30 text-sm shadow-sm" />
+      <lucide-icon
+        [img]="SearchIcon"
+        class="w-5 h-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></lucide-icon>
     </div>
   </div>
+
+  <!-- Scrollable Filter Content -->
+  <div class="overflow-y-auto flex-1 p-5 space-y-4">
+    
+    <!-- Clear All Button -->
+    @if (hasActiveFilters()) {
+    <button
+      (click)="clearAllFilters()"
+      class="w-full text-rose-600 hover:text-rose-700 font-medium text-sm py-2 px-4 border border-rose-200 hover:border-rose-300 rounded-lg transition-all duration-200 hover:bg-rose-50">
+      Clear All Filters
+    </button>
+    }
+
+    <!-- Category Section -->
+    <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+      <button
+        (click)="toggleSection('category')"
+        class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center gap-2">
+          <h4 class="font-semibold text-gray-900">Category</h4>
+          @if (selectedCategories().length > 0) {
+          <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+            {{ selectedCategories().length }}
+          </span>
+          }
+        </div>
+        <lucide-icon 
+          [img]="expandedSections().category ? ChevronUpIcon : ChevronDownIcon" 
+          class="w-5 h-5 text-gray-500 transition-transform">
+        </lucide-icon>
+      </button>
+      @if (expandedSections().category) {
+      <div class="px-4 pb-4 space-y-2 animate-slideDown">
+        @for (cat of categories; track cat.id) {
+        <label class="flex items-center justify-between cursor-pointer group p-2 rounded-lg hover:bg-gray-50 transition-colors">
+          <div class="flex items-center gap-3">
+            <input 
+              type="checkbox" 
+              [checked]="selectedCategories().includes(cat.id)"
+              (change)="toggleCategory(cat.id)"
+              class="w-4 h-4 text-rose-600 border-gray-300 rounded focus:ring-2 focus:ring-rose-500 cursor-pointer" />
+            <span class="text-gray-700 group-hover:text-gray-900 font-medium">{{ cat.name }}</span>
+          </div>
+          <span class="text-xs text-gray-400 font-medium">{{ cat.count }}</span>
+        </label>
+        }
+      </div>
+      }
+    </div>
+
+    <!-- Gender Section -->
+    <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+      <button
+        (click)="toggleSection('gender')"
+        class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center gap-2">
+          <h4 class="font-semibold text-gray-900">Gender</h4>
+          @if (selectedGenders().length > 0) {
+          <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+            {{ selectedGenders().length }}
+          </span>
+          }
+        </div>
+        <lucide-icon 
+          [img]="expandedSections().gender ? ChevronUpIcon : ChevronDownIcon" 
+          class="w-5 h-5 text-gray-500">
+        </lucide-icon>
+      </button>
+      @if (expandedSections().gender) {
+      <div class="px-4 pb-4 space-y-2 animate-slideDown">
+        @for (gender of genders; track gender) {
+        <label class="flex items-center gap-3 cursor-pointer group p-2 rounded-lg hover:bg-gray-50 transition-colors">
+          <input 
+            type="checkbox" 
+            [checked]="selectedGenders().includes(gender)"
+            (change)="toggleGender(gender)"
+            class="w-4 h-4 text-rose-600 border-gray-300 rounded focus:ring-2 focus:ring-rose-500 cursor-pointer" />
+          <span class="text-gray-700 group-hover:text-gray-900 font-medium">{{ gender }}</span>
+        </label>
+        }
+      </div>
+      }
+    </div>
+
+    <!-- Brand Section -->
+    <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+      <button
+        (click)="toggleSection('brand')"
+        class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center gap-2">
+          <h4 class="font-semibold text-gray-900">Brand</h4>
+          @if (selectedBrands().length > 0) {
+          <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+            {{ selectedBrands().length }}
+          </span>
+          }
+        </div>
+        <lucide-icon 
+          [img]="expandedSections().brand ? ChevronUpIcon : ChevronDownIcon" 
+          class="w-5 h-5 text-gray-500">
+        </lucide-icon>
+      </button>
+      @if (expandedSections().brand) {
+      <div class="px-4 pb-4 space-y-2 animate-slideDown">
+        @for (brand of brands; track brand) {
+        <label class="flex items-center gap-3 cursor-pointer group p-2 rounded-lg hover:bg-gray-50 transition-colors">
+          <input 
+            type="checkbox" 
+            [checked]="selectedBrands().includes(brand)"
+            (change)="toggleBrand(brand)"
+            class="w-4 h-4 text-rose-600 border-gray-300 rounded focus:ring-2 focus:ring-rose-500 cursor-pointer" />
+          <span class="text-gray-700 group-hover:text-gray-900 font-medium">{{ brand }}</span>
+        </label>
+        }
+      </div>
+      }
+    </div>
+
+    <!-- Price Range Section -->
+    <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+      <button
+        (click)="toggleSection('price')"
+        class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center gap-2">
+          <h4 class="font-semibold text-gray-900">Price Range</h4>
+          @if (minPrice() > 0 || maxPrice() < 500) {
+          <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+            Active
+          </span>
+          }
+        </div>
+        <lucide-icon 
+          [img]="expandedSections().price ? ChevronUpIcon : ChevronDownIcon" 
+          class="w-5 h-5 text-gray-500">
+        </lucide-icon>
+      </button>
+      @if (expandedSections().price) {
+      <div class="px-4 pb-4 space-y-4 animate-slideDown">
+        <div class="flex items-center gap-4">
+          <div class="flex-1">
+            <label class="text-xs text-gray-500 font-medium mb-1 block">Min</label>
+            <input 
+              type="number" 
+              [(ngModel)]="minPrice"
+              min="0" 
+              max="500"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm" />
+          </div>
+          <span class="text-gray-400 mt-5">-</span>
+          <div class="flex-1">
+            <label class="text-xs text-gray-500 font-medium mb-1 block">Max</label>
+            <input 
+              type="number" 
+              [(ngModel)]="maxPrice"
+              min="0" 
+              max="500"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-sm" />
+          </div>
+        </div>
+        <div class="bg-gradient-to-r from-rose-500 to-rose-600 text-white text-center py-2 px-4 rounded-lg font-semibold text-sm shadow-sm">
+          ${{ minPrice() }} - ${{ maxPrice() }}
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Color Section -->
+    <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+      <button
+        (click)="toggleSection('color')"
+        class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center gap-2">
+          <h4 class="font-semibold text-gray-900">Color</h4>
+          @if (selectedColors().length > 0) {
+          <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+            {{ selectedColors().length }}
+          </span>
+          }
+        </div>
+        <lucide-icon 
+          [img]="expandedSections().color ? ChevronUpIcon : ChevronDownIcon" 
+          class="w-5 h-5 text-gray-500">
+        </lucide-icon>
+      </button>
+      @if (expandedSections().color) {
+      <div class="px-4 pb-4 animate-slideDown">
+        <div class="grid grid-cols-4 gap-3">
+          @for (color of colors; track color.id) {
+          <button
+            (click)="toggleColor(color.id)"
+            [class.ring-2]="selectedColors().includes(color.id)"
+            [class.ring-rose-600]="selectedColors().includes(color.id)"
+            [class.ring-offset-2]="selectedColors().includes(color.id)"
+            class="relative w-12 h-12 rounded-lg cursor-pointer transition-all duration-200 hover:scale-110 shadow-md hover:shadow-lg"
+            [style.backgroundColor]="color.hex"
+            [title]="color.name">
+            @if (selectedColors().includes(color.id)) {
+            <svg class="absolute inset-0 m-auto w-6 h-6 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+            </svg>
+            }
+          </button>
+          }
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Rating Section -->
+    <div class="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm">
+      <button
+        (click)="toggleSection('rating')"
+        class="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors">
+        <div class="flex items-center gap-2">
+          <h4 class="font-semibold text-gray-900">Rating</h4>
+          @if (minRating() > 0) {
+          <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-0.5 rounded-full">
+            {{ minRating() }}+ ⭐
+          </span>
+          }
+        </div>
+        <lucide-icon 
+          [img]="expandedSections().rating ? ChevronUpIcon : ChevronDownIcon" 
+          class="w-5 h-5 text-gray-500">
+        </lucide-icon>
+      </button>
+      @if (expandedSections().rating) {
+      <div class="px-4 pb-4 space-y-2 animate-slideDown">
+        @for (rating of [4, 3, 2, 1]; track rating) {
+        <label class="flex items-center gap-3 cursor-pointer group p-2 rounded-lg hover:bg-gray-50 transition-colors">
+          <input 
+            type="radio" 
+            name="rating"
+            [checked]="minRating() === rating"
+            (change)="minRating.set(rating)"
+            class="w-4 h-4 text-rose-600 border-gray-300 focus:ring-2 focus:ring-rose-500 cursor-pointer" />
+          <div class="flex items-center gap-1">
+            <span class="text-gray-700 group-hover:text-gray-900 font-medium">{{ rating }}+</span>
+            <span class="text-yellow-400">⭐</span>
+          </div>
+        </label>
+        }
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- Footer with Apply Button -->
+  <div class="sticky bottom-0 bg-white border-t border-gray-200 p-4 rounded-b-2xl">
+    <button
+      class="w-full bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-[1.02] active:scale-95 shadow-md hover:shadow-lg">
+      Apply Filters
+    </button>
+  </div>
 </aside>
+
+<style>
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-slideDown {
+    animation: slideDown 0.2s ease-out;
+  }
+</style>
