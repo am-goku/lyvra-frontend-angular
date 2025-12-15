@@ -1,6 +1,13 @@
 <div class="font-sans">
     <header class="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center border-b pb-4">
         <h1 class="text-3xl font-bold text-gray-900 mb-4 sm:mb-0">Product Management</h1>
+        <a routerLink="/admin/products/new" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add Product
+        </a>
     </header>
 
     <!-- Search, Filter, and Bulk Actions Section -->
@@ -91,27 +98,30 @@
                         <!-- Product Image/Name -->
                         <td class="px-4 py-4 whitespace-nowrap">
                             <div class="flex items-center">
-                                <img [src]="product.imageUrl" class="h-10 w-10 rounded-lg object-cover mr-3 shadow-sm"
+                                <img [src]="product.imageUrl || 'assets/placeholder.png'" class="h-10 w-10 rounded-lg object-cover mr-3 shadow-sm"
                                     alt="{{ product.name }}">
                                 <div>
                                     <div class="text-sm font-medium text-gray-900 truncate max-w-xs">{{ product.name }}
                                     </div>
-                                    <div class="text-xs text-gray-500">{{ product.category }}</div>
+                                    <div class="text-xs text-gray-500">
+                                        {{ product.categories?.[0]?.name || 'Uncategorized' }}
+                                        <span *ngIf="(product.categories?.length || 0) > 1">+{{ (product.categories?.length || 0) - 1 }} more</span>
+                                    </div>
                                 </div>
                             </div>
                         </td>
                         <!-- Stock -->
                         <td class="px-4 py-4 whitespace-nowrap text-sm font-medium"
-                            [ngClass]="{'text-red-500': product.stock < 10, 'text-green-600': product.stock >= 10}">
-                            {{ product.stock | number }}
+                            [ngClass]="{'text-red-500': (product.stock || 0) < 10, 'text-green-600': (product.stock || 0) >= 10}">
+                            {{ (product.stock || 0) | number }}
                         </td>
                         <!-- Price -->
                         <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">
-                            {{ product.price | number:'1.2-2' }}$
+                            {{ (product.price || 0) | number:'1.2-2' }}$
                         </td>
                         <!-- Sales -->
                         <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
-                            {{ product.sales | number }}
+                            {{ (product.sales || 0) | number }}
                         </td>
                         <!-- Listed/Unlisted Status Toggle -->
                         <td class="px-4 py-4 whitespace-nowrap">
@@ -196,7 +206,7 @@
         <div class="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Left Column: Image and Status -->
             <div class="lg:col-span-1 space-y-4">
-                <img [src]="editingProduct()?.imageUrl || 'https://placehold.co/400x400/eeeeee/333333?text=No+Image'"
+                <img [src]="editingProduct()?.imageUrl || 'assets/placeholder.png'"
                     class="w-full h-auto rounded-lg shadow-md object-cover" alt="Product Image">
                 <div class="text-center">
                     <span [ngClass]="{
@@ -241,20 +251,10 @@
                         class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2 border focus:ring-indigo-500 focus:border-indigo-500 resize-none"></textarea>
                 </div>
 
-                <!-- Specifications (Simple display, could be editable with more complex logic) -->
-                <div>
-                    <h3 class="text-sm font-medium text-gray-700 mb-1">Specifications:</h3>
-                    <ul class="list-disc list-inside text-sm text-gray-600 pl-4 space-y-1">
-                        <li *ngFor="let spec of editingProduct()?.specs">{{ spec }}</li>
-                        <li *ngIf="editingProduct()?.specs?.length === 0" class="italic text-gray-400">No specifications
-                            listed.</li>
-                    </ul>
-                </div>
-
                 <!-- Read-only Stats -->
                 <div class="bg-gray-50 p-4 rounded-lg">
                     <h3 class="text-lg font-semibold mb-2">Sales Metrics</h3>
-                    <p>Total Sales: <span class="font-bold text-indigo-600">{{ editingProduct()?.sales | number }}
+                    <p>Total Sales: <span class="font-bold text-indigo-600">{{ (editingProduct()?.sales || 0) | number }}
                             units</span></p>
                     <p>Product ID: <span class="font-mono text-xs text-gray-600">{{ editingProduct()?.id === -1 ? 'New'
                             : editingProduct()?.id }}</span></p>

@@ -1,6 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, EventEmitter, Output, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { CreditCardIcon, LucideAngularModule } from "lucide-angular";
+import { LucideAngularModule, CreditCardIcon, WalletIcon, BanknoteIcon } from "lucide-angular";
 
 @Component({
     selector: 'checkout-payment-method',
@@ -9,21 +9,22 @@ import { CreditCardIcon, LucideAngularModule } from "lucide-angular";
     templateUrl: './payment.component.html'
 })
 export class CheckoutPaymentMethodComponent {
+    @Output() paymentMethodSelected = new EventEmitter<string>();
 
     CreditCardIcon = CreditCardIcon;
+    WalletIcon = WalletIcon;
+    BanknoteIcon = BanknoteIcon;
 
     paymentMethods = [
-        { id: 1, name: 'Credit / Debit Card', icon: 'credit-card' },
-        { id: 2, name: 'UPI / Wallet', icon: 'credit-card' },
-        { id: 3, name: 'Cash on Delivery', icon: 'credit-card' },
+        { id: 'STRIPE', name: 'Credit / Debit Card', icon: CreditCardIcon },
+        { id: 'RAZORPAY', name: 'UPI / Wallet', icon: WalletIcon },
+        { id: 'COD', name: 'Cash on Delivery', icon: BanknoteIcon },
     ];
 
-    selectedPayment = 1;
+    selectedPayment = signal('COD');
 
-    cardDetails = {
-        number: '',
-        expiry: '',
-        cvv: '',
-    };
-
+    selectPayment(method: string) {
+        this.selectedPayment.set(method);
+        this.paymentMethodSelected.emit(method);
+    }
 }

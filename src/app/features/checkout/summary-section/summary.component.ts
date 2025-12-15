@@ -1,66 +1,73 @@
-import { Component } from "@angular/core";
+import { Component, DestroyRef, Input, inject, signal } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { Router, RouterLink } from "@angular/router";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { Cart } from "../../../models/cart.model";
+import { OrderService } from "../../../core/services/order.service";
+import { NotificationService } from "../../../core/services/notification.service";
+import { LoggerService } from "../../../core/services/logger.service";
 
 @Component({
     selector: 'checkout-order-summary',
     standalone: true,
-    imports: [],
+    imports: [CommonModule, RouterLink],
     templateUrl: './summary.component.html'
 })
 export class CheckoutOrderSummaryComponent {
-    //-----------------------//
-    //--> PAYMENT-METHOD <--//
-    //---------------------//
-    paymentMethods = [
-        { id: 1, name: 'Credit / Debit Card', icon: 'credit-card' },
-        { id: 2, name: 'UPI / Wallet', icon: 'credit-card' },
-        { id: 3, name: 'Cash on Delivery', icon: 'credit-card' },
-    ];
-    selectedPayment = 1; // From payment method
+    private orderService = inject(OrderService);
+    private router = inject(Router);
+    private notification = inject(NotificationService);
+    private logger = inject(LoggerService);
+    private destroyRef = inject(DestroyRef);
 
-    deliveryOptions = [
-        { id: 1, name: 'Standard Delivery', eta: '3-5 business days', cost: 50 },
-        { id: 2, name: 'Express Delivery', eta: '1-2 business days', cost: 150 },
-        { id: 3, name: 'Overnight Delivery', eta: 'Next day delivery', cost: 300 },
-    ];
-    selectedDelivery = 1;
+    @Input() cart: Cart | null = null;
+    @Input() addressId: number | null = null;
+    @Input() paymentMethod: string = 'COD';
 
-    //---------------------//
-    //---> CART-ITEMS <---//
-    //-------------------//
-    cartItems = [
-        { id: 1, name: 'Floral Maxi Dress', size: 'M', color: 'Red', price: 1299, quantity: 1 },
-        { id: 2, name: 'Casual Denim Jacket', size: 'L', color: 'Blue', price: 1599, quantity: 2 },
-        { id: 3, name: 'Men’s Polo T-Shirt', size: 'S', color: 'White', price: 899, quantity: 1 },
-    ]; //From Cart
+    isLoading = signal(false);
 
-    getSubtotal() {
-        return this.cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    }
-
-    getDiscount() {
-        return Math.round(this.getSubtotal() * 0.05); // example 5% discount
-    }
-
-    getDeliveryCost() {
-        // Assume delivery cost based on selected option
-        return this.deliveryOptions.find(d => d.id === this.selectedDelivery)?.cost || 0;
-    }
-
-    getTax() {
-        return Math.round((this.getSubtotal() - this.getDiscount()) * 0.12); // 12% GST
-    }
-
-    getTotal() {
-        return this.getSubtotal() - this.getDiscount() + this.getTax() + this.getDeliveryCost();
+    getTotal(): number {
+        if (!this.cart || !this.cart.items) return 0;
+        return this.cart.items.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
     }
 
     placeOrder() {
-        console.log('Order placed:', {
-            // shipping: this.shipping,
-            paymentMethod: this.selectedPayment,
-            items: this.cartItems,
-            total: this.getTotal(),
-        });
-    }
+        if (!this.cart || !this.cart.items.length) {
+            this.notification.warning('Your cart is empty');
+            return;
+        }
 
-};
+        if (!this.addressId) {
+            this.notification.warning('Please select a shipping address');
+            return;
+        }
+
+        this.isLoading.set(true);
+        this.logger.info('Placing order', {
+            addressId: this.addressId,
+            paymentMethod: this.paymentMethod,
+            total: this.getTotal()
+        });
+
+        this.orderService.createOrder({
+            addressId: this.addressId,
+            paymentMethod: this.paymentMethod
+        })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (order) => {
+                    this.isLoading.set(false);
+                    this.notification.success('Order placed successfully!');
+                    this.logger.info('Order placed', { orderId: order.id });
+                    // Navigate to success page or orders page
+                    // Ideally backend clears cart, but frontend checkout flow usually redirects
+                    this.router.navigate(['/']); // TODO: Create order success page
+                },
+                error: (err) => {
+                    this.isLoading.set(false);
+                    this.logger.error('Failed to place order', err);
+                    this.notification.error('Failed to place order. Please try again.');
+                }
+            });
+    }
+}

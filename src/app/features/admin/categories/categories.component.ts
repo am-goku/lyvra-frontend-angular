@@ -171,35 +171,63 @@ export class AdminCategoriesComponent implements OnInit {
     }
 
     toggleStatus(id: number) {
-        this.allCategories.update(categories =>
-            categories.map(c => c.id === id ? { ...c, active: !c.active } : c)
-        );
-        this.closeModal();
+        const category = this.allCategories().find(c => c.id === id);
+        if (!category) return;
+
+        const newVal = !category.active;
+        this.categoryService.updateCategory(id, { active: newVal }).subscribe({
+            next: () => {
+                this.allCategories.update(categories =>
+                    categories.map(c => c.id === id ? { ...c, active: newVal } : c)
+                );
+                this.closeModal();
+            },
+            error: (err) => console.error('Failed to update status', err)
+        });
     }
 
     deleteCategory(id: number) {
-        this.allCategories.update(categories => categories.filter(c => c.id !== id));
-        this.selectedCategories.update(set => {
-            const newSet = new Set(set);
-            newSet.delete(id);
-            return newSet;
+        if (!confirm('Are you sure you want to delete this category?')) return;
+
+        this.categoryService.deleteCategory(id).subscribe({
+            next: () => {
+                this.allCategories.update(categories => categories.filter(c => c.id !== id));
+                this.selectedCategories.update(set => {
+                    const newSet = new Set(set);
+                    newSet.delete(id);
+                    return newSet;
+                });
+                this.closeModal();
+            },
+            error: (err) => console.error('Failed to delete category', err)
         });
-        this.closeModal();
     }
 
     bulkToggleStatus() {
         const activate = !this.selectedInactive();
-        this.allCategories.update(categories =>
-            categories.map(c => this.selectedCategories().has(c.id) ? { ...c, active: activate } : c)
-        );
+        const selectedIds = [...this.selectedCategories()];
+
+        // Naive loop for MVP
+        selectedIds.forEach(id => {
+            this.categoryService.updateCategory(id, { active: activate }).subscribe(() => {
+                this.allCategories.update(categories =>
+                    categories.map(c => c.id === id ? { ...c, active: activate } : c)
+                );
+            });
+        });
         this.selectedCategories.set(new Set());
     }
 
     bulkDelete() {
-        if (confirm(`Delete ${this.selectedCategories().size} categories?`)) {
-            this.allCategories.update(categories => categories.filter(c => !this.selectedCategories().has(c.id)));
-            this.selectedCategories.set(new Set());
-        }
+        if (!confirm(`Delete ${this.selectedCategories().size} categories?`)) return;
+
+        const selectedIds = [...this.selectedCategories()];
+        selectedIds.forEach(id => {
+            this.categoryService.deleteCategory(id).subscribe(() => {
+                this.allCategories.update(categories => categories.filter(c => c.id !== id));
+            });
+        });
+        this.selectedCategories.set(new Set());
     }
 
     prevPage() { if (this.currentPage() > 1) this.currentPage.update(p => p - 1); }

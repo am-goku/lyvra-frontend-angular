@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, Component, computed, signal, effect, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal, effect, OnInit, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin } from 'rxjs';
+import { OrderService } from '../../../core/services/order.service';
+import { UserService } from '../../../core/services/user.service';
+import { LoggerService } from '../../../core/services/logger.service';
+import { NotificationService } from '../../../core/services/notification.service';
+import { Order } from '../../../models/order.model';
+import { User } from '../../../models/user.model';
 
 // --- Interfaces for Data Structure ---
 
@@ -29,40 +37,6 @@ interface FilterPeriod {
     label: string;
 }
 
-// --- Utility Functions for Data ---
-
-/**
- * Simulates fetching and processing raw data.
- * In a real app, this would come from a service/API.
- */
-function getSimulatedData(): { sales: SaleRecord[], users: UserMetric[] } {
-    // Generate 30 days of synthetic sales data
-    const sales: SaleRecord[] = Array(30).fill(0).map((_, i) => {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-
-        const revenue = Math.floor(Math.random() * 5000) + 1000;
-        const orders = Math.floor(Math.random() * 50) + 10;
-        const aov = parseFloat((revenue / orders).toFixed(2));
-
-        return {
-            date: date.toISOString().split('T')[0],
-            revenue,
-            orders,
-            aov
-        };
-    }).reverse(); // Sort oldest to newest
-
-    const users: UserMetric[] = [
-        { country: 'United States', newUsers: 120, totalUsers: 5800 },
-        { country: 'Germany', newUsers: 45, totalUsers: 2100 },
-        { country: 'Japan', newUsers: 30, totalUsers: 1550 },
-        { country: 'Brazil', newUsers: 55, totalUsers: 1900 },
-    ];
-
-    return { sales, users };
-}
-
 @Component({
     selector: 'app-root',
     standalone: true,
@@ -72,6 +46,12 @@ function getSimulatedData(): { sales: SaleRecord[], users: UserMetric[] } {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDashboardComponent implements OnInit {
+    private orderService = inject(OrderService);
+    private userService = inject(UserService);
+    private logger = inject(LoggerService);
+    private notification = inject(NotificationService);
+    private destroyRef = inject(DestroyRef);
+
     // --- State Signals ---
     periods: FilterPeriod[] = [
         { id: '7d', label: 'Last 7 Days' },
@@ -81,16 +61,80 @@ export class AdminDashboardComponent implements OnInit {
     ];
     selectedPeriod = signal<FilterPeriod>(this.periods[1]); // Default to Last 30 Days
 
-    // Raw data (simulated)
+    // Raw data
     rawSalesData = signal<SaleRecord[]>([]);
     rawUserStats = signal<UserMetric[]>([]);
+    isLoading = signal(false);
 
     // --- Initialization ---
 
     ngOnInit(): void {
-        const { sales, users } = getSimulatedData();
+        this.loadDashboardData();
+    }
+
+    loadDashboardData() {
+        this.isLoading.set(true);
+        forkJoin({
+            orders: this.orderService.getOrders(), // Assuming fetching all orders for stats
+            users: this.userService.getUsers()
+        })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: ({ orders, users }) => {
+                    this.processOrders(orders);
+                    this.processUsers(users);
+                    this.isLoading.set(false);
+                },
+                error: (err) => {
+                    this.logger.error('Failed to load dashboard data', err);
+                    this.notification.error('Failed to load dashboard stats');
+                    this.isLoading.set(false);
+                }
+            });
+    }
+
+    private processOrders(orders: Order[]) {
+        // Group by Date
+        const salesMap = new Map<string, { revenue: number, orders: number }>();
+
+        orders.forEach(order => {
+            if (!order.createdAt) return;
+            const date = new Date(order.createdAt).toISOString().split('T')[0];
+            const current = salesMap.get(date) || { revenue: 0, orders: 0 };
+
+            // Only count paid/delivered orders for revenue ideally, but using all for now
+            salesMap.set(date, {
+                revenue: current.revenue + (order.total || 0),
+                orders: current.orders + 1
+            });
+        });
+
+        const sales: SaleRecord[] = Array.from(salesMap.entries()).map(([date, data]) => ({
+            date,
+            revenue: data.revenue,
+            orders: data.orders,
+            aov: data.orders > 0 ? data.revenue / data.orders : 0
+        })).sort((a, b) => a.date.localeCompare(b.date));
+
         this.rawSalesData.set(sales);
-        this.rawUserStats.set(users);
+    }
+
+    private processUsers(users: User[]) {
+        // Mocking country distribution as it's not in User model
+        const total = users.length;
+        // Assume recent users are "new" (last 30 days)
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const newUsersCount = users.filter(u => u.createdAt && new Date(u.createdAt) >= thirtyDaysAgo).length;
+
+        // One mock entry for "Global" since we don't track country
+        const metric: UserMetric = {
+            country: 'Global',
+            newUsers: newUsersCount,
+            totalUsers: total
+        };
+        this.rawUserStats.set([metric]);
     }
 
     // --- Filtering Logic (Computed Signals) ---
@@ -145,14 +189,14 @@ export class AdminDashboardComponent implements OnInit {
 
     maxRevenue = computed(() => {
         const revenues = this.filteredSales().map(s => s.revenue);
-        return Math.max(...revenues);
-    })
+        return revenues.length > 0 ? Math.max(...revenues) : 0;
+    });
 
     avgDailyRevenue = computed(() => {
         const filtered = this.filteredSales();
         if (filtered.length === 0) return 0;
         return this.totalRevenue() / filtered.length;
-    })
+    });
 
     computedKpis = computed<Kpi[]>(() => {
         return [

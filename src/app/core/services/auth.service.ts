@@ -53,7 +53,7 @@ export class AuthService {
     signup(credentials: SignupCredentials): Observable<{ message: string }> {
         this.logger.debug('Sending OTP for registration', { email: credentials.email });
 
-        return this.http.post<{ message: string }>('auth/register/send-otp', credentials).pipe(
+        return this.http.post<{ message: string }>('auth/register/send-otp', {...credentials, name: undefined}).pipe(
             tap(() => {
                 this.logger.info('OTP sent successfully', { email: credentials.email });
             }),

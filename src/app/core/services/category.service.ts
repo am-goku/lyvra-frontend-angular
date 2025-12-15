@@ -21,4 +21,8 @@ export class CategoryService {
     deleteCategory(id: number) {
         return this.http.delete(`categories/${id}`);
     }
+
+    updateCategory(id: number, data: FormData | any) {
+        return this.http.patch(`categories/${id}`, data);
+    }
 }

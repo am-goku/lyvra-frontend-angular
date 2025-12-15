@@ -5,12 +5,11 @@
     @for(method of paymentMethods; track method.id) {
       <label
         class="flex items-center justify-between p-4 border rounded-xl cursor-pointer hover:border-rose-600 transition"
+        [class.border-rose-600]="selectedPayment() === method.id"
+        [class.bg-rose-50]="selectedPayment() === method.id"
       >
         <div class="flex items-center gap-3">
-          <!-- Optional Icon -->
-          @if(method.icon) {
-            <lucide-icon [img]="CreditCardIcon" class="w-6 h-6 text-rose-600"></lucide-icon>
-          }
+          <lucide-icon [img]="method.icon" class="w-6 h-6 text-rose-600"></lucide-icon>
           <span class="font-semibold text-gray-800">{{ method.name }}</span>
         </div>
 
@@ -18,39 +17,11 @@
           type="radio"
           name="payment"
           [value]="method.id"
-          [(ngModel)]="selectedPayment"
+          [checked]="selectedPayment() === method.id"
+          (change)="selectPayment(method.id)"
           class="w-4 h-4 accent-rose-600"
         />
       </label>
-
-      <!-- Conditional Card Form -->
-      @if(selectedPayment === 1 && method.id === 1) {
-        <div class="flex flex-col gap-3 mt-3 ">
-          <input
-            type="text"
-            placeholder="Card Number"
-            class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
-            [(ngModel)]="cardDetails.number"
-            name="cardNumber"
-          />
-          <div class="flex w-full gap-1">
-            <input
-              type="text"
-              placeholder="Expiry MM/YY"
-              class="w-2/3 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
-              [(ngModel)]="cardDetails.expiry"
-              name="cardExpiry"
-            />
-            <input
-              type="text"
-              placeholder="CVV"
-              class="w-1/3 px-1 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none"
-              [(ngModel)]="cardDetails.cvv"
-              name="cardCvv"
-            />
-          </div>
-        </div>
-      }
     }
   </div>
 </section>

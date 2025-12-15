@@ -1,78 +1,59 @@
-import { ChangeDetectionStrategy, Component, computed, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, signal, OnInit, inject, DestroyRef } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ProductService } from '../../../core/services/products.service';
+import { CategoryService } from '../../../core/services/category.service';
+import { NotificationService } from '../../../core/services/notification.service';
+import { Product } from '../../../models/product.model';
+import { Category } from '../../../models/category.model';
+import { LoggerService } from '../../../core/services/logger.service';
 
-// --- Interfaces for Product Data Structure ---
-
-interface Product {
-  id: number;
-  name: string;
-  category: 'Electronics' | 'Apparel' | 'Home Goods' | 'Books';
-  price: number;
-  stock: number;
-  sales: number;
-  isListed: boolean;
-  imageUrl: string;
-  description: string;
-  specs: string[];
+interface DisplayProduct extends Product {
+  stock?: number;
+  sales?: number;
+  isListed?: boolean;
+  categories?: Category[]; // Ensure this matches backend response
+  imageUrl?: string; // Derived from images array
 }
 
 interface SortState {
-  column: keyof Product | '';
+  column: keyof DisplayProduct | '';
   direction: 'asc' | 'desc';
 }
-
-// --- Utility Functions for Mock Data ---
-
-function getMockProducts(): Product[] {
-  const categories: Product['category'][] = ['Electronics', 'Apparel', 'Home Goods', 'Books'];
-  const data: Product[] = [];
-
-  for (let i = 1; i <= 25; i++) {
-    const category = categories[i % categories.length];
-    const isListed = Math.random() > 0.3;
-
-    data.push({
-      id: i,
-      name: `Product ${i}: ${category} Item`,
-      category,
-      price: parseFloat((Math.random() * 500 + 10).toFixed(2)),
-      stock: Math.floor(Math.random() * 500),
-      sales: Math.floor(Math.random() * 2000),
-      isListed: isListed,
-      imageUrl: `https://placehold.co/80x80/2980b9/ffffff?text=P${i}`,
-      description: `A detailed description for Product ${i}. This item is essential for all your ${category.toLowerCase()} needs.`,
-      specs: [`Weight: ${Math.floor(Math.random() * 10)}kg`, `Material: Durable Polymer`, `Warranty: 1 Year`],
-    });
-  }
-  return data;
-}
-
-// --- Product Dashboard Component ---
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, DecimalPipe],
+  imports: [CommonModule, DecimalPipe, RouterLink],
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminProductComponent implements OnInit {
+  private productService = inject(ProductService);
+  private categoryService = inject(CategoryService);
+  private notification = inject(NotificationService);
+  private logger = inject(LoggerService);
+  private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
+
   // --- State Signals ---
-  allProducts = signal<Product[]>([]);
+  allProducts = signal<DisplayProduct[]>([]);
+  categories = signal<Category[]>([]);
+
   searchTerm = signal<string>('');
   filterCategory = signal<string>('all');
   sortState = signal<SortState>({ column: 'name', direction: 'asc' });
   currentPage = signal<number>(1);
   pageSize = signal<number>(10);
   selectedProducts = signal<number[]>([]); // Array of selected product IDs
-  
-  // Modal state
-  isModalOpen = signal<boolean>(false);
-  // Holds the product data currently being edited/viewed in the modal.
-  editingProduct = signal<Product | null>(null);
 
-  // Table columns for rendering and sorting
+  // Modal state (For Quick Edit/View only)
+  isModalOpen = signal<boolean>(false);
+  editingProduct = signal<DisplayProduct | null>(null);
+
+  // Table columns
   columns = [
     { key: 'name', label: 'Product' },
     { key: 'stock', label: 'Stock' },
@@ -80,101 +61,113 @@ export class AdminProductComponent implements OnInit {
     { key: 'sales', label: 'Sales' },
   ];
 
-  // --- Initialization ---
   ngOnInit(): void {
-    this.allProducts.set(getMockProducts());
+    this.loadData();
   }
 
-  // --- Filtering & Sorting Logic (Computed Signals) ---
+  loadData() {
+    // Load Categories
+    this.categoryService.getCategories()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(cats => this.categories.set(cats));
 
-  /** Filters products based on search term and category. */
+    // Load Products
+    this.productService.getProducts()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (data: any[]) => {
+          // Map backend data to DisplayProduct
+          const mapped: DisplayProduct[] = data.map(p => ({
+            ...p,
+            stock: p.stock ?? Math.floor(Math.random() * 100), // Fallback if missing
+            sales: p.sales ?? Math.floor(Math.random() * 500),
+            isListed: p.isListed ?? true,
+            imageUrl: p.images && p.images.length > 0 ? p.images[0].url : 'assets/placeholder.png',
+            categories: p.categories || []
+          }));
+          this.allProducts.set(mapped);
+        },
+        error: (err) => {
+          this.logger.error('Failed to load products', err);
+          this.notification.error('Failed to load products');
+        }
+      });
+  }
+
+  // --- Filtering & Sorting Logic ---
   filteredProducts = computed(() => {
     const products = this.allProducts();
     const term = this.searchTerm().toLowerCase();
-    const category = this.filterCategory();
+    const categoryId = this.filterCategory();
     const sort = this.sortState();
 
     let result = products.filter(p => {
       const matchesSearch = p.name.toLowerCase().includes(term) || p.id.toString().includes(term);
-      const matchesCategory = category === 'all' || p.category === category;
+      // Filter by category ID if not 'all'
+      const matchesCategory = categoryId === 'all' ||
+        (p.categories?.some(c => c.id.toString() === categoryId) ?? false);
       return matchesSearch && matchesCategory;
     });
 
-    // Sorting Logic
+    // Sorting
     const column = sort.column;
     if (column) {
       result.sort((a, b) => {
         const valA = a[column] as any;
         const valB = b[column] as any;
-        
+
         let comparison = 0;
         if (valA > valB) comparison = 1;
         else if (valA < valB) comparison = -1;
-        
+
         return sort.direction === 'asc' ? comparison : comparison * -1;
       });
     }
 
-    // Reset page to 1 after filtering/sorting if the current page becomes invalid
     if (this.currentPage() > 1 && result.length <= (this.currentPage() - 1) * this.pageSize()) {
-        // Use setTimeout to avoid side-effects during signal computation
-        setTimeout(() => this.currentPage.set(1), 0);
+      setTimeout(() => this.currentPage.set(1), 0);
     }
-
     return result;
   });
 
-  /** Calculates total number of pages. */
-  totalPages = computed(() => {
-    return Math.ceil(this.filteredProducts().length / this.pageSize());
-  });
+  totalPages = computed(() => Math.ceil(this.filteredProducts().length / this.pageSize()) || 1);
 
-  /** Gets the products for the current page. */
   pagedProducts = computed(() => {
     const products = this.filteredProducts();
     const start = (this.currentPage() - 1) * this.pageSize();
     const end = start + this.pageSize();
     return products.slice(start, end);
   });
-  
-  /** Calculates the range of products currently displayed for the pagination text. */
+
   displayRange = computed(() => {
     const currentProducts = this.filteredProducts();
     const total = currentProducts.length;
-    
-    if (total === 0) {
-        return { start: 0, end: 0, total: 0 };
-    }
-    
+    if (total === 0) return { start: 0, end: 0, total: 0 };
     const start = (this.currentPage() - 1) * this.pageSize() + 1;
     const end = Math.min(this.currentPage() * this.pageSize(), total);
-    
     return { start, end, total };
   });
 
-  // --- Table & Filter Handlers ---
-
+  // --- Handlers ---
   onSearch(event: Event) {
     this.searchTerm.set((event.target as HTMLInputElement).value);
-    this.currentPage.set(1); // Reset page on search
+    this.currentPage.set(1);
   }
 
   onFilter(event: Event) {
     this.filterCategory.set((event.target as HTMLSelectElement).value);
-    this.currentPage.set(1); // Reset page on filter
+    this.currentPage.set(1);
   }
 
-  setSort(column: keyof Product) {
+  setSort(column: string) { // Cast as string to match any key
     this.sortState.update(currentSort => {
       if (currentSort.column === column) {
-        // Toggle direction if same column is clicked
-        return { column, direction: currentSort.direction === 'asc' ? 'desc' : 'asc' };
+        return { column: column as keyof DisplayProduct, direction: currentSort.direction === 'asc' ? 'desc' : 'asc' };
       } else {
-        // Default to ascending if new column is clicked
-        return { column, direction: 'asc' };
+        return { column: column as keyof DisplayProduct, direction: 'asc' };
       }
     });
-    this.currentPage.set(1); // Reset page after sort
+    this.currentPage.set(1);
   }
 
   changePage(page: number) {
@@ -183,8 +176,7 @@ export class AdminProductComponent implements OnInit {
     }
   }
 
-  // --- Selection & Bulk Action Handlers ---
-
+  // --- Selection ---
   areAllSelected = computed(() => {
     const currentProductIds = this.pagedProducts().map(p => p.id);
     return currentProductIds.length > 0 && currentProductIds.every(id => this.selectedProducts().includes(id));
@@ -199,11 +191,8 @@ export class AdminProductComponent implements OnInit {
   toggleProductSelection(id: number) {
     this.selectedProducts.update(ids => {
       const index = ids.indexOf(id);
-      if (index > -1) {
-        ids.splice(index, 1); // Deselect
-      } else {
-        ids.push(id); // Select
-      }
+      if (index > -1) ids.splice(index, 1);
+      else ids.push(id);
       return [...ids];
     });
   }
@@ -211,67 +200,61 @@ export class AdminProductComponent implements OnInit {
   toggleSelectAll(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     const currentProductIds = this.pagedProducts().map(p => p.id);
-    
+
     this.selectedProducts.update(ids => {
       let newIds = [...ids];
       if (isChecked) {
-        // Add all current page IDs that are not already selected
         currentProductIds.forEach(id => {
-          if (!newIds.includes(id)) {
-            newIds.push(id);
-          }
+          if (!newIds.includes(id)) newIds.push(id);
         });
       } else {
-        // Remove all current page IDs from the selection
         newIds = newIds.filter(id => !currentProductIds.includes(id));
       }
       return newIds;
     });
   }
 
+  // --- Actions ---
   bulkToggleListing(isListed: boolean) {
-    this.allProducts.update(products => {
-      const selectedIds = this.selectedProducts();
-      console.log(`Bulk action: Setting ${selectedIds.length} products to ${isListed ? 'Listed' : 'Unlisted'}.`);
-      return products.map(p => 
-        selectedIds.includes(p.id) ? { ...p, isListed: isListed } : p
-      );
-    });
-    this.selectedProducts.set([]); // Clear selection after action
+    // Mock implementation for bulk toggle, or loop updateProduct
+    const selectedIds = this.selectedProducts();
+    if (selectedIds.length === 0) return;
+
+    this.notification.info('Bulk update not fully implemented in backend yet');
+    // Optimistic update
+    this.allProducts.update(products =>
+      products.map(p => selectedIds.includes(p.id) ? { ...p, isListed } : p)
+    );
+    this.selectedProducts.set([]);
   }
 
   bulkDelete() {
     const selectedIds = this.selectedProducts();
-    console.log(`Bulk action: Deleting ${selectedIds.length} products.`);
-    
-    this.allProducts.update(products => {
-      return products.filter(p => !selectedIds.includes(p.id));
+    if (selectedIds.length === 0) return;
+    if (!confirm(`Delete ${selectedIds.length} products?`)) return;
+
+    // Loop delete (naive)
+    selectedIds.forEach(id => {
+      this.productService.deleteProduct(id).subscribe({
+        next: () => {
+          this.allProducts.update(p => p.filter(item => item.id !== id));
+        },
+        error: () => this.notification.error(`Failed to delete product ${id}`)
+      });
     });
-    this.selectedProducts.set([]); // Clear selection after action
+    this.selectedProducts.set([]);
   }
 
-  // --- Modal Handlers ---
-
-  openProductModal(product: Product | null) {
-    // Deep clone the product object if editing, or create a blank slate for adding
+  // --- Modal ---
+  openProductModal(product: DisplayProduct | null) {
     if (product) {
-      this.editingProduct.set({ ...product, specs: [...product.specs] });
+      // Edit mode
+      this.editingProduct.set({ ...product });
+      this.isModalOpen.set(true);
     } else {
-      // New Product Template
-      this.editingProduct.set({
-        id: -1, // Temporary ID for new products
-        name: 'New Product Name',
-        category: 'Electronics',
-        price: 0.00,
-        stock: 0,
-        sales: 0,
-        isListed: false,
-        imageUrl: 'https://placehold.co/400x400/eeeeee/333333?text=New+Product',
-        description: 'Enter a detailed description here.',
-        specs: ['Dimensions: TBD', 'Weight: TBD'],
-      });
+      // Add mode -> Redirect
+      this.router.navigate(['/admin/products/new']);
     }
-    this.isModalOpen.set(true);
   }
 
   closeProductModal() {
@@ -279,50 +262,49 @@ export class AdminProductComponent implements OnInit {
     this.editingProduct.set(null);
   }
 
-  updateModalField(key: keyof Product, event: Event) {
-    const target = event.target as HTMLInputElement | HTMLTextAreaElement;
-    let value: string | number | boolean = target.value;
+  updateModalField(key: keyof DisplayProduct, event: Event) {
+    const target = event.target as HTMLInputElement;
+    let value: any = target.value;
+    if (key === 'price' || key === 'stock') value = parseFloat(value) || 0;
 
-    // Type coercion for numeric fields
-    if (key === 'price' || key === 'stock') {
-      value = parseFloat(target.value) || 0;
-    }
-    
-    this.editingProduct.update(p => p ? { ...p, [key]: value } as Product : null);
+    this.editingProduct.update(p => p ? { ...p, [key]: value } : null);
   }
 
   saveProductChanges() {
-    const productToSave = this.editingProduct();
-    if (!productToSave) return;
+    const product = this.editingProduct();
+    if (!product) return;
 
-    this.allProducts.update(products => {
-      if (productToSave.id === -1) {
-        // Add new product
-        const newId = Math.max(...products.map(p => p.id), 0) + 1;
-        console.log(`Adding new product with ID: ${newId}`);
-        return [...products, { ...productToSave, id: newId }];
-      } else {
-        // Update existing product
-        console.log(`Updating product ID: ${productToSave.id}`);
-        return products.map(p => (p.id === productToSave.id) ? productToSave : p);
-      }
-    });
-    this.closeProductModal();
+    this.productService.updateProduct(product.id, product)
+      .subscribe({
+        next: () => {
+          this.notification.success('Product updated');
+          this.allProducts.update(list => list.map(p => p.id === product.id ? product : p));
+          this.closeProductModal();
+        },
+        error: (err) => this.notification.error('Failed to update product')
+      });
   }
 
   deleteProduct(id: number) {
-    console.log(`Product ID ${id} deleted.`);
-    this.allProducts.update(products => products.filter(p => p.id !== id));
-    this.closeProductModal(); // Ensure modal closes if delete was from modal
-    this.selectedProducts.set(this.selectedProducts().filter(selectedId => selectedId !== id)); // Remove from selection
-  }
-  
-  toggleListing(product: Product) {
-    this.allProducts.update(products => {
-      console.log(`Toggling listing status for product ID: ${product.id}`);
-      return products.map(p => (p.id === product.id) ? { ...p, isListed: !p.isListed } : p);
+    if (!confirm('Delete this product?')) return;
+    this.productService.deleteProduct(id).subscribe({
+      next: () => {
+        this.allProducts.update(p => p.filter(item => item.id !== id));
+        this.notification.success('Product deleted');
+        if (this.isModalOpen()) this.closeProductModal();
+      },
+      error: (err) => this.notification.error('Failed to delete product')
     });
-    // Also update the modal's internal state immediately
-    this.editingProduct.update(p => p ? { ...p, isListed: !p.isListed } : null);
+  }
+
+  toggleListing(product: DisplayProduct) {
+    const newVal = !product.isListed;
+    this.productService.updateProduct(product.id, { isListed: newVal }).subscribe({
+      next: () => {
+        this.allProducts.update(list => list.map(p => p.id === product.id ? { ...p, isListed: newVal } : p));
+        this.notification.success(`Product ${newVal ? 'listed' : 'unlisted'}`);
+      },
+      error: () => this.notification.error('Update failed')
+    });
   }
 }

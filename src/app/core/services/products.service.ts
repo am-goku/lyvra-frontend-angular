@@ -79,6 +79,32 @@ export class ProductService {
         return this.cache.get(key)! as Observable<SingleProductResponse>;
     }
 
+    updateProduct(id: number, data: FormData | any): Observable<any> {
+        return this.http.patch(`products/${id}`, data).pipe(
+            tap(() => {
+                this.clearCache();
+                this.logger.info('Product updated', { id });
+            }),
+            catchError((error) => {
+                this.logger.error('Failed to update product', error);
+                return throwError(() => error);
+            })
+        );
+    }
+
+    deleteProduct(id: number): Observable<void> {
+        return this.http.delete<void>(`products/${id}`).pipe(
+            tap(() => {
+                this.clearCache();
+                this.logger.info('Product deleted', { id });
+            }),
+            catchError((error) => {
+                this.logger.error('Failed to delete product', error);
+                return throwError(() => error);
+            })
+        );
+    }
+
     /**
      * Clear all cached products
      * Call this after creating, updating, or deleting products

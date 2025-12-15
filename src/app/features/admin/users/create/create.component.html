@@ -1,1 +1,74 @@
-<h1>Create Admin User</h1>
+<div class="p-6 max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center gap-4 mb-8">
+        <a routerLink="/admin/users" class="p-2 hover:bg-gray-100 rounded-full transition">
+            <lucide-icon [img]="ArrowLeftIcon" class="w-6 h-6 text-gray-600"></lucide-icon>
+        </a>
+        <h1 class="text-2xl font-bold text-gray-800">Create New User</h1>
+    </div>
+
+    <!-- Form Section -->
+    <div class="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm max-w-2xl">
+        <form (ngSubmit)="createUser()" class="flex flex-col gap-6">
+            
+            <!-- Name -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700">Full Name</label>
+                <input type="text" [ngModel]="name()" (ngModelChange)="name.set($event)" name="name"
+                    placeholder="Enter full name"
+                    class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none transition"
+                    required />
+            </div>
+
+            <!-- Email -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700">Email Address</label>
+                <input type="email" [ngModel]="email()" (ngModelChange)="email.set($event)" name="email"
+                    placeholder="Enter email address"
+                    class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none transition"
+                    required />
+            </div>
+
+            <!-- Password -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700">Password</label>
+                <input type="password" [ngModel]="password()" (ngModelChange)="password.set($event)" name="password"
+                    placeholder="Enter password"
+                    class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-rose-600 focus:outline-none transition"
+                    required />
+            </div>
+
+            <!-- Role -->
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-semibold text-gray-700">Role</label>
+                <div class="flex gap-4">
+                    @for(r of roles; track r.value) {
+                        <label class="flex items-center gap-2 cursor-pointer border p-3 rounded-lg flex-1 hover:bg-gray-50 transition"
+                            [class.border-rose-600]="role() === r.value"
+                            [class.bg-rose-50]="role() === r.value">
+                            <input type="radio" name="role" [value]="r.value" 
+                                [checked]="role() === r.value" 
+                                (change)="role.set(r.value)"
+                                class="accent-rose-600 w-4 h-4">
+                            <span class="font-medium" [class.text-rose-700]="role() === r.value">{{ r.label }}</span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center justify-end gap-3 mt-4 pt-4 border-t">
+                <a routerLink="/admin/users" class="px-6 py-2.5 border border-gray-300 rounded-lg hover:bg-gray-50 font-medium transition">
+                    Cancel
+                </a>
+                <button type="submit" [disabled]="isLoading()" 
+                    class="px-6 py-2.5 bg-rose-600 text-white rounded-lg hover:bg-rose-700 disabled:opacity-50 font-medium transition flex items-center gap-2">
+                    @if(isLoading()) {
+                        <span class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+                    }
+                    {{ isLoading() ? 'Creating...' : 'Create User' }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

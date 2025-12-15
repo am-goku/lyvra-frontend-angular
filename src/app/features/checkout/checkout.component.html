@@ -1,9 +1,13 @@
 <main class="py-16 relative lg:pt-20 h-full px-4 overflow-auto max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
     <div class="flex-1 flex flex-col gap-6">
-        <checkout-address />
+        <checkout-address (addressSelected)="onAddressSelected($event)" />
         <checkout-delivery-options />
-        <checkout-payment-method />
+        <checkout-payment-method (paymentMethodSelected)="onPaymentMethodSelected($event)" />
     </div>
 
-    <checkout-order-summary />
+    <checkout-order-summary 
+        [cart]="cart()" 
+        [addressId]="selectedAddressId()" 
+        [paymentMethod]="selectedPaymentMethod()" 
+    />
 </main>
