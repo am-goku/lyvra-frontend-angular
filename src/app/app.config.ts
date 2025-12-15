@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -6,6 +6,7 @@ import ApiInterceptor from './core/interceptors/api.interceptor';
 import JwtInterceptor from './core/interceptors/jwt.interceptor';
 import { provideOAuthClient } from 'angular-oauth2-oidc';
 import { BoxIcon, HouseIcon, LucideAngularModule, MenuIcon, SearchIcon, SettingsIcon, ShoppingCartIcon, UserIcon } from 'lucide-angular';
+import { GlobalErrorHandler } from './core/handlers/global-error.handler';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([ApiInterceptor, JwtInterceptor])
     ),
     provideOAuthClient(),
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
     importProvidersFrom(
       LucideAngularModule.pick({
         Home: HouseIcon,

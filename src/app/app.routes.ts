@@ -9,8 +9,8 @@ import { ProductDetailComponent } from './features/product-detail/detail.compone
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { AccountComponent } from './features/account/account.component';
 import { AuthComponent } from './features/auth/auth.component';
-import { NoAuthGuard } from './core/guards/no-auth.guard';
-import { AuthGuard } from './core/guards/auth.guard';
+import { noAuthGuard } from './core/guards/no-auth.guard';
+import { authGuard } from './core/guards/auth.guard';
 import { AdminProductComponent } from './features/admin/product/product.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AdminDashboardComponent } from './features/admin/dashboard/dashboard.component';
@@ -19,7 +19,7 @@ import { AdminCreateUserComponent } from './features/admin/users/create/create.c
 import { AdminNewProductComponent } from './features/admin/product/new/new-product.component';
 import { AdminCategoriesComponent } from './features/admin/categories/categories.component';
 import { AddCategoryComponent } from './features/admin/categories/add/add-category.component';
-import { AdminAuthGuard } from './core/guards/admin-auth.guard';
+import { adminAuthGuard } from './core/guards/admin-auth.guard';
 import { AuthCallbackComponent } from './features/auth/callback/callback.component';
 
 export const routes: Routes = [
@@ -28,11 +28,11 @@ export const routes: Routes = [
         component: UserLayoutComponent,
         children: [
             { path: '', component: HomeComponent },
-            { path: 'cart', component: CartComponent, canActivate: [AuthGuard] },
+            { path: 'cart', component: CartComponent, canActivate: [authGuard] },
             { path: 'products', component: ProductListComponent },
             { path: 'products/:productId', component: ProductDetailComponent },
-            { path: 'checkout', component: CheckoutComponent, canActivate: [AuthGuard] },
-            { path: 'account', component: AccountComponent, canActivate: [AuthGuard] },
+            { path: 'checkout', component: CheckoutComponent, canActivate: [authGuard] },
+            { path: 'account', component: AccountComponent, canActivate: [authGuard] },
 
             //Auth Routes
             {
@@ -44,13 +44,13 @@ export const routes: Routes = [
                     { path: 'callback', component: AuthCallbackComponent },
                     { path: '', redirectTo: 'login', pathMatch: 'full' }, // optional default redirect
                 ],
-                canActivate: [NoAuthGuard]
+                canActivate: [noAuthGuard]
             },
         ]
     },
     {
         path: 'admin',
-        canActivate: [AdminAuthGuard],
+        canActivate: [adminAuthGuard],
         component: AdminLayoutComponent,
         children: [
             { path: '', component: AdminDashboardComponent },

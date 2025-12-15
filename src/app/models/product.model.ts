@@ -14,6 +14,7 @@ export interface Product {
     name: string;
     description: string;
     price: number;
+    originalPrice?: number; // For discount calculations
     images: ProductImage[];
     createdAt: string;
     updatedAt: string;
