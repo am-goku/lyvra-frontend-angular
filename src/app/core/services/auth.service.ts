@@ -53,7 +53,7 @@ export class AuthService {
     signup(credentials: SignupCredentials): Observable<{ message: string }> {
         this.logger.debug('Sending OTP for registration', { email: credentials.email });
 
-        return this.http.post<{ message: string }>('auth/register/send-otp', {...credentials, name: undefined}).pipe(
+        return this.http.post<{ message: string }>('auth/register/send-otp', { ...credentials, name: undefined }).pipe(
             tap(() => {
                 this.logger.info('OTP sent successfully', { email: credentials.email });
             }),
@@ -121,9 +121,50 @@ export class AuthService {
     /**
      * Store authentication data in localStorage and update user subject
      */
+    /**
+     * Store authentication data in localStorage and update user subject
+     * Handles cases where User object might be missing from response by decoding the token
+     */
     private storeAuthData(response: AuthResponse): void {
-        localStorage.setItem('user', JSON.stringify(response.user));
-        localStorage.setItem('accessToken', response.access_token);
-        this.userSubject.next(response.user);
+        let user = response.user;
+
+        // If user object is missing, try to decode from token
+        if (!user && response.access_token) {
+            this.logger.warn('User object missing in response, decoding token...');
+            const payload = this.decodeToken(response.access_token);
+            if (payload) {
+                user = {
+                    id: payload.sub || payload.id, // Handle 'sub' or 'id' claim
+                    email: payload.email,
+                    role: payload.role || 'USER',
+                    name: payload.name
+                };
+                // Update response object for downstream subscribers
+                response.user = user;
+            }
+        }
+
+        if (user) {
+            localStorage.setItem('user', JSON.stringify(user));
+            this.userSubject.next(user);
+        } else {
+            this.logger.error('Failed to extract user from authentication response');
+        }
+
+        if (response.access_token) {
+            localStorage.setItem('accessToken', response.access_token);
+        }
+    }
+
+    /**
+     * Decode JWT token payload
+     */
+    private decodeToken(token: string): any {
+        try {
+            return JSON.parse(atob(token.split('.')[1]));
+        } catch (e) {
+            this.logger.error('Failed to decode token', e);
+            return null;
+        }
     }
 }
