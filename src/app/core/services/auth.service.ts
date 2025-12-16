@@ -129,9 +129,9 @@ export class AuthService {
         let user = response.user;
 
         // If user object is missing, try to decode from token
-        if (!user && response.access_token) {
+        if (!user && response.token) {
             this.logger.warn('User object missing in response, decoding token...');
-            const payload = this.decodeToken(response.access_token);
+            const payload = this.decodeToken(response.token);
             if (payload) {
                 user = {
                     id: payload.sub || payload.id, // Handle 'sub' or 'id' claim
@@ -151,8 +151,8 @@ export class AuthService {
             this.logger.error('Failed to extract user from authentication response');
         }
 
-        if (response.access_token) {
-            localStorage.setItem('accessToken', response.access_token);
+        if (response.token) {
+            localStorage.setItem('accessToken', response.token);
         }
     }
 
