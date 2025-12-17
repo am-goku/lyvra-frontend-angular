@@ -10,7 +10,7 @@ import { Category } from '../../../models/category.model';
 import { LoggerService } from '../../../core/services/logger.service';
 
 interface DisplayProduct extends Product {
-  stock?: number;
+  stock: number;
   sales?: number;
   isListed?: boolean;
   categories?: Category[]; // Ensure this matches backend response

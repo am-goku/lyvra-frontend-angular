@@ -1,8 +1,14 @@
-import { Component, Input, signal } from "@angular/core";
+import { Component, Input, signal, inject, DestroyRef } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { HeartIcon, LucideAngularModule, ShoppingCartIcon, MinusIcon, PlusIcon, TruckIcon, ShieldCheckIcon, RefreshCwIcon, StarIcon } from "lucide-angular";
 import { ProductMediaComponent } from "../media-section/media.component";
 import { SingleProductResponse } from "../../../../models/product.model";
 import { CommonModule } from "@angular/common";
+import { CartService } from "../../../../core/services/cart.service";
+import { NotificationService } from "../../../../core/services/notification.service";
+import { LoggerService } from "../../../../core/services/logger.service";
+import { AuthService } from "../../../../core/services/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'product-info-section',
@@ -11,6 +17,13 @@ import { CommonModule } from "@angular/common";
     templateUrl: './info.component.html'
 })
 export class ProductInfoComponent {
+    private cartService = inject(CartService);
+    private notification = inject(NotificationService);
+    private logger = inject(LoggerService);
+    private destroyRef = inject(DestroyRef);
+    private authService = inject(AuthService);
+    private router = inject(Router);
+
     Math = Math; // Expose Math to template
 
     CartIcon = ShoppingCartIcon;
@@ -30,6 +43,7 @@ export class ProductInfoComponent {
     quantity = signal<number>(1);
     activeTab = signal<'overview' | 'specifications' | 'reviews'>('overview');
     isFavorite = signal(false);
+    isAddingToCart = signal(false);
 
     // Mock data - replace with actual product data
     sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
@@ -54,7 +68,7 @@ export class ProductInfoComponent {
 
     // Mock stock and pricing data
     getStockQuantity(): number {
-        return 15; // TODO: Get from product data
+        return this.product?.stock ?? 15; // Use product stock if available
     }
 
     getOriginalPrice(): number {
@@ -117,12 +131,45 @@ export class ProductInfoComponent {
     }
 
     addToCart() {
-        console.log('Add to cart:', {
-            product: this.product?.name,
+        if (!this.product) {
+            this.logger.error('Cannot add to cart: product is undefined');
+            return;
+        }
+
+        if (this.getStockStatus() === 'out-of-stock') {
+            this.notification.warning('This product is out of stock');
+            return;
+        }
+
+        if (!this.authService.isAuthenticated()) {
+            this.notification.info('Please login to add items to cart');
+            this.router.navigate(['/auth/login'], { queryParams: { returnUrl: this.router.url } });
+            return;
+        }
+
+        this.isAddingToCart.set(true);
+
+        // Note: Backend currently doesn't support size/color in cart item
+        this.logger.debug('Adding to cart with options (client-side only for now)', {
+            productId: this.product.id,
             size: this.selectedSize(),
             color: this.selectedColor(),
             quantity: this.quantity()
         });
-        // TODO: Implement add to cart functionality
+
+        this.cartService.addToCart(this.product.id, this.quantity())
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: () => {
+                    this.isAddingToCart.set(false);
+                    this.notification.success(`${this.product?.name} added to cart!`);
+                    this.logger.info('Product added to cart', { productId: this.product?.id, quantity: this.quantity() });
+                },
+                error: (err) => {
+                    this.isAddingToCart.set(false);
+                    this.logger.error('Failed to add product to cart', err);
+                    this.notification.error('Failed to add to cart. Please try again.');
+                }
+            });
     }
 }

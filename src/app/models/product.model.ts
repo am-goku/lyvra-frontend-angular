@@ -14,10 +14,12 @@ export interface Product {
     name: string;
     description: string;
     price: number;
+    stock: number;
     originalPrice?: number; // For discount calculations
     images: ProductImage[];
     createdAt: string;
     updatedAt: string;
+    categories?: Category[];
 }
 
 export interface SingleProductResponse extends Product {

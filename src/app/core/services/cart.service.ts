@@ -30,7 +30,7 @@ export class CartService {
      * @param quantity - Quantity to add (default: 1)
      */
     addToCart(productId: number, quantity: number = 1): Observable<Cart> {
-        return this.http.post<Cart>('cart/add', { productId, quantity }).pipe(
+        return this.http.post<Cart>('cart', { productId, quantity }).pipe(
             tap(() => this.logger.info('Product added to cart', { productId, quantity })),
             catchError((error) => {
                 this.logger.error('Failed to add product to cart', error);
