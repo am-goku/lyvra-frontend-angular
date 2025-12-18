@@ -1,37 +1,90 @@
-<div class="flex flex-col sm:flex-row items-center gap-4 border-b border-gray-200 p-4">
+<div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-300">
     @if (item) {
-    <!-- Product Thumbnail -->
-    <img [src]="getProductImage()" [alt]="item.product.name"
-        class="w-28 h-28 object-cover rounded-2xl" />
-
-    <!-- Product Info -->
-    <div class="flex-1 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 w-full">
-        <div class="flex-1">
-            <h2 class="text-lg font-semibold">{{ item.product.name }}</h2>
-            <!-- <p class="text-gray-500 text-sm">Size: {{ item.size }}</p> -->
-            <p class="text-gray-500 text-sm">Price: ₹{{ item.product.price }}</p>
+    <!-- Desktop Layout -->
+    <div class="hidden sm:flex flex-row gap-6">
+        <!-- Product Thumbnail -->
+        <div class="relative w-32 h-32 flex-shrink-0 bg-gray-50 rounded-xl overflow-hidden group">
+            <img [src]="getProductImage()" [alt]="item.product.name"
+                class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
         </div>
 
-        <!-- Quantity Selector -->
-        <div class="flex items-center gap-2">
-            <button
-                class="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 transition"
-                (click)="minusQ.emit(item.id)">-</button>
-            <span class="w-8 text-center">{{ item.quantity }}</span>
-            <button
-                class="w-8 h-8 flex items-center justify-center bg-gray-200 rounded-full hover:bg-gray-300 transition"
-                (click)="addQ.emit(item.id)">+</button>
+        <!-- Content -->
+        <div class="flex-1 flex flex-col justify-between py-1">
+            <div class="flex justify-between items-start gap-4">
+                <div>
+                    <h3 class="font-bold text-gray-900 text-lg leading-tight mb-1">{{ item.product.name }}</h3>
+                    <p class="text-gray-500 text-sm">Unit Price: <span class="font-medium text-gray-900">₹{{ item.product.price }}</span></p>
+                </div>
+                <div class="text-right">
+                    <p class="text-lg font-bold text-gray-900">₹{{ item.product.price * item.quantity }}</p>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between gap-4">
+                <!-- Quantity Selector -->
+                <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-1 border border-gray-200">
+                    <button
+                        class="w-8 h-8 flex items-center justify-center bg-white text-gray-600 rounded shadow-sm hover:text-rose-600 disabled:opacity-50 transition-colors"
+                        [disabled]="item.quantity <= 1"
+                        (click)="minusQ.emit(item.id)">
+                        <span>-</span>
+                    </button>
+                    <span class="w-8 text-center font-semibold text-gray-800 text-sm">{{ item.quantity }}</span>
+                    <button
+                        class="w-8 h-8 flex items-center justify-center bg-white text-gray-600 rounded shadow-sm hover:text-green-600 transition-colors"
+                        (click)="addQ.emit(item.id)">
+                        <span>+</span>
+                    </button>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-2">
+                    <button class="flex items-center gap-2 text-gray-400 hover:text-rose-500 px-3 py-1.5 rounded-lg hover:bg-rose-50 transition-colors text-sm font-medium" 
+                        (click)="remove.emit(item.id)">
+                        <lucide-icon [img]="TrashIcon" class="w-4 h-4"></lucide-icon>
+                        <span class="hidden sm:inline">Remove</span>
+                    </button>
+                    <div class="w-px h-4 bg-gray-200 hidden sm:block"></div>
+                    <button class="text-gray-400 hover:text-blue-500 p-2 rounded-lg hover:bg-blue-50 transition-colors" title="Move to Wishlist">
+                        <lucide-icon [img]="HeartIcon" class="w-4 h-4"></lucide-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Layout -->
+    <div class="flex sm:hidden gap-4">
+        <!-- Small Thumbnail -->
+        <div class="relative w-24 h-24 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden">
+            <img [src]="getProductImage()" [alt]="item.product.name"
+                class="w-full h-full object-cover object-center" />
         </div>
 
-        <!-- Total & Actions -->
-        <div class="flex items-center gap-4 mt-2 sm:mt-0">
-            <p class="font-semibold text-gray-800">₹{{ item.product.price * item.quantity }}</p>
-            <button class="text-gray-500 hover:text-rose-600 transition" (click)="remove.emit(item.id)">
-                <lucide-icon [img]="TrashIcon" class="w-5 h-5"></lucide-icon>
-            </button>
-            <button class="text-gray-500 hover:text-rose-600 transition" >
-                <lucide-icon [img]="HeartIcon" class="w-5 h-5"></lucide-icon>
-            </button>
+        <!-- Content -->
+        <div class="flex-1 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-start gap-2">
+                    <h3 class="font-semibold text-gray-900 text-base leading-tight line-clamp-2">{{ item.product.name }}</h3>
+                    <button class="text-gray-400 hover:text-rose-500 -mt-1 -mr-1 p-1 shrink-0" (click)="remove.emit(item.id)">
+                         <lucide-icon [img]="TrashIcon" class="w-4 h-4"></lucide-icon>
+                    </button>
+                </div>
+                <!-- <p class="text-xs text-gray-500 mt-1">Size: M</p> -->
+            </div>
+
+            <div class="flex justify-between items-end mt-2">
+                <p class="text-sm font-bold text-gray-900">₹{{ item.product.price * item.quantity }}</p>
+                
+                <!-- Compact Quantity -->
+                <div class="flex items-center gap-2 bg-gray-50 rounded p-0.5 border border-gray-200">
+                    <button class="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-xs"
+                        [disabled]="item.quantity <= 1" (click)="minusQ.emit(item.id)">-</button>
+                    <span class="w-4 text-center text-xs font-semibold">{{ item.quantity }}</span>
+                    <button class="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-xs"
+                        (click)="addQ.emit(item.id)">+</button>
+                </div>
+            </div>
         </div>
     </div>
     }

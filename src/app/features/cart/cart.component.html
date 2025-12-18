@@ -1,4 +1,4 @@
-<main class="py-16 relative gap-10 lg:pt-20 h-full px-10 overflow-auto">
+<main class="py-16 lg:pt-20 h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-auto">
   <section class="h-full">
     @if (isLoading()) {
     <div class="flex flex-col items-center justify-center py-20 h-[60vh]">
@@ -6,7 +6,7 @@
       <p class="mt-4 text-gray-500 font-medium">Loading your cart...</p>
     </div>
     } @else { @if (cart(); as cartValue) { @if (cartValue && cartValue.items && cartValue.items.length > 0) {
-    <div class="md:flex gap-10">
+    <div class="flex flex-col md:flex-row gap-6 md:gap-10">
       <!-- Cart item list section -->
       <section class="md:mr-auto flex-1">
         <cart-item-list [cartItems]="cartValue.items" [addQuantity]="increaseQty.bind(this)"

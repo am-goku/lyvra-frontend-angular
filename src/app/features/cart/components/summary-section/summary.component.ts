@@ -1,14 +1,20 @@
 import { Component, Input } from "@angular/core";
 import { Cart } from "../../../../models/cart.model";
+import { LucideAngularModule, TruckIcon, CheckCircleIcon, ArrowRightIcon, ShieldCheckIcon } from "lucide-angular";
 
 @Component({
     selector: 'cart-summary',
     standalone: true,
-    imports: [],
+    imports: [LucideAngularModule],
     templateUrl: './summary.component.html'
 })
 export class CartSummaryComponent {
     @Input() cart: Cart | null = null;
+
+    TruckIcon = TruckIcon;
+    CheckCircleIcon = CheckCircleIcon;
+    ArrowRightIcon = ArrowRightIcon;
+    ShieldCheckIcon = ShieldCheckIcon;
 
     getSubtotal() {
         if (!this.cart || !this.cart.items) return 0;

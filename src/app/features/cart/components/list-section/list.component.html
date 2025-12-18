@@ -1,7 +1,9 @@
-<section class="max-w-6xl mx-auto mt-10 px-4">
-    <!-- <h1 class="text-3xl font-bold mb-6">Your Cart ({{ cartItems.length }} items)</h1> -->
+<section class="flex flex-col gap-6">
+    <div class="flex items-center justify-between pb-4 border-b border-gray-100">
+        <h2 class="text-xl font-bold text-gray-900">Shopping Cart <span class="text-gray-400 font-normal text-base ml-2">({{ cartItems.length }} items)</span></h2>
+    </div>
 
-    <div class="flex flex-col gap-6">
+    <div class="flex flex-col gap-4">
         @for(item of cartItems; track item.id) {
         <cart-item [item]="item" (addQ)="addQuantity ? addQuantity(item.id): null"
             (minusQ)="minusQuantity ? minusQuantity(item.id): null"

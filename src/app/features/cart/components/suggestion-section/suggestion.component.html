@@ -1,33 +1,32 @@
-<section class="max-w-6xl mx-auto mt-16 px-4">
-  <h2 class="text-2xl font-bold mb-6">You May Also Like</h2>
+<section class="hidden md:block mt-12 border-t border-gray-100 pt-8 pb-8">
+  <div class="flex items-center justify-between mb-6 px-1">
+    <h2 class="text-xl font-bold text-gray-900">You May Also Like</h2>
+    <!-- Optional: View All link -->
+    <!-- <a href="#" class="text-sm text-rose-600 font-medium hover:underline">View All</a> -->
+  </div>
 
-  <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+  <!-- Horizontal Scroll Container -->
+  <div class="flex overflow-x-auto gap-4 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide snap-x">
     @for(product of recommendedProducts; track product.id){
-      <div
-        class="group border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition cursor-pointer"
-      >
-        <div class="relative aspect-square overflow-hidden">
-          <img
-            src="https://picsum.photos/400/400?random={{product.id}}"
+      <div class="min-w-[160px] w-[160px] sm:w-[180px] bg-white border border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all snap-start flex-shrink-0 group relative">
+        <!-- Image -->
+        <div class="relative aspect-[4/5] bg-gray-50 overflow-hidden">
+             <img
+            src="https://picsum.photos/300/400?random={{product.id}}"
             alt="{{ product.name }}"
             loading="lazy"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-          <!-- Quick View Overlay -->
-          <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-            <button
-              class="bg-white text-gray-800 px-4 py-2 rounded-full flex items-center gap-2 hover:bg-rose-600 hover:text-white transition"
-            >
-              <lucide-icon [img]="EyeIcon" class="w-4 h-4"></lucide-icon>
-              View
-            </button>
-          </div>
+          <!-- Add Button Overlay -->
+          <button class="absolute bottom-2 right-2 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center shadow-sm text-gray-700 hover:bg-rose-600 hover:text-white transition-colors opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 duration-300" title="Add to Cart">
+             <lucide-icon [img]="PlusIcon" class="w-4 h-4"></lucide-icon>
+          </button>
         </div>
 
-        <!-- Details -->
-        <div class="p-4">
-          <h3 class="font-semibold text-gray-800 truncate">{{ product.name }}</h3>
-          <p class="text-rose-600 font-medium">₹{{ product.price }}</p>
+        <!-- Info -->
+        <div class="p-3">
+          <h3 class="font-medium text-gray-800 text-sm truncate mb-1" title="{{ product.name }}">{{ product.name }}</h3>
+          <p class="text-gray-900 font-bold text-sm">₹{{ product.price }}</p>
         </div>
       </div>
     }

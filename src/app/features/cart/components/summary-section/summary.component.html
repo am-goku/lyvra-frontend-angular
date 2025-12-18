@@ -1,33 +1,75 @@
-<div class="w-full lg:w-96 bg-gray-50 border border-gray-200 rounded-2xl p-6 flex flex-col gap-6 h-fit">
-    <h2 class="text-xl font-bold">Order Summary</h2>
-
-    <div class="flex justify-between text-gray-600">
-        <span>Subtotal</span>
-        <span>₹{{ getSubtotal() }}</span>
+<div class="w-full bg-white border border-gray-100 shadow-xl rounded-3xl p-8 flex flex-col gap-6 sticky top-24 z-10">
+    <div class="border-b border-gray-100 pb-6 mb-2">
+        <h2 class="text-2xl font-bold text-gray-900">Order Summary</h2>
+        <p class="text-gray-500 text-sm mt-1">Check your items and select shipping</p>
     </div>
 
-    <div class="flex justify-between text-gray-600">
-        <span>Discount</span>
-        <span>₹{{ getDiscount() }}</span>
+    <!-- Free Shipping Progress (Mock) -->
+    @if (getTotal() < 2000) {
+    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+        <div class="flex items-center gap-2 text-blue-700 text-sm font-medium mb-2">
+            <lucide-icon [img]="TruckIcon" class="w-4 h-4"></lucide-icon>
+            <span>Add ₹{{ 2000 - getTotal() }} for free shipping</span>
+        </div>
+        <div class="w-full bg-blue-200 rounded-full h-1.5">
+            <div class="bg-blue-600 h-1.5 rounded-full" [style.width.%]="(getTotal() / 2000) * 100"></div>
+        </div>
+    </div>
+    } @else {
+    <div class="bg-green-50 p-4 rounded-xl border border-green-100 flex items-center gap-2 text-green-700 text-sm font-medium">
+         <lucide-icon [img]="CheckCircleIcon" class="w-4 h-4"></lucide-icon>
+         <span>You've unlocked free shipping!</span>
+    </div>
+    }
+
+    <div class="flex flex-col gap-3">
+        <div class="flex justify-between text-gray-600">
+            <span>Subtotal</span>
+            <span class="font-medium text-gray-900">₹{{ getSubtotal() }}</span>
+        </div>
+        <div class="flex justify-between text-gray-600">
+            <span>Discount</span>
+            <span class="text-green-600 font-medium">- ₹{{ getDiscount() }}</span>
+        </div>
+        <div class="flex justify-between text-gray-600">
+            <span>Shipping</span>
+            <span class="text-gray-900 font-medium">Free</span>
+        </div>
+        <div class="flex justify-between text-gray-600">
+            <span>Tax</span>
+            <span class="font-medium text-gray-900">₹{{ getTax() }}</span>
+        </div>
     </div>
 
-    <div class="flex justify-between text-gray-600">
-        <span>Tax</span>
-        <span>₹{{ getTax() }}</span>
+    <div class="border-t border-dashed border-gray-200 my-2"></div>
+
+    <div class="flex justify-between items-end">
+        <span class="text-lg font-semibold text-gray-700">Total</span>
+        <span class="text-3xl font-bold text-gray-900">₹{{ getTotal() }}</span>
     </div>
 
-    <div class="border-t border-gray-300"></div>
-
-    <div class="flex justify-between font-semibold text-gray-800 text-lg">
-        <span>Total</span>
-        <span>₹{{ getTotal() }}</span>
-    </div>
-
-    <button class="w-full bg-rose-600 hover:bg-rose-700 text-white py-3 rounded-full mt-4 transition">
+    <button class="w-full bg-gray-900 hover:bg-black text-white py-4 rounded-xl mt-2 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg flex justify-center items-center gap-2 group">
         Proceed to Checkout
+        <lucide-icon [img]="ArrowRightIcon" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></lucide-icon>
     </button>
 
-    <p class="text-sm text-gray-500 mt-2">
-        Free shipping on orders over ₹2,000
-    </p>
+    <div class="flex items-center justify-center gap-4 mt-2 text-gray-400">
+        <lucide-icon [img]="ShieldCheckIcon" class="w-5 h-5"></lucide-icon>
+        <span class="text-xs font-medium">Secure Checkout</span>
+    </div>
 </div>
+
+<!-- Mobile Sticky Bottom Bar (Visible only on small screens) -->
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] sm:hidden z-50 flex items-center justify-between gap-4">
+    <div class="flex flex-col">
+        <span class="text-gray-500 text-xs font-medium">Total</span>
+        <span class="text-xl font-bold text-gray-900">₹{{ getTotal() }}</span>
+    </div>
+    <button class="flex-1 bg-gray-900 text-white py-3 rounded-xl font-semibold shadow-lg flex justify-center items-center gap-2">
+        Checkout
+        <lucide-icon [img]="ArrowRightIcon" class="w-4 h-4"></lucide-icon>
+    </button>
+</div>
+
+<!-- Spacer for Mobile to prevent content from being hidden behind sticky bar -->
+<div class="h-24 sm:hidden"></div>
