@@ -17,4 +17,10 @@ export class CartItemComponent {
     @Output() addQ = new EventEmitter<number>();
     @Output() minusQ = new EventEmitter<number>();
 
+    getProductImage(): string {
+        if (this.item && this.item.product && this.item.product.images && this.item.product.images.length > 0) {
+            return this.item.product.images[0].url;
+        }
+        return 'https://placehold.co/100x100?text=No+Image'; // Default image
+    }
 }

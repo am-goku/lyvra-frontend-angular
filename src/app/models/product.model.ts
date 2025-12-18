@@ -1,7 +1,7 @@
 import { Category } from "./category.model";
 
 export interface ProductImage {
-    _id: number;
+    id: number;
     url: string;
     productId: number;
     public_id: string;

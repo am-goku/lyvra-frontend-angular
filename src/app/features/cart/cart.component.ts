@@ -9,10 +9,13 @@ import { RouterLink } from "@angular/router";
 import { NotificationService } from '../../core/services/notification.service';
 import { LoggerService } from '../../core/services/logger.service';
 
+import { CommonModule } from "@angular/common";
+import { LucideAngularModule, Loader2Icon, ShoppingBagIcon } from "lucide-angular";
+
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CartItemListComponent, CartSummaryComponent, CartSuggestionComponent, RouterLink],
+  imports: [CommonModule, CartItemListComponent, CartSummaryComponent, CartSuggestionComponent, RouterLink, LucideAngularModule],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })
@@ -21,6 +24,9 @@ export class CartComponent implements OnInit {
   private notification = inject(NotificationService);
   private logger = inject(LoggerService);
   private destroyRef = inject(DestroyRef);
+
+  Loader2 = Loader2Icon;
+  ShoppingBag = ShoppingBagIcon;
 
   cart = signal<Cart | null>(null);
   isLoading = signal(false);
@@ -53,16 +59,16 @@ export class CartComponent implements OnInit {
 
   /**
    * Remove item from cart
-   * @param productId - Product ID to remove
+   * @param itemId - Cart Item ID to remove
    */
-  removeItem(productId: number): void {
-    this.cartService.removeFromCart(productId)
+  removeItem(itemId: number): void {
+    this.cartService.removeFromCart(itemId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updatedCart) => {
           this.cart.set(updatedCart);
           this.notification.success('Item removed from cart');
-          this.logger.info('Item removed from cart', { productId });
+          this.logger.info('Item removed from cart', { itemId });
         },
         error: (err) => {
           this.logger.error('Failed to remove item from cart', err);
@@ -73,15 +79,15 @@ export class CartComponent implements OnInit {
 
   /**
    * Decrease item quantity by 1
-   * @param productId - Product ID
+   * @param itemId - Cart Item ID
    */
-  decreaseQty(productId: number): void {
-    this.cartService.decrementQuantity(productId)
+  decreaseQty(itemId: number): void {
+    this.cartService.decrementQuantity(itemId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updatedCart) => {
           this.cart.set(updatedCart);
-          this.logger.debug('Quantity decreased', { productId });
+          this.logger.debug('Quantity decreased', { itemId });
         },
         error: (err) => {
           this.logger.error('Failed to decrease quantity', err);
@@ -92,15 +98,15 @@ export class CartComponent implements OnInit {
 
   /**
    * Increase item quantity by 1
-   * @param productId - Product ID
+   * @param itemId - Cart Item ID
    */
-  increaseQty(productId: number): void {
-    this.cartService.incrementQuantity(productId)
+  increaseQty(itemId: number): void {
+    this.cartService.incrementQuantity(itemId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updatedCart) => {
           this.cart.set(updatedCart);
-          this.logger.debug('Quantity increased', { productId });
+          this.logger.debug('Quantity increased', { itemId });
         },
         error: (err) => {
           this.logger.error('Failed to increase quantity', err);

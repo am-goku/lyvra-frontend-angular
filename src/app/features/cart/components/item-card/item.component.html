@@ -1,7 +1,7 @@
 <div class="flex flex-col sm:flex-row items-center gap-4 border-b border-gray-200 p-4">
     @if (item) {
     <!-- Product Thumbnail -->
-    <img src="{{item.product.images[0].url}}" alt="{{item.product.name}}"
+    <img [src]="getProductImage()" [alt]="item.product.name"
         class="w-28 h-28 object-cover rounded-2xl" />
 
     <!-- Product Info -->

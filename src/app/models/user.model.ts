@@ -5,8 +5,10 @@ export interface User {
     email: string;
     name?: string;
     role: UserRole;
-    createdAt?: Date;
-    updatedAt?: Date;
+    phoneNumber?: string;
+    address?: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 export interface AuthResponse {

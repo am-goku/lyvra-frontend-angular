@@ -41,11 +41,11 @@ export class CartService {
 
     /**
      * Increment product quantity by 1
-     * @param productId - ID of the product
+     * @param itemId - ID of the cart item
      */
-    incrementQuantity(productId: number): Observable<Cart> {
-        return this.http.patch<Cart>('cart/increment', { productId }).pipe(
-            tap(() => this.logger.debug('Product quantity incremented', { productId })),
+    incrementQuantity(itemId: number): Observable<Cart> {
+        return this.http.post<Cart>(`cart/item/${itemId}/increment`, {}).pipe(
+            tap(() => this.logger.debug('Product quantity incremented', { itemId })),
             catchError((error) => {
                 this.logger.error('Failed to increment quantity', error);
                 return throwError(() => error);
@@ -55,11 +55,11 @@ export class CartService {
 
     /**
      * Decrement product quantity by 1
-     * @param productId - ID of the product
+     * @param itemId - ID of the cart item
      */
-    decrementQuantity(productId: number): Observable<Cart> {
-        return this.http.patch<Cart>('cart/decrement', { productId }).pipe(
-            tap(() => this.logger.debug('Product quantity decremented', { productId })),
+    decrementQuantity(itemId: number): Observable<Cart> {
+        return this.http.post<Cart>(`cart/item/${itemId}/decrement`, {}).pipe(
+            tap(() => this.logger.debug('Product quantity decremented', { itemId })),
             catchError((error) => {
                 this.logger.error('Failed to decrement quantity', error);
                 return throwError(() => error);
@@ -69,12 +69,12 @@ export class CartService {
 
     /**
      * Set specific quantity for a product
-     * @param productId - ID of the product
+     * @param itemId - ID of the cart item
      * @param quantity - New quantity
      */
-    setQuantity(productId: number, quantity: number): Observable<Cart> {
-        return this.http.patch<Cart>('cart/set', { productId, quantity }).pipe(
-            tap(() => this.logger.debug('Product quantity set', { productId, quantity })),
+    setQuantity(itemId: number, quantity: number): Observable<Cart> {
+        return this.http.patch<Cart>('cart/item/quantity', { itemId, quantity }).pipe(
+            tap(() => this.logger.debug('Product quantity set', { itemId, quantity })),
             catchError((error) => {
                 this.logger.error('Failed to set quantity', error);
                 return throwError(() => error);
@@ -84,13 +84,11 @@ export class CartService {
 
     /**
      * Remove a product from cart
-     * @param productId - ID of the product to remove
+     * @param itemId - ID of the cart item to remove
      */
-    removeFromCart(productId: number): Observable<Cart> {
-        return this.http.delete<Cart>('cart/remove', {
-            body: { productId }
-        }).pipe(
-            tap(() => this.logger.info('Product removed from cart', { productId })),
+    removeFromCart(itemId: number): Observable<Cart> {
+        return this.http.delete<Cart>(`cart/item/${itemId}`).pipe(
+            tap(() => this.logger.info('Product removed from cart', { itemId })),
             catchError((error) => {
                 this.logger.error('Failed to remove product from cart', error);
                 return throwError(() => error);

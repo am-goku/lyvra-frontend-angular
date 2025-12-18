@@ -1,37 +1,44 @@
 <main class="py-16 relative gap-10 lg:pt-20 h-full px-10 overflow-auto">
-  <section class="md:flex">
-    @if (cart(); as cartValue) {
-    @if (cartValue && cartValue.items && cartValue.items.length > 0) {
-    <!-- Cart item list section -->
-    <section class="md:mr-auto">
-      <cart-item-list [cartItems]="cartValue.items" [addQuantity]="increaseQty.bind(this)"
-        [minusQuantity]="decreaseQty.bind(this)" [removeItem]="removeItem.bind(this)" />
-    </section>
+  <section class="h-full">
+    @if (isLoading()) {
+    <div class="flex flex-col items-center justify-center py-20 h-[60vh]">
+      <lucide-icon [img]="Loader2" class="w-10 h-10 text-rose-600 animate-spin"></lucide-icon>
+      <p class="mt-4 text-gray-500 font-medium">Loading your cart...</p>
+    </div>
+    } @else { @if (cart(); as cartValue) { @if (cartValue && cartValue.items && cartValue.items.length > 0) {
+    <div class="md:flex gap-10">
+      <!-- Cart item list section -->
+      <section class="md:mr-auto flex-1">
+        <cart-item-list [cartItems]="cartValue.items" [addQuantity]="increaseQty.bind(this)"
+          [minusQuantity]="decreaseQty.bind(this)" [removeItem]="removeItem.bind(this)" />
+      </section>
 
-    <!-- Cart summary section -->
-    <section class="md:ml-auto md:shadow-2xl">
-      <cart-summary />
-    </section>
+      <!-- Cart summary section -->
+      <section class="md:ml-auto w-full md:w-auto h-fit md:sticky md:top-24">
+        <cart-summary [cart]="cartValue" />
+      </section>
+    </div>
     } @else {
-    <section class="w-full">
-      <div class="text-center py-8">
-        <p class="text-lg text-gray-600">Your cart is empty</p>
-        <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" [routerLink]="['/products']">
-          Continue Shopping
-        </button>
-      </div>
-    </section>
-    }
-    } @else {
-    <section class="md:mr-auto">
-      <div class="text-center py-8">
-        <p class="text-lg text-gray-600">Your cart is empty</p>
-        <button class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600" [routerLink]="['/products']">
-          Continue Shopping
-        </button>
-      </div>
-    </section>
-    }
+    <ng-container *ngTemplateOutlet="emptyCartTemplate"></ng-container>
+    } } @else {
+    <ng-container *ngTemplateOutlet="emptyCartTemplate"></ng-container>
+    } }
   </section>
+
+  <ng-template #emptyCartTemplate>
+    <section class="flex flex-col items-center justify-center py-20 text-center h-[60vh]">
+      <div class="bg-gray-50 p-6 rounded-full mb-6">
+        <lucide-icon [img]="ShoppingBag" class="w-16 h-16 text-gray-400"></lucide-icon>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
+      <p class="text-gray-500 mb-8 max-w-md">Looks like you haven't added anything to your cart yet. Explore our
+        collection and find something you love!</p>
+      <a routerLink="/products"
+        class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full transition duration-300 shadow-md hover:shadow-lg flex items-center gap-2">
+        <lucide-icon [img]="ShoppingBag" class="w-4 h-4"></lucide-icon>
+        Start Shopping
+      </a>
+    </section>
+  </ng-template>
   <cart-suggestion />
 </main>
