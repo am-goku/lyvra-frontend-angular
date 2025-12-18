@@ -4,7 +4,7 @@
       <img
         src="https://i.pravatar.cc/120?img=5"
         alt="User avatar"
-        class="w-20 h-20 rounded-full border border-rose-200 object-cover"
+        class="w-20 h-20 rounded-full border border-indigo-200 object-cover"
       />
       <div>
         <h2 class="text-2xl font-bold text-gray-800">Hi, {{ userName }}</h2>
@@ -13,7 +13,7 @@
     </div>
 
     <button
-      class="flex items-center gap-2 bg-rose-600 text-white px-5 py-2.5 rounded-lg hover:bg-rose-700 transition"
+      class="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-lg hover:bg-indigo-700 transition"
       (click)="isEditing = !isEditing"
     >
       <lucide-icon [img]="EditIcon" class="w-5 h-5"></lucide-icon>
@@ -29,7 +29,7 @@
           <label class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
           <input
             type="text"
-            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             [(ngModel)]="userName"
           />
         </div>
@@ -38,7 +38,7 @@
           <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
           <input
             type="email"
-            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             [(ngModel)]="userEmail"
           />
         </div>
@@ -47,7 +47,7 @@
           <label class="block text-sm font-medium text-gray-600 mb-1">Phone</label>
           <input
             type="text"
-            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             [(ngModel)]="userPhone"
           />
         </div>
@@ -56,7 +56,7 @@
           <label class="block text-sm font-medium text-gray-600 mb-1">Location</label>
           <input
             type="text"
-            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+            class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             [(ngModel)]="userLocation"
           />
         </div>

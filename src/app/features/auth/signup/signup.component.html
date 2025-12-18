@@ -13,40 +13,40 @@
     <div>
       <label class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
       <input type="text" placeholder="Name" name="name" [(ngModel)]="fullName"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
     </div>
 
     <div>
       <label class="block text-sm font-medium text-gray-600 mb-1">Email</label>
       <input type="email" placeholder="email@example.com" name="email" [(ngModel)]="email"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
     </div>
 
     <div>
       <label class="block text-sm font-medium text-gray-600 mb-1">Password</label>
       <input type="password" placeholder="••••••••" name="password" [(ngModel)]="password"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
     </div>
 
     <div>
       <label class="block text-sm font-medium text-gray-600 mb-1">Confirm Password</label>
       <input type="password" placeholder="••••••••" name="confirmPassword" [(ngModel)]="confirmPassword"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
     </div>
 
     <!-- Terms Checkbox -->
     <label class="flex items-center gap-2 text-gray-500 text-sm">
-      <input type="checkbox" name="agreeTerms" [(ngModel)]="agreeTerms" class="w-4 h-4 accent-rose-600" />
-      I agree to the <a href="#" class="text-rose-600 hover:underline">Terms & Conditions</a>
+      <input type="checkbox" name="agreeTerms" [(ngModel)]="agreeTerms" class="w-4 h-4 accent-indigo-600" />
+      I agree to the <a href="#" class="text-indigo-600 hover:underline">Terms & Conditions</a>
     </label>
 
     <!-- Error Message -->
     @if (signupError) {
-    <p class="text-rose-600 text-sm mt-2">{{ signupError }}</p>
+    <p class="text-indigo-600 text-sm mt-2">{{ signupError }}</p>
     }
     <!-- Signup Button -->
     <button type="submit"
-      class="w-full bg-rose-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition mt-2">
+      class="w-full bg-indigo-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition mt-2">
       Sign Up
     </button>
   </form>
@@ -56,7 +56,7 @@
   <form class="space-y-4" (submit)="submitOtp()">
     <div>
       <input type="email" [readOnly]="true" [value]="email"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
     </div>
 
     <div class="flex items-center gap-2">
@@ -65,14 +65,14 @@
         @for (ctrl of otpControls; track $index; let i = $index) {
         <input id="otpInput" type="text" inputmode="numeric" maxlength="1" name="{{'otp'+i}}" [(ngModel)]="otp[i]"
           (input)="onInput($event, i)" (keydown)="onKeyDown($event, i)"
-          class="border w-10 md:w-12 aspect-square text-center border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500" />
+          class="border w-10 md:w-12 aspect-square text-center border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" />
         }
       </div>
     </div>
 
     <!-- OTP Submit Button -->
     <button type="submit"
-      class="w-full bg-rose-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition mt-2">
+      class="w-full bg-indigo-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition mt-2">
       Register
     </button>
   </form>
@@ -82,6 +82,6 @@
   <!-- Bottom link -->
   <p class="text-gray-500 text-center mt-6">
     Already have an account?
-    <a routerLink="/auth/login" class="text-rose-600 font-medium hover:underline">Login</a>
+    <a routerLink="/auth/login" class="text-indigo-600 font-medium hover:underline">Login</a>
   </p>
 </div>

@@ -1,5 +1,5 @@
 <div 
-  class="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden relative flex flex-col border border-gray-100 hover:border-rose-200 transform hover:-translate-y-1"
+  class="group bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden relative flex flex-col border border-gray-100 hover:border-indigo-200 transform hover:-translate-y-1"
   (mouseenter)="isHovered.set(true)"
   (mouseleave)="isHovered.set(false)">
 
@@ -7,7 +7,7 @@
   <div class="absolute top-3 left-3 z-20 flex flex-col gap-2">
     <!-- Discount Badge -->
     @if (hasDiscount()) {
-    <span class="bg-gradient-to-r from-rose-600 to-rose-700 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+    <span class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
       -{{ getDiscountPercentage() }}%
     </span>
     }
@@ -28,9 +28,9 @@
   <!-- Favorite Button -->
   <button 
     (click)="toggleFavorite($event)"
-    [class.bg-rose-600]="isFavorite()"
+    [class.bg-indigo-600]="isFavorite()"
     [class.bg-black/40]="!isFavorite()"
-    class="absolute top-3 right-3 z-20 hover:bg-rose-700 p-2 rounded-full transition-all duration-200 shadow-lg backdrop-blur-sm hover:scale-110 active:scale-95">
+    class="absolute top-3 right-3 z-20 hover:bg-indigo-700 p-2 rounded-full transition-all duration-200 shadow-lg backdrop-blur-sm hover:scale-110 active:scale-95">
     @if (isFavorite()) {
       <svg class="w-5 h-5 text-white fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -72,7 +72,7 @@
     <div>
       <h3 
         routerLink="/products/{{product?.id}}" 
-        class="text-gray-900 font-bold text-base mb-1 line-clamp-2 cursor-pointer hover:text-rose-600 transition-colors leading-snug">
+        class="text-gray-900 font-bold text-base mb-1 line-clamp-2 cursor-pointer hover:text-indigo-600 transition-colors leading-snug">
         {{ product?.name }}
       </h3>
       

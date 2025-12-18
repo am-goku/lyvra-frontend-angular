@@ -2,7 +2,7 @@
   <section class="h-full">
     @if (isLoading()) {
     <div class="flex flex-col items-center justify-center py-20 h-[60vh]">
-      <lucide-icon [img]="loader2" class="w-10 h-10 text-rose-600 animate-spin"></lucide-icon>
+      <lucide-icon [img]="loader2" class="w-10 h-10 text-indigo-600 animate-spin"></lucide-icon>
       <p class="mt-4 text-gray-500 font-medium">Loading your cart...</p>
     </div>
     } @else { @if (cart(); as cartValue) { @if (cartValue && cartValue.items && cartValue.items.length > 0) {

@@ -3,7 +3,7 @@
     <h2 class="text-2xl font-bold text-gray-800">My Addresses</h2>
 
     <button
-      class="flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition"
+      class="flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
       (click)="isAdding = !isAdding"
     >
       <lucide-icon [img]="PlusIcon" class="w-5 h-5"></lucide-icon>
@@ -18,7 +18,7 @@
         <label class="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
         <input
           type="text"
-          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           [(ngModel)]="newAddress.fullName"
         />
       </div>
@@ -27,7 +27,7 @@
         <label class="block text-sm font-medium text-gray-600 mb-1">Phone</label>
         <input
           type="text"
-          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           [(ngModel)]="newAddress.phone"
         />
       </div>
@@ -36,7 +36,7 @@
         <label class="block text-sm font-medium text-gray-600 mb-1">Street Address</label>
         <input
           type="text"
-          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           [(ngModel)]="newAddress.street"
         />
       </div>
@@ -45,7 +45,7 @@
         <label class="block text-sm font-medium text-gray-600 mb-1">City</label>
         <input
           type="text"
-          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           [(ngModel)]="newAddress.city"
         />
       </div>
@@ -54,7 +54,7 @@
         <label class="block text-sm font-medium text-gray-600 mb-1">Postal Code</label>
         <input
           type="text"
-          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-rose-500"
+          class="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           [(ngModel)]="newAddress.postalCode"
         />
       </div>
@@ -62,7 +62,7 @@
       <div class="md:col-span-2 flex justify-end">
         <button
           type="button"
-          class="bg-rose-600 text-white px-5 py-2.5 rounded-lg hover:bg-rose-700 transition"
+          class="bg-indigo-600 text-white px-5 py-2.5 rounded-lg hover:bg-indigo-700 transition"
           (click)="saveAddress()"
         >
           Save Address
@@ -80,13 +80,13 @@
 
             <div class="flex gap-2">
               <button
-                class="text-gray-400 hover:text-rose-600 transition"
+                class="text-gray-400 hover:text-indigo-600 transition"
                 (click)="editAddress(address.id)"
               >
                 <lucide-icon [img]="Edit3Icon" class="w-4 h-4"></lucide-icon>
               </button>
               <button
-                class="text-gray-400 hover:text-rose-600 transition"
+                class="text-gray-400 hover:text-indigo-600 transition"
                 (click)="deleteAddress(address.id)"
               >
                 <lucide-icon [img]="Trash2Icon" class="w-4 h-4"></lucide-icon>

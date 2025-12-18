@@ -8,8 +8,8 @@
 
       <nav class="flex md:flex-col md:gap-3 gap-1">
         <button
-          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
-          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'profile' }"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
+          [ngClass]="{ 'bg-indigo-600 text-white': activeSection === 'profile' }"
           (click)="activeSection = 'profile'"
         >
           <lucide-icon [img]="UserIcon" class="w-5 h-5"></lucide-icon>
@@ -17,8 +17,8 @@
         </button>
 
         <button
-          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
-          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'orders' }"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
+          [ngClass]="{ 'bg-indigo-600 text-white': activeSection === 'orders' }"
           (click)="activeSection = 'orders'"
         >
           <lucide-icon [img]="PackageIcon" class="w-5 h-5"></lucide-icon>
@@ -26,8 +26,8 @@
         </button>
 
         <button
-          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
-          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'payments' }"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
+          [ngClass]="{ 'bg-indigo-600 text-white': activeSection === 'payments' }"
           (click)="activeSection = 'payments'"
         >
           <lucide-icon [img]="CreditCardIcon" class="w-5 h-5"></lucide-icon>
@@ -35,8 +35,8 @@
         </button>
 
         <button
-          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
-          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'addresses' }"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
+          [ngClass]="{ 'bg-indigo-600 text-white': activeSection === 'addresses' }"
           (click)="activeSection = 'addresses'"
         >
           <lucide-icon [img]="MapPinIcon" class="w-5 h-5"></lucide-icon>
@@ -44,8 +44,8 @@
         </button>
 
         <button
-          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
-          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'wishlist' }"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
+          [ngClass]="{ 'bg-indigo-600 text-white': activeSection === 'wishlist' }"
           (click)="activeSection = 'wishlist'"
         >
           <lucide-icon [img]="HeartIcon" class="w-5 h-5"></lucide-icon>
@@ -53,8 +53,8 @@
         </button>
 
         <button
-          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-rose-50 hover:text-rose-600 transition"
-          [ngClass]="{ 'bg-rose-600 text-white': activeSection === 'settings' }"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
+          [ngClass]="{ 'bg-indigo-600 text-white': activeSection === 'settings' }"
           (click)="activeSection = 'settings'"
         >
           <lucide-icon [img]="SettingsIcon" class="w-5 h-5"></lucide-icon>
@@ -62,7 +62,7 @@
         </button>
 
         <button
-          class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-rose-50 text-rose-600 transition"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-indigo-50 text-indigo-600 transition"
           (click)="authService.logout()"
         >
           <lucide-icon [img]="LogOutIcon" class="w-5 h-5"></lucide-icon>

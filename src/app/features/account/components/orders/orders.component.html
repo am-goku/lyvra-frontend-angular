@@ -28,7 +28,7 @@
               [ngClass]="{
                 'bg-emerald-100 text-emerald-700': order.status === 'Delivered',
                 'bg-amber-100 text-amber-700': order.status === 'Processing',
-                'bg-rose-100 text-rose-700': order.status === 'Cancelled'
+                'bg-indigo-100 text-indigo-700': order.status === 'Cancelled'
               }"
             >
               <lucide-icon
@@ -39,7 +39,7 @@
             </span>
 
             <button
-              class="flex items-center gap-2 text-sm font-medium text-rose-600 hover:text-rose-700 transition"
+              class="flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-700 transition"
             >
               <lucide-icon [img]="EyeIcon" class="w-4 h-4"></lucide-icon>
               View Details

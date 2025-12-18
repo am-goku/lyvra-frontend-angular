@@ -1,5 +1,5 @@
 import { Component, signal } from "@angular/core";
-import { LucideAngularModule, SearchIcon, SlidersVertical, X, ChevronDown, ChevronUp } from "lucide-angular";
+import { LucideAngularModule, SearchIcon, SlidersVertical, X, ChevronDown, ChevronUp, Check } from "lucide-angular";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 
@@ -15,6 +15,7 @@ export class FilterComponent {
     SearchIcon = SearchIcon;
     ChevronDownIcon = ChevronDown;
     ChevronUpIcon = ChevronUp;
+    CheckIcon = Check;
 
     isDrawerOpen = false;
 

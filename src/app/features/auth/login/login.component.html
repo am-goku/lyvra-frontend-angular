@@ -12,32 +12,32 @@
     <div>
       <label class="block text-sm font-medium text-gray-600 mb-1">Email or Phone</label>
       <input type="text" name="email" placeholder="you@example.com" [(ngModel)]="emailOrPhone"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
     </div>
 
     <div>
       <label class="block text-sm font-medium text-gray-600 mb-1">Password</label>
       <input type="password" placeholder="••••••••" name="password" [(ngModel)]="password"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-rose-500" />
+        class="w-full border border-gray-300 rounded-lg px-4 py-2 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
     </div>
 
     <!-- Remember Me + Forgot Password -->
     <div class="flex justify-between items-center text-sm text-gray-500">
       <label class="flex items-center gap-2">
-        <input type="checkbox" [(ngModel)]="rememberMe" name="remember" class="w-4 h-4 accent-rose-600" />
+        <input type="checkbox" [(ngModel)]="rememberMe" name="remember" class="w-4 h-4 accent-indigo-600" />
         Remember me
       </label>
-      <a href="#" class="hover:text-rose-600">Forgot Password?</a>
+      <a href="#" class="hover:text-indigo-600">Forgot Password?</a>
     </div>
 
     <!-- Error Message -->
     @if (loginError) {
-    <p class="text-rose-600 text-sm mt-2">{{ loginError }}</p>
+    <p class="text-indigo-600 text-sm mt-2">{{ loginError }}</p>
     }
 
     <!-- Login Button -->
     <button type="submit"
-      class="w-full bg-rose-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-rose-700 transition mt-2">
+      class="w-full bg-indigo-600 cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition mt-2">
       Login
     </button>
   </form>
@@ -67,6 +67,6 @@
   <!-- Signup Link -->
   <p class="text-gray-500 text-center mt-6">
     Don’t have an account?
-    <a routerLink="/auth/signup" class="text-rose-600 font-medium hover:underline">Sign up</a>
+    <a routerLink="/auth/signup" class="text-indigo-600 font-medium hover:underline">Sign up</a>
   </p>
 </div>

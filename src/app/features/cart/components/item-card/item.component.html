@@ -9,7 +9,7 @@
             
             @if(isProcessing) {
                 <div class="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-10">
-                    <lucide-icon [img]="LoaderIcon" class="w-6 h-6 text-rose-600 animate-spin"></lucide-icon>
+                    <lucide-icon [img]="LoaderIcon" class="w-6 h-6 text-indigo-600 animate-spin"></lucide-icon>
                 </div>
             }
         </div>
@@ -30,7 +30,7 @@
                 <!-- Quantity Selector -->
                 <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-1 border border-gray-200">
                     <button
-                        class="w-8 h-8 flex items-center justify-center bg-white text-gray-600 rounded shadow-sm hover:text-rose-600 disabled:opacity-50 transition-colors"
+                        class="w-8 h-8 flex items-center justify-center bg-white text-gray-600 rounded shadow-sm hover:text-indigo-600 disabled:opacity-50 transition-colors"
                         [disabled]="item.quantity <= 1 || isProcessing"
                         (click)="minusQ.emit(item.id)">
                         <span>-</span>
@@ -73,7 +73,7 @@
                 class="w-full h-full object-cover object-center" />
              @if(isProcessing) {
                 <div class="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-10">
-                    <lucide-icon [img]="LoaderIcon" class="w-5 h-5 text-rose-600 animate-spin"></lucide-icon>
+                    <lucide-icon [img]="LoaderIcon" class="w-5 h-5 text-indigo-600 animate-spin"></lucide-icon>
                 </div>
             }
         </div>

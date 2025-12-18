@@ -3,7 +3,7 @@
         <!-- Left: Logo + Brand -->
         <div class="flex w-40 justify-center items-center relative select-none">
             <img src="/logo.png" alt="Lyvra logo" class="rounded-md h-20 absolute left-0" draggable="false" />
-            <h1 class="text-2xl font-extrabold text-rose-600 tracking-tight">Lyvra</h1>
+            <h1 class="text-2xl font-extrabold text-indigo-600 tracking-tight">Lyvra</h1>
         </div>
 
         <!-- Desktop Navigation -->
@@ -14,34 +14,34 @@
 
                 @if(isSearchOpen) {
                 <input type="text" placeholder="Search products..."
-                    class="border border-gray-300 rounded-full px-2 py-1 focus:outline-none focus:ring-2 focus:ring-rose-500 w-xl"
+                    class="border border-gray-300 rounded-full px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-xl"
                     animate.enter="searchenter" animate.leave="searchleave" />
                 }
 
                 <button (click)="toggleSearch()"
-                    class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-1">
+                    class="text-slate-800 hover:text-indigo-600 transition-colors flex items-center gap-1">
                     <lucide-icon [img]="SearchIcon" class="w-5 h-5"></lucide-icon>
                 </button>
             </div>
 
-            <a routerLink="/" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
-                <lucide-icon [img]="HomeIcon" [ngClass]="{'text-rose-500': currentRoute === 'home'}" class="w-5 h-5"></lucide-icon>
+            <a routerLink="/" class="text-slate-800 hover:text-indigo-600 transition-colors flex items-center gap-2">
+                <lucide-icon [img]="HomeIcon" [ngClass]="{'text-indigo-500': currentRoute === 'home'}" class="w-5 h-5"></lucide-icon>
             </a>
-            <a routerLink="/products" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
-                <lucide-icon [img]="ShoppingIcon" [ngClass]="{'text-rose-500': currentRoute === 'products'}" class="w-5 h-5"></lucide-icon>
+            <a routerLink="/products" class="text-slate-800 hover:text-indigo-600 transition-colors flex items-center gap-2">
+                <lucide-icon [img]="ShoppingIcon" [ngClass]="{'text-indigo-500': currentRoute === 'products'}" class="w-5 h-5"></lucide-icon>
             </a>
-            <a routerLink="/cart" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
-                <lucide-icon [img]="CartIcon" [ngClass]="{'text-rose-500': currentRoute === 'cart'}" class="w-5 h-5"></lucide-icon>
+            <a routerLink="/cart" class="text-slate-800 hover:text-indigo-600 transition-colors flex items-center gap-2">
+                <lucide-icon [img]="CartIcon" [ngClass]="{'text-indigo-500': currentRoute === 'cart'}" class="w-5 h-5"></lucide-icon>
             </a>
-            <a routerLink="/account" class="text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
-                <lucide-icon [img]="UserIcons" [ngClass]="{'text-rose-500': currentRoute === 'account'}" class="w-5 h-5"></lucide-icon>
+            <a routerLink="/account" class="text-slate-800 hover:text-indigo-600 transition-colors flex items-center gap-2">
+                <lucide-icon [img]="UserIcons" [ngClass]="{'text-indigo-500': currentRoute === 'account'}" class="w-5 h-5"></lucide-icon>
             </a>
 
 
         </nav>
 
         <!-- Mobile Menu Button -->
-        <button (click)="toggleDrawer()" class="lg:hidden text-slate-800 hover:text-rose-600 transition-colors">
+        <button (click)="toggleDrawer()" class="lg:hidden text-slate-800 hover:text-indigo-600 transition-colors">
             <lucide-icon [img]="MenuIcon" class="w-6 h-6"></lucide-icon>
         </button>
     </div>
@@ -53,22 +53,22 @@
 
     <aside class="fixed top-0 right-0 w-3/4 sm:w-2/3 h-full bg-white shadow-lg z-50 p-6 flex flex-col gap-6"
         animate.enter="drawerenter" animate.leave="drawerleave">
-        <button (click)="closeDrawer()" class="self-end text-slate-800 hover:text-rose-600 transition-colors">
+        <button (click)="closeDrawer()" class="self-end text-slate-800 hover:text-indigo-600 transition-colors">
             <lucide-icon [img]="XIcon" class="w-6 h-6"></lucide-icon>
         </button>
 
-        <a routerLink="/" class="text-lg text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+        <a routerLink="/" class="text-lg text-slate-800 hover:text-indigo-600 transition-colors flex items-center gap-2">
             <lucide-icon [img]="HomeIcon" class="w-5 h-5"></lucide-icon>
             Home
         </a>
-        <a routerLink="/products" class="text-lg text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+        <a routerLink="/products" class="text-lg text-slate-800 hover:text-indigo-600 transition-colors flex items-center gap-2">
             <lucide-icon [img]="ShoppingIcon" class="w-5 h-5"></lucide-icon>
             Shop
         </a>
-        <a routerLink="/cart" class="text-lg text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+        <a routerLink="/cart" class="text-lg text-slate-800 hover:text-indigo-600 transition-colors flex items-center gap-2">
             <lucide-icon [img]="CartIcon" class="w-5 h-5"></lucide-icon> Cart
         </a>
-        <a routerLink="/account" class="text-lg text-slate-800 hover:text-rose-600 transition-colors flex items-center gap-2">
+        <a routerLink="/account" class="text-lg text-slate-800 hover:text-indigo-600 transition-colors flex items-center gap-2">
             <lucide-icon [img]="UserIcons" class="w-5 h-5"></lucide-icon> Account
         </a>
     </aside>
