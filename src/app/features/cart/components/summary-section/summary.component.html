@@ -48,9 +48,18 @@
         <span class="text-3xl font-bold text-gray-900">₹{{ getTotal() }}</span>
     </div>
 
-    <button class="w-full bg-gray-900 hover:bg-black text-white py-4 rounded-xl mt-2 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg flex justify-center items-center gap-2 group">
-        Proceed to Checkout
-        <lucide-icon [img]="ArrowRightIcon" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></lucide-icon>
+    <button 
+        class="w-full bg-gray-900 hover:bg-black text-white py-4 rounded-xl mt-2 transition-all duration-300 shadow-lg hover:shadow-xl font-semibold text-lg flex justify-center items-center gap-2 group disabled:opacity-70 disabled:cursor-not-allowed"
+        [disabled]="isCheckingOut"
+        (click)="checkout.emit()">
+        
+        @if (isCheckingOut) {
+            <lucide-icon [img]="LoaderCircleIcon" class="w-5 h-5 animate-spin"></lucide-icon>
+            Processing...
+        } @else {
+            Proceed to Checkout
+            <lucide-icon [img]="ArrowRightIcon" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></lucide-icon>
+        }
     </button>
 
     <div class="flex items-center justify-center gap-4 mt-2 text-gray-400">
@@ -65,9 +74,17 @@
         <span class="text-gray-500 text-xs font-medium">Total</span>
         <span class="text-xl font-bold text-gray-900">₹{{ getTotal() }}</span>
     </div>
-    <button class="flex-1 bg-gray-900 text-white py-3 rounded-xl font-semibold shadow-lg flex justify-center items-center gap-2">
-        Checkout
-        <lucide-icon [img]="ArrowRightIcon" class="w-4 h-4"></lucide-icon>
+    <button 
+        class="flex-1 bg-gray-900 text-white py-3 rounded-xl font-semibold shadow-lg flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+        [disabled]="isCheckingOut"
+        (click)="checkout.emit()">
+        @if (isCheckingOut) {
+            <lucide-icon [img]="LoaderCircleIcon" class="w-4 h-4 animate-spin"></lucide-icon>
+            Processing...
+        } @else {
+            Checkout
+            <lucide-icon [img]="ArrowRightIcon" class="w-4 h-4"></lucide-icon>
+        }
     </button>
 </div>
 

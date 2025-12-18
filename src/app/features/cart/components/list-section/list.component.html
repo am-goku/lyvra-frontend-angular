@@ -7,7 +7,8 @@
         @for(item of cartItems; track item.id) {
         <cart-item [item]="item" (addQ)="addQuantity ? addQuantity(item.id): null"
             (minusQ)="minusQuantity ? minusQuantity(item.id): null"
-            (remove)="removeItem ? removeItem(item.id) : null" />
+            (remove)="removeItem ? removeItem(item.id) : null"
+            [isProcessing]="processingItemId === item.id" />
         }
     </div>
 </section>

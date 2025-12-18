@@ -6,12 +6,18 @@
         <div class="relative w-32 h-32 flex-shrink-0 bg-gray-50 rounded-xl overflow-hidden group">
             <img [src]="getProductImage()" [alt]="item.product.name"
                 class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500" />
+            
+            @if(isProcessing) {
+                <div class="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-10">
+                    <lucide-icon [img]="LoaderIcon" class="w-6 h-6 text-rose-600 animate-spin"></lucide-icon>
+                </div>
+            }
         </div>
 
         <!-- Content -->
         <div class="flex-1 flex flex-col justify-between py-1">
             <div class="flex justify-between items-start gap-4">
-                <div>
+                <div [class.opacity-50]="isProcessing">
                     <h3 class="font-bold text-gray-900 text-lg leading-tight mb-1">{{ item.product.name }}</h3>
                     <p class="text-gray-500 text-sm">Unit Price: <span class="font-medium text-gray-900">₹{{ item.product.price }}</span></p>
                 </div>
@@ -25,13 +31,14 @@
                 <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-1 border border-gray-200">
                     <button
                         class="w-8 h-8 flex items-center justify-center bg-white text-gray-600 rounded shadow-sm hover:text-rose-600 disabled:opacity-50 transition-colors"
-                        [disabled]="item.quantity <= 1"
+                        [disabled]="item.quantity <= 1 || isProcessing"
                         (click)="minusQ.emit(item.id)">
                         <span>-</span>
                     </button>
                     <span class="w-8 text-center font-semibold text-gray-800 text-sm">{{ item.quantity }}</span>
                     <button
-                        class="w-8 h-8 flex items-center justify-center bg-white text-gray-600 rounded shadow-sm hover:text-green-600 transition-colors"
+                        class="w-8 h-8 flex items-center justify-center bg-white text-gray-600 rounded shadow-sm hover:text-green-600 disabled:opacity-50 transition-colors"
+                        [disabled]="isProcessing"
                         (click)="addQ.emit(item.id)">
                         <span>+</span>
                     </button>
@@ -40,12 +47,17 @@
                 <!-- Actions -->
                 <div class="flex items-center gap-2">
                     <button class="flex items-center gap-2 text-gray-400 hover:text-rose-500 px-3 py-1.5 rounded-lg hover:bg-rose-50 transition-colors text-sm font-medium" 
+                        [disabled]="isProcessing"
                         (click)="remove.emit(item.id)">
-                        <lucide-icon [img]="TrashIcon" class="w-4 h-4"></lucide-icon>
+                        @if(isProcessing) {
+                             <lucide-icon [img]="LoaderIcon" class="w-4 h-4 animate-spin text-rose-500"></lucide-icon>
+                        } @else {
+                             <lucide-icon [img]="TrashIcon" class="w-4 h-4"></lucide-icon>
+                        }
                         <span class="hidden sm:inline">Remove</span>
                     </button>
                     <div class="w-px h-4 bg-gray-200 hidden sm:block"></div>
-                    <button class="text-gray-400 hover:text-blue-500 p-2 rounded-lg hover:bg-blue-50 transition-colors" title="Move to Wishlist">
+                    <button class="text-gray-400 hover:text-blue-500 p-2 rounded-lg hover:bg-blue-50 transition-colors" title="Move to Wishlist" [disabled]="isProcessing">
                         <lucide-icon [img]="HeartIcon" class="w-4 h-4"></lucide-icon>
                     </button>
                 </div>
@@ -59,15 +71,26 @@
         <div class="relative w-24 h-24 flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden">
             <img [src]="getProductImage()" [alt]="item.product.name"
                 class="w-full h-full object-cover object-center" />
+             @if(isProcessing) {
+                <div class="absolute inset-0 bg-white/50 backdrop-blur-[1px] flex items-center justify-center z-10">
+                    <lucide-icon [img]="LoaderIcon" class="w-5 h-5 text-rose-600 animate-spin"></lucide-icon>
+                </div>
+            }
         </div>
 
         <!-- Content -->
         <div class="flex-1 flex flex-col justify-between">
             <div>
                 <div class="flex justify-between items-start gap-2">
-                    <h3 class="font-semibold text-gray-900 text-base leading-tight line-clamp-2">{{ item.product.name }}</h3>
-                    <button class="text-gray-400 hover:text-rose-500 -mt-1 -mr-1 p-1 shrink-0" (click)="remove.emit(item.id)">
-                         <lucide-icon [img]="TrashIcon" class="w-4 h-4"></lucide-icon>
+                    <h3 class="font-semibold text-gray-900 text-base leading-tight line-clamp-2" [class.opacity-50]="isProcessing">{{ item.product.name }}</h3>
+                    <button class="text-gray-400 hover:text-rose-500 -mt-1 -mr-1 p-1 shrink-0" 
+                        [disabled]="isProcessing"
+                        (click)="remove.emit(item.id)">
+                         @if(isProcessing) {
+                             <lucide-icon [img]="LoaderIcon" class="w-4 h-4 animate-spin text-rose-500"></lucide-icon>
+                        } @else {
+                             <lucide-icon [img]="TrashIcon" class="w-4 h-4"></lucide-icon>
+                        }
                     </button>
                 </div>
                 <!-- <p class="text-xs text-gray-500 mt-1">Size: M</p> -->
@@ -78,10 +101,11 @@
                 
                 <!-- Compact Quantity -->
                 <div class="flex items-center gap-2 bg-gray-50 rounded p-0.5 border border-gray-200">
-                    <button class="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-xs"
-                        [disabled]="item.quantity <= 1" (click)="minusQ.emit(item.id)">-</button>
+                    <button class="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-xs disabled:opacity-50"
+                        [disabled]="item.quantity <= 1 || isProcessing" (click)="minusQ.emit(item.id)">-</button>
                     <span class="w-4 text-center text-xs font-semibold">{{ item.quantity }}</span>
-                    <button class="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-xs"
+                    <button class="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-xs disabled:opacity-50"
+                        [disabled]="isProcessing"
                         (click)="addQ.emit(item.id)">+</button>
                 </div>
             </div>

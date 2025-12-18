@@ -1,6 +1,6 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Cart } from "../../../../models/cart.model";
-import { LucideAngularModule, TruckIcon, CheckCircleIcon, ArrowRightIcon, ShieldCheckIcon } from "lucide-angular";
+import { LucideAngularModule, TruckIcon, CheckCircleIcon, ArrowRightIcon, ShieldCheckIcon, LoaderCircleIcon } from "lucide-angular";
 
 @Component({
     selector: 'cart-summary',
@@ -10,11 +10,14 @@ import { LucideAngularModule, TruckIcon, CheckCircleIcon, ArrowRightIcon, Shield
 })
 export class CartSummaryComponent {
     @Input() cart: Cart | null = null;
+    @Input() isCheckingOut: boolean = false;
+    @Output() checkout = new EventEmitter<void>();
 
     TruckIcon = TruckIcon;
     CheckCircleIcon = CheckCircleIcon;
     ArrowRightIcon = ArrowRightIcon;
     ShieldCheckIcon = ShieldCheckIcon;
+    LoaderCircleIcon = LoaderCircleIcon;
 
     getSubtotal() {
         if (!this.cart || !this.cart.items) return 0;

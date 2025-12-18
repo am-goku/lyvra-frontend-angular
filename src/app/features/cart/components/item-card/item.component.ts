@@ -1,18 +1,21 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { HeartIcon, LucideAngularModule, TrashIcon } from "lucide-angular";
 import { CartItems } from "../../../../models/cart.model";
+import { TrashIcon, HeartIcon, LucideAngularModule, LoaderCircleIcon } from "lucide-angular";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: 'cart-item',
     standalone: true,
-    imports: [LucideAngularModule],
+    imports: [LucideAngularModule, CommonModule],
     templateUrl: './item.component.html'
 })
 export class CartItemComponent {
-    HeartIcon = HeartIcon;
     TrashIcon = TrashIcon;
+    HeartIcon = HeartIcon;
+    LoaderIcon = LoaderCircleIcon;
 
-    @Input() item: CartItems | null = null;
+    @Input() item!: CartItems;
+    @Input() isProcessing: boolean = false;
     @Output() remove = new EventEmitter<number>();
     @Output() addQ = new EventEmitter<number>();
     @Output() minusQ = new EventEmitter<number>();

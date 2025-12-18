@@ -1,5 +1,6 @@
-import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs/operators';
 import { CartItemListComponent } from './components/list-section/list.component';
 import { CartSummaryComponent } from './components/summary-section/summary.component';
 import { CartSuggestionComponent } from './components/suggestion-section/suggestion.component';
@@ -19,40 +20,39 @@ import { LucideAngularModule, Loader2Icon, ShoppingBagIcon } from "lucide-angula
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.scss'
 })
-export class CartComponent implements OnInit {
+export class CartComponent {
   private cartService = inject(CartService);
   private notification = inject(NotificationService);
   private logger = inject(LoggerService);
   private destroyRef = inject(DestroyRef);
 
-  Loader2 = Loader2Icon;
-  ShoppingBag = ShoppingBagIcon;
+  loader2 = Loader2Icon;
+  shoppingBag = ShoppingBagIcon;
 
   cart = signal<Cart | null>(null);
   isLoading = signal(false);
+  processingItemId = signal<number | null>(null);
+  isCheckingOut = signal(false);
 
-  ngOnInit(): void {
+  constructor() {
     this.loadCart();
   }
 
   /**
    * Load cart from backend
    */
-  private loadCart(): void {
+  loadCart(): void {
     this.isLoading.set(true);
 
     this.cartService.getCart()
-      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (cart) => {
           this.cart.set(cart);
           this.isLoading.set(false);
-          this.logger.debug('Cart loaded', { itemCount: cart.items.length });
         },
         error: (err) => {
           this.isLoading.set(false);
           this.logger.error('Failed to load cart', err);
-          this.notification.error('Failed to load cart. Please try again.');
         }
       });
   }
@@ -62,13 +62,18 @@ export class CartComponent implements OnInit {
    * @param itemId - Cart Item ID to remove
    */
   removeItem(itemId: number): void {
+    if (this.processingItemId()) return; // Prevent double clicks
+    this.processingItemId.set(itemId);
+
     this.cartService.removeFromCart(itemId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.processingItemId.set(null))
+      )
       .subscribe({
         next: (updatedCart) => {
           this.cart.set(updatedCart);
           this.notification.success('Item removed from cart');
-          this.logger.info('Item removed from cart', { itemId });
         },
         error: (err) => {
           this.logger.error('Failed to remove item from cart', err);
@@ -82,8 +87,14 @@ export class CartComponent implements OnInit {
    * @param itemId - Cart Item ID
    */
   decreaseQty(itemId: number): void {
+    if (this.processingItemId()) return;
+    this.processingItemId.set(itemId);
+
     this.cartService.decrementQuantity(itemId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.processingItemId.set(null))
+      )
       .subscribe({
         next: (updatedCart) => {
           this.cart.set(updatedCart);
@@ -101,8 +112,14 @@ export class CartComponent implements OnInit {
    * @param itemId - Cart Item ID
    */
   increaseQty(itemId: number): void {
+    if (this.processingItemId()) return;
+    this.processingItemId.set(itemId);
+
     this.cartService.incrementQuantity(itemId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.processingItemId.set(null))
+      )
       .subscribe({
         next: (updatedCart) => {
           this.cart.set(updatedCart);
@@ -129,12 +146,29 @@ export class CartComponent implements OnInit {
         next: () => {
           this.cart.set(null);
           this.notification.success('Cart cleared');
-          this.logger.info('Cart cleared');
         },
         error: (err) => {
           this.logger.error('Failed to clear cart', err);
           this.notification.error('Failed to clear cart. Please try again.');
         }
       });
+  }
+
+  /**
+   * Mock checkout process
+   */
+  onCheckout(): void {
+    if (this.isCheckingOut()) return;
+
+    this.isCheckingOut.set(true);
+
+    // Simulate API delay
+    setTimeout(() => {
+      this.isCheckingOut.set(false);
+      this.notification.success('Order placed successfully! (Mock)');
+
+      // Optional: clear cart locally to simulate successful order
+      // this.cart.set(null); // Or keep it to let them play more
+    }, 2500);
   }
 }

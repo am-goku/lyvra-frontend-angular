@@ -10,8 +10,8 @@ import { CartItems } from "../../../../models/cart.model";
 })
 export class CartItemListComponent {
     @Input() cartItems: CartItems[] = [];
-
-    @Input() removeItem?: (id: number) => void; // Optional function input
-    @Input() addQuantity?: (id: number) => void;
-    @Input() minusQuantity?: (id: number) => void;
+    @Input() addQuantity: ((id: number) => void) | null = null;
+    @Input() minusQuantity: ((id: number) => void) | null = null;
+    @Input() removeItem: ((id: number) => void) | null = null;
+    @Input() processingItemId: number | null = null;
 }
