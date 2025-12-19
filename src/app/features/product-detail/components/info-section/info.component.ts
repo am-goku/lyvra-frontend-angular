@@ -9,11 +9,12 @@ import { NotificationService } from "../../../../core/services/notification.serv
 import { LoggerService } from "../../../../core/services/logger.service";
 import { AuthService } from "../../../../core/services/auth.service";
 import { Router } from "@angular/router";
+import { PriceTagComponent } from "../../../../shared/components/price-tag/price-tag.component";
 
 @Component({
     selector: 'product-info-section',
     standalone: true,
-    imports: [LucideAngularModule, ProductMediaComponent, CommonModule],
+    imports: [LucideAngularModule, ProductMediaComponent, CommonModule, PriceTagComponent],
     templateUrl: './info.component.html'
 })
 export class ProductInfoComponent {

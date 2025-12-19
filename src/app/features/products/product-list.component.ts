@@ -1,5 +1,5 @@
-import { Component, DestroyRef, OnInit, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { LucideAngularModule, Funnel, ChevronDown, LayoutGrid, List, ArrowUpDown } from 'lucide-angular';
+import { CommonModule } from '@angular/common';
 import { FilterComponent } from "./components/filter/filter.component";
 import { ProductGrid } from './components/grid/grid.component';
 import { ProductPagination } from './components/pagination/pagination.component';
@@ -7,16 +7,34 @@ import { ProductService } from '../../core/services/products.service';
 import { Product } from '../../models/product.model';
 import { NotificationService } from '../../core/services/notification.service';
 import { LoggerService } from '../../core/services/logger.service';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ProductCard } from "./components/product/product.component";
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
-  imports: [FilterComponent, ProductGrid, ProductPagination]
+  imports: [FilterComponent, ProductPagination, CommonModule, LucideAngularModule, ProductCard]
 })
 export class ProductListComponent implements OnInit {
+  // Icons
+  LayoutGridIcon = LayoutGrid;
+  ListIcon = List;
+  ChevronDownIcon = ChevronDown;
+  SortIcon = ArrowUpDown;
+  FilterIcon = Funnel;
+
+  // View State
+  isGridView = signal(true);
+  isSortOpen = signal(false);
+  sortBy = signal('newest');
   private productService = inject(ProductService);
+
+  toggleSort() {
+    this.isSortOpen.update(v => !v);
+  }
   private notification = inject(NotificationService);
   private logger = inject(LoggerService);
   private destroyRef = inject(DestroyRef);

@@ -8,10 +8,12 @@ import { CartService } from "../../../../core/services/cart.service";
 import { NotificationService } from "../../../../core/services/notification.service";
 import { LoggerService } from "../../../../core/services/logger.service";
 
+import { PriceTagComponent } from "../../../../shared/components/price-tag/price-tag.component";
+
 @Component({
     selector: 'product-card',
     standalone: true,
-    imports: [LucideAngularModule, RouterLink, CommonModule],
+    imports: [LucideAngularModule, RouterLink, CommonModule, PriceTagComponent],
     templateUrl: './product.component.html'
 })
 export class ProductCard implements OnInit {

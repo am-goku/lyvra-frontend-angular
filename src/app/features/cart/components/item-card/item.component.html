@@ -19,10 +19,12 @@
             <div class="flex justify-between items-start gap-4">
                 <div [class.opacity-50]="isProcessing">
                     <h3 class="font-bold text-gray-900 text-lg leading-tight mb-1">{{ item.product.name }}</h3>
-                    <p class="text-gray-500 text-sm">Unit Price: <span class="font-medium text-gray-900">₹{{ item.product.price }}</span></p>
+                    <div class="flex items-center gap-1 text-gray-500 text-sm">
+                        Unit Price: <app-price-tag [price]="item.product.price" size="sm" [showBadge]="false"></app-price-tag>
+                    </div>
                 </div>
                 <div class="text-right">
-                    <p class="text-lg font-bold text-gray-900">₹{{ item.product.price * item.quantity }}</p>
+                    <app-price-tag [price]="item.product.price * item.quantity" size="lg" [showBadge]="false"></app-price-tag>
                 </div>
             </div>
 
@@ -97,7 +99,7 @@
             </div>
 
             <div class="flex justify-between items-end mt-2">
-                <p class="text-sm font-bold text-gray-900">₹{{ item.product.price * item.quantity }}</p>
+                <app-price-tag [price]="item.product.price * item.quantity" size="base" [showBadge]="false"></app-price-tag>
                 
                 <!-- Compact Quantity -->
                 <div class="flex items-center gap-2 bg-gray-50 rounded p-0.5 border border-gray-200">

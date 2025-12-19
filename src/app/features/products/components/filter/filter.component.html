@@ -1,5 +1,5 @@
 <!-- MOBILE: Filter button + Search bar -->
-<div class="sm:hidden flex items-center gap-3 px-4 mt-4">
+<div class="lg:hidden flex items-center gap-3 px-4 mt-4">
   <!-- Filter Button with Badge -->
   <button
     (click)="setIsDrawerOpen()"
@@ -28,7 +28,7 @@
 
 <!-- MOBILE DRAWER -->
 @if (isDrawerOpen) {
-<div class="fixed inset-0 z-50 sm:hidden" (click)="setIsDrawerOpen()">
+<div class="fixed inset-0 z-50 lg:hidden" (click)="setIsDrawerOpen()">
   <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
   <div
     class="absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl transform transition-transform duration-300"
@@ -321,7 +321,7 @@
 }
 
 <!-- DESKTOP SIDEBAR -->
-<aside class="hidden sm:flex flex-col w-80 bg-white shadow-xl rounded-2xl sticky top-6 h-fit max-h-[calc(100vh-3rem)] overflow-hidden border border-gray-100">
+<div class="hidden lg:flex flex-col w-full bg-white shadow-xl rounded-2xl h-fit max-h-[calc(100vh-8rem)] overflow-hidden border border-gray-100">
   
   <!-- Header with gradient -->
   <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white p-5 rounded-t-2xl">
@@ -614,7 +614,7 @@
       Apply Filters
     </button>
   </div>
-</aside>
+</div>
 
 <style>
   @keyframes slideDown {

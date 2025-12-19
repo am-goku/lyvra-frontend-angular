@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, input } from "@angular/core";
 import { LucideAngularModule, StarIcon } from "lucide-angular";
 import { FormsModule, ɵInternalFormsSharedModule } from "@angular/forms";
 import { NgClass } from "@angular/common";
@@ -13,6 +13,7 @@ import { NgClass } from "@angular/common";
 export class ProductReviewComponent {
 
     StarIcon = StarIcon;
+    canReview = input(false);
 
     reviews = [
         { id: 1, user: 'Ananya Sharma', date: 'Oct 10, 2025', rating: 5, comment: 'Loved the fabric and fit!' },

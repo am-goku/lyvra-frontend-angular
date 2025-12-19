@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Cart } from "../../../../models/cart.model";
-import { LucideAngularModule, TruckIcon, CheckCircleIcon, ArrowRightIcon, ShieldCheckIcon, LoaderCircleIcon } from "lucide-angular";
+import { LucideAngularModule, TruckIcon, CircleCheckBigIcon, ArrowRightIcon, ShieldCheckIcon, LoaderCircleIcon } from "lucide-angular";
 
 @Component({
     selector: 'cart-summary',
@@ -14,7 +14,7 @@ export class CartSummaryComponent {
     @Output() checkout = new EventEmitter<void>();
 
     TruckIcon = TruckIcon;
-    CheckCircleIcon = CheckCircleIcon;
+    CheckCircleIcon = CircleCheckBigIcon;
     ArrowRightIcon = ArrowRightIcon;
     ShieldCheckIcon = ShieldCheckIcon;
     LoaderCircleIcon = LoaderCircleIcon;

@@ -3,10 +3,12 @@ import { CartItems } from "../../../../models/cart.model";
 import { TrashIcon, HeartIcon, LucideAngularModule, LoaderCircleIcon } from "lucide-angular";
 import { CommonModule } from "@angular/common";
 
+import { PriceTagComponent } from "../../../../shared/components/price-tag/price-tag.component";
+
 @Component({
     selector: 'cart-item',
     standalone: true,
-    imports: [LucideAngularModule, CommonModule],
+    imports: [LucideAngularModule, CommonModule, PriceTagComponent],
     templateUrl: './item.component.html'
 })
 export class CartItemComponent {
