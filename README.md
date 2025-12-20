@@ -1,59 +1,85 @@
-# Lyvra
+# Lyvra - E-commerce Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+Lyvra is a modern, high-performance e-commerce frontend built with **Angular 20** and **Tailwind CSS 4**. It features a clean, responsive design and is optimized for speed and developer experience.
 
-## Development server
+## ✨ Features
 
-To start a local development server, run:
+- **🛍️ Product Discovery**: Advanced product filtering and sorting in a responsive product list.
+- **🔍 Quick View & Details**: Detailed product views with image galleries, size/color selectors, and stock alerts.
+- **🛒 Cart Management**: Seamless "Add to Cart" functionality with persistent state.
+- **🔐 Secure Authentication**: Integrated OIDC-based authentication and user account management.
+- **🛡️ Admin Dashboard**: Dedicated administrative interface for managing products, orders, and users.
+- **💳 Checkout Flow**: Streamlined checkout process for improved conversion.
+- **🎨 Modern UI/UX**: Designed with Tailwind CSS 4 and Lucide-Angular icons for a premium feel.
 
-```bash
-ng serve
+## 🛠️ Tech Stack
+
+- **Framework**: [Angular 20](https://angular.dev/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **State Management**: [RxJS](https://rxjs.dev/)
+- **Icons**: [Lucide Angular](https://lucide.dev/guide/packages/lucide-angular)
+- **Auth**: [angular-oauth2-oidc](https://github.com/manfredsteyer/angular-oauth2-oidc)
+
+## 📂 Project Structure
+
+```text
+src/
+├── app/
+│   ├── core/           # Interceptors, guards, services, and core utilities.
+│   ├── features/       # Feature-based modules (Admin, Auth, Cart, Products, etc.).
+│   ├── layouts/        # Page layouts (UserLayout, AdminLayout).
+│   ├── models/         # TypeScript interfaces and type definitions.
+│   ├── shared/         # Reusable components, pipes, and directives.
+│   └── app.routes.ts   # Main application routing configuration.
+├── environments/       # Environment-specific configurations.
+├── public/             # Static assets.
+└── styles.css          # Global styles and Tailwind imports.
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 🚀 Getting Started
 
-## Code scaffolding
+### Prerequisites
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- [Node.js](https://nodejs.org/) (Latest LTS recommended)
+- [Angular CLI](https://angular.dev/tools/cli)
 
-```bash
-ng generate component component-name
-```
+### Installation
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+1. Clone the repository:
 
-```bash
-ng generate --help
-```
+   ```bash
+   git clone <repository-url>
+   cd lyvra
+   ```
 
-## Building
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-To build the project run:
+### Development Server
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Run the development server using:
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-For end-to-end (e2e) testing, run:
+### Build
+
+To build the project for production, run:
 
 ```bash
-ng e2e
+npm run build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+The build artifacts will be stored in the `dist/` directory.
 
-## Additional Resources
+## 📜 Available Scripts
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- `npm start`: Runs the development server.
+- `npm run build`: Builds the application for production.
+- `npm test`: Executes unit tests via [Karma](https://karma-runner.github.io).
+- `npm run watch`: Builds and watches for changes (development).
