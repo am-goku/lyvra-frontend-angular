@@ -52,3 +52,5 @@ src/environments/environment.prod.ts
 build_log.txt
 build_error.log
 *.log
+
+project-dashboard.html
