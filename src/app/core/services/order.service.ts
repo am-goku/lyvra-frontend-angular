@@ -41,7 +41,7 @@ export class OrderService {
     }
 
     cancelOrder(orderId: number): Observable<void> {
-        return this.http.delete<void>(`orders/${orderId}/cancel`).pipe(
+        return this.http.put<void>(`orders/${orderId}/cancel`, {}).pipe(
             tap(() => this.logger.info('Order cancelled', { orderId })),
             catchError(err => {
                 this.logger.error('Failed to cancel order', err);

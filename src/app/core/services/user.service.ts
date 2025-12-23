@@ -11,11 +11,21 @@ export class UserService {
     private http = inject(HttpClient);
     private logger = inject(LoggerService);
 
-    getUsers(): Observable<User[]> {
-        return this.http.get<User[]>('users').pipe(
+    getAllUsers(): Observable<User[]> {
+        return this.http.get<User[]>('admin/users').pipe(
             tap(users => this.logger.debug('Users fetched', { count: users.length })),
             catchError(err => {
                 this.logger.error('Failed to fetch users', err);
+                return throwError(() => err);
+            })
+        );
+    }
+
+    getProfile(): Observable<User> {
+        return this.http.get<User>('users/me').pipe(
+            tap(user => this.logger.debug('Profile fetched', { id: user.id })),
+            catchError(err => {
+                this.logger.error('Failed to fetch profile', err);
                 return throwError(() => err);
             })
         );
@@ -41,11 +51,31 @@ export class UserService {
         );
     }
 
+    updateProfile(userData: Partial<User>): Observable<User> {
+        return this.http.put<User>('users/me', userData).pipe(
+            tap(user => this.logger.info('Profile updated', { id: user.id })),
+            catchError(err => {
+                this.logger.error('Failed to update profile', err);
+                return throwError(() => err);
+            })
+        );
+    }
+
     deleteUser(id: number): Observable<void> {
         return this.http.delete<void>(`users/${id}`).pipe(
             tap(() => this.logger.info('User deleted', { id })),
             catchError(err => {
                 this.logger.error('Failed to delete user', err);
+                return throwError(() => err);
+            })
+        );
+    }
+
+    deleteProfile(): Observable<void> {
+        return this.http.delete<void>('users/me').pipe(
+            tap(() => this.logger.info('Profile deleted')),
+            catchError(err => {
+                this.logger.error('Failed to delete profile', err);
                 return throwError(() => err);
             })
         );

@@ -76,7 +76,7 @@ export class AdminDashboardComponent implements OnInit {
         this.isLoading.set(true);
         forkJoin({
             orders: this.orderService.getOrders(), // Assuming fetching all orders for stats
-            users: this.userService.getUsers()
+            users: this.userService.getAllUsers()
         })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({

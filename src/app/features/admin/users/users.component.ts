@@ -72,7 +72,7 @@ export class AdminUsersComponent implements OnInit {
 
     loadUsers() {
         this.isLoading.set(true);
-        this.userService.getUsers()
+        this.userService.getAllUsers()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (users) => {

@@ -80,7 +80,7 @@ export class ProductService {
     }
 
     updateProduct(id: number, data: FormData | any): Observable<any> {
-        return this.http.patch(`products/${id}`, data).pipe(
+        return this.http.put(`products/${id}`, data).pipe(
             tap(() => {
                 this.clearCache();
                 this.logger.info('Product updated', { id });

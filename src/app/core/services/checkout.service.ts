@@ -7,7 +7,7 @@ import { Injectable } from "@angular/core";
 export class CheckoutService {
     constructor(private readonly http: HttpClient) { };
 
-    checkout() {
-        return this.http.post('checkout', {});
+    getCheckoutDetails() {
+        return this.http.get('checkout');
     }
 }
